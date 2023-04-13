@@ -2,19 +2,15 @@
 // #ID = 1220
 // Created by BoomEX
 
+// -- Code Functions
+
 // $005A: Paused (8-Bit)
 //        0x00 = Paused
 function cPaused() => byte(0x00005A)
-function isPaused() {
-    return byte(0x00005A) == 00
-}
 
 // $0084: Loading Next Stage: (16-Bit)
 //        0x00=No
 function cLoading() => word(0x000084)
-function isLoading() {
-    return word(0x000084) != 00
-}
 
 // $0086: Stage Number (16-Bit)
 function cStageNumber() => word(0x000086)
@@ -25,15 +21,16 @@ function cWorldNumber() => word(0x000088)
 
 // $00CC: Next Stage To Load: (16-Bit)
 //        When 0x000084 is non zero, the number here is the stage being loaded. Value is then moved to 0x000086
-// $A4EB: Start of Stage Item List [..]
+function cNextStage() => word(0x0000CC)
+
 // $AD21: Cheat: All Doors Unlocked (16-Bit)
 //        0x0000=No
+function cCheatAllDoors() => word(0x00AD21)
+
 // $AD23: Cheat: Infinite Lives (16-Bit)
 //        0x0000=No
-// $AD5C: Stage Exit Count Array (656-Bits):
-//        - Stage Exit counts follow, this stage is 0x00 (level select)
-//        - Stage numbers are the offsets of the flag. I.e. Stage 0x3f has an exit count in position 0x3f.
-//        - Stage counts increment upon touching an exit. If you go to a bonus level, come back and then clear the level, the exit count will be 0x02
+function cCheatInfLives() => word(0x00AD23)
+
 // $B0E6: Player state: (8-Bit)
 //        0x00=Falling
 //        0x01=On Ground
@@ -41,6 +38,8 @@ function cWorldNumber() => word(0x000088)
 //        0x04=Hanging
 //        0x05=Retracting
 //        0x07=Dead
+function cPlayerState() => word(0x00B0E6)
+
 // $B11E: Invincibility Timer (16-Bit)
 // $B120: Score BCD (32-Bit)
 //        0x12345678 = Decimal 12345678
@@ -69,6 +68,27 @@ function cWorldNumber() => word(0x000088)
 // $B17E: Extension Length (16-Bit)
 // $B1CA: Recent Collected Items: (40-Bit)
 //        Order: 5,4,3,2,1
+
+// -- Other Code Notes
+// $A4EB: Start of Stage Item List [..]
+// $AD5C: Stage Exit Count Array (656-Bits):
+//        - Stage Exit counts follow, this stage is 0x00 (level select)
+//        - Stage numbers are the offsets of the flag. I.e. Stage 0x3f has an exit count in position 0x3f.
+//        - Stage counts increment upon touching an exit. If you go to a bonus level, come back and then clear the level, the exit count will be 0x02
+
+// -- Boolean functions
+
+function isLoading() {
+    return word(0x000084) != 00
+}
+
+function isPaused() {
+    return byte(0x00005A) == 00
+}
+
+function isCheating(){
+    return true
+}
 
 LevelLookup = {
     // Overworld
@@ -234,7 +254,7 @@ achievement(
 achievement(
     title = "Nothing Ventured, Nothing Gained", points = 0,
     description = "Take the quick exit from Stuffed Animal World",
-    trigger = (prev(word(0x000086)) == 1 && prev(word(0x000088)) == 1 && word(0x000086) == 0) && word(0x000088) == 0
+    trigger = (prev(word(0x000086)) == 1 && prev(cWorldNumber()) == 1 && word(0x000086) == 0) && cWorldNumber() == 0
 )
 
 achievement(
@@ -246,25 +266,25 @@ achievement(
 achievement(
     title = "Complete Sports World", points = 0,
     description = "Clear this stage without using cheats",
-    trigger = word(0x000088) == 1 && word(0x000084) > 0 && word(0x0000CC) == 0
+    trigger = cWorldNumber() == 1 && isLoading() && word(0x0000CC) == 0
 )
 
 achievement(
     title = "Complete Indistrial World", points = 0,
     description = "Clear this stage without using cheats",
-    trigger = word(0x000088) == 4 && word(0x000086) != 43 && word(0x000084) > 0 && word(0x0000CC) == 0
+    trigger = cWorldNumber() == 4 && word(0x000086) != 43 && isLoading() && word(0x0000CC) == 0
 )
 
 achievement(
     title = "Boss Fight - Giant Car", points = 0,
     description = "Clear this stage without using cheats",
-    trigger = word(0x000088) == 4 && word(0x000086) == 43 && word(0x000084) > 0 && word(0x0000CC) == 0
+    trigger = cWorldNumber() == 4 && word(0x000086) == 43 && isLoading() && word(0x0000CC) == 0
 )
 
 achievement(
     title = "Complete Bathtub World", points = 0,
     description = "Clear this stage without using cheats",
-    trigger = word(0x000088) == 6 && word(0x000084) > 0 && word(0x0000CC) == 0
+    trigger = cWorldNumber() == 6 && isLoading() && word(0x0000CC) == 0
 )
 
 achievement(
