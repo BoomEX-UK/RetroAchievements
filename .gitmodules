@@ -1,0 +1,3 @@
+[submodule "RATutorials"]
+	path = RATutorials
+	url = https://github.com/Etron-RA/RetroAchievements.git
