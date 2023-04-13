@@ -11,4 +11,4 @@ The backbone for Emulation & Achievement Development
 The toolkit behind the Achievement scripting concept
 
 ## RATutorials
-An incredibly useful introduction to RAScript by @Etron-RA
+An incredibly useful introduction to RAScript by [Etron-RA](https://github.com/Etron-RA)
