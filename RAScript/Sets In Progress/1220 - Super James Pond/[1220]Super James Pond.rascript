@@ -87,6 +87,24 @@ cHVelocity = word(0x00B174)
 // $B17E: Extension Length (16-Bit)
 cExLength = word(0x00B17E)
 
+// $B1CA: Recent Collected Items: (40-Bit)
+//        Order: 5,4,3,2,1
+// 0x1c - Bowl of Soup
+// 0x30 - TMNT T-Shirt
+// 0x31 - Mickey Mouse T-Shirt
+// 0x32 - Body Armour (Invincbility)
+// 0x40 - 1-Up
+// 0x42 - Rainbow
+
+cItem5 = byte(0x00B1ca)
+cItem4 = byte(0x00B1cb)
+cItem3 = byte(0x00B1cc)
+cItem2 = byte(0x00B1cd)
+cItem1 = byte(0x00B1ce)
+
+// $B12C: Continues (Upper4)
+cContinues =  high4(0x00B12C)
+
 
 // ----------------------------------------------------------------------------
 // -- Other Code Notes
@@ -101,8 +119,7 @@ cExLength = word(0x00B17E)
 //        0x12345678 = Decimal 12345678
 // $B132: Animation Frame (16-Bit)
 // $B134: Animation Counter (16-Bit)
-// $B1CA: Recent Collected Items: (40-Bit)
-//        Order: 5,4,3,2,1
+
 
 
 // ----------------------------------------------------------------------------
@@ -113,9 +130,13 @@ function isLoading() => cLoading != 00
 function isPaused() => cPaused == 00
 function isCheating() => cCheatAllDoors != 00 || cCheatInfLives != 00
 function isActiveGame() => cLives > 0 && cHP > 0
+function scoreValue() {
+    return low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
+        low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
+}
 
 function stageComplete( stage ){
-    return !isCheating() && isActiveGame() && prev(cStageNumber) == stage && (cStageNumber == 00 || cStageNumber == 0x40)
+    return !isCheating() && isActiveGame() && cStageNumber == stage && (cNextStage == 00 || cNextStage == 0x40) && isLoading()
 }
 
 // ----------------------------------------------------------------------------
@@ -123,10 +144,10 @@ function stageComplete( stage ){
 // ----------------------------------------------------------------------------
 
 stageEndCodes = {
-    0x04: "Sports World",
-    0x0f: "Teddy World",
+   // 0x04: "Sports World",
+    0x0d: "Teddy World",
     0x10: "Boss: Teddy",
-    0x17: "? World",
+    0x1a: "Sweet World World",
     0x20: "Industrial World",
     0x2b: "Boss: Car",
     0x36: "Bathtub World",
@@ -142,9 +163,9 @@ stageEndCodes = {
 
 stageEndPoints = {
     0x04: 5,
-    0x0f: 5,
+    0x0d: 5,
     0x10: 10,
-    0x17: 5,
+    0x1a: 5,
     0x20: 5,
     0x2b: 10,
     0x36: 5,
@@ -157,6 +178,13 @@ stageEndPoints = {
     0x45: 5,
     0x41: 5   
 }
+
+// Multi Exit Sports World
+achievement(
+    title = "Complete Sports World", points = 5,
+    description = "Complete stage 'Sports World' without using cheats",
+    trigger = stageComplete(0x03) || stageComplete(0x04)
+)
 
 function stageAchievementBuilder( code, name, points ){
     achievement(
@@ -172,62 +200,132 @@ for k in stageEndCodes{
 
 
 // ----------------------------------------------------------------------------
-// -- Other Achievements
+// -- Cheating Achievements
 // ----------------------------------------------------------------------------
 
 achievement(
     title = "C.H.E.A.T. [m]", points = 5,
-    description = "Collect Items in Order - C___, H_____, E____, A____, T__",
-    trigger = byte(0x00B1CA) == 22 && byte(0x00B1CB) == 100 && byte(0x00B1CC) == 99 && byte(0x00B1CD) == 33 && 
-              byte(0x00B1CE) == 93
-)
-
-achievement(
-    title = "[TESTING]", points = 0,
-    description = "",
-    trigger = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-               low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
-               + 0) == 99999999)
+    description = "Collect Items in Order - C___, H_____, E____, A____, T__. (Disables other achievements until reset)",
+    trigger = cItem5 == 22 && cItem4 == 100 && cItem3 == 99 && cItem2 == 33 && cItem1 == 93
 )
 
 achievement(
     title = "P.O.W.E.R. [m]", points = 5,
-    description = "Collect Items in Order - P______, O__ ___, W____, E____, R_____",
+    description = "Collect Items in Order - P______, O__ ___, W____, E____, R_____.",
     trigger = byte(0x00B1CA) == 60 && byte(0x00B1CB) == 81 && byte(0x00B1CC) == 3 && byte(0x00B1CD) == 99 && 
               byte(0x00B1CE) == 53
 )
 
 achievement(
     title = "L.I.V.E.S. [m]", points = 5,
-    description = "Collect Items in Order - L___, I__ _____, V_____, E____, S______",
+    description = "Collect Items in Order - L___, I__ _____, V_____, E____, S______. (Disables other achievements until reset)",
     trigger = byte(0x00B1CA) == 9 && byte(0x00B1CB) == 37 && byte(0x00B1CC) == 86 && byte(0x00B1CD) == 99 && 
               byte(0x00B1CE) == 11
 )
 
+
+// ----------------------------------------------------------------------------
+// -- Collectible Achievements
+// ----------------------------------------------------------------------------
+
+function cmpItemCollected( itemID ){
+    return prev(cItem1) != itemID && cItem1 == itemID
+}
+
 achievement(
     title = "Bad Taste", points = 1,
     description = "Drink the poisonous potion",
-    trigger = prev(byte(0x00B1CE)) != 73 && byte(0x00B1CE) == 73
+    trigger = cmpItemCollected(0x49)
+)
+
+achievement(
+    title = "Body Armour", points = 1,
+    description = "Collect the Body Armour item",
+    trigger = cmpItemCollected(0x32)
 )
 
 achievement(
     title = "Leprechaun's Dream", points = 1,
     description = "Collect the most valuable item in the game",
-    trigger = prev(byte(0x00B1CE)) != 65 && byte(0x00B1CE) == 65
-)
-
-achievement(
-    title = "Nothing Ventured, Nothing Gained", points = 0,
-    description = "Take the quick exit from Stuffed Animal World",
-    trigger = (prev(word(0x000086)) == 1 && prev(cWorldNumber) == 1 && word(0x000086) == 0) && cWorldNumber == 0
+    trigger = cmpItemCollected(0x41)
 )
 
 achievement(
     title = "CRT", points = 1,
     description = "Collect the Retro Computer Screen",
-    trigger = prev(byte(0x00B1CE)) != 82 && byte(0x00B1CE) == 82
+    trigger = cmpItemCollected(0x52)
 )
 
+achievement(
+    title = "3½ inches of floppy goodness", points = 1,
+    description = "Collect the Floppy Disk",
+    trigger = cmpItemCollected(0x54)
+)
+
+achievement(
+    title = "The King of Christmas", points = 10,
+    description = "Steal all of Stanta's crowns from outide the Toy Factory",
+    trigger = cStageNumber == 00 && cItem5 == 1 && cItem4 == 1 && cItem3 == 1 && cItem2 == 1 && cItem1 == 1
+)
+
+achievement(
+    title = "Join the Fanclub", points = 10,
+    description = "Collect a Micket Mouse and a Teenage Mutant Turtles T-Shirt",
+    trigger = tally(2,once(cmpItemCollected(0x30)),once(cmpItemCollected(0x31)))
+)
+
+
+// ----------------------------------------------------------------------------
+// -- Accessory Achievements
+// ----------------------------------------------------------------------------
+
+achievement(
+    title = "Getting Over Exocoetidae", points = 1,
+    description = "Fly using the Wings",
+    trigger = isActiveGame() && !isCheating() && cWings != 0
+)
+
+achievement(
+    title = "Just taking the Aston Martin out for a quick spin, Q", points = 1,
+    description = "Start driving the Car",
+    trigger = isActiveGame() && !isCheating() && cCar != 0
+)
+
+achievement(
+    title = "Any higher, Mr. Pond, and my ears will pop.", points = 1,
+    description = "Start flying the Aeroplane",
+    trigger = isActiveGame() && !isCheating() && cPlane != 0
+)
+
+achievement(
+    title = "Bubble 07", points = 1,
+    description = "Float away in the Bath",
+    trigger = isActiveGame() && !isCheating() && cBath != 0
+)
+
+
+// ----------------------------------------------------------------------------
+// -- Other Achievements
+// ----------------------------------------------------------------------------
+
+achievement(
+    title = "Nothing Ventured, Nothing Gained", points = 1,
+    description = "Take the quick exit from Stuffed Animal World",
+    trigger = stageComplete( 0x01 )
+)
+
+
+// ----------------------------------------------------------------------------
+// -- Testing Area
+// ----------------------------------------------------------------------------
+
+achievement(
+    title = "[TEST] BCD Score", points = 0,
+    description = "",
+    trigger = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
+               low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
+               + 0) == 99999999)
+)
 
 // ----------------------------------------------------------------------------
 // -- Leaderboards
@@ -236,27 +334,23 @@ achievement(
 leaderboard(
     id = 111000016, title = "Hall of Fame",
     description = "A score based leaderboard for those who Saved the World (No Cheaters Please)",
-    start  = (word(0x00AD21) == 0 && word(0x00AD23) == 0) &&
+    start  = !isCheating() &&
              (always_false() || (prev(word(0x000086)) != 80 && word(0x000086) == 80)),
     cancel = always_false(),
     submit = always_true(),
-    value = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-              low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
-              + 0)),
+    value = measured(scoreValue()),
     format = "VALUE"
 )
 
 leaderboard(
     id = 111000018, title = "Scoreboard",
     description = "A score based leaderboard for everyone (No Cheaters Please)",
-    start  = (word(0x00AD21) == 0 && word(0x00AD23) == 0) &&
-             ((prev(byte(0x00B0E6)) != 7 && byte(0x00B0E6) == 7) ||
+    start  = !isCheating() &&
+             ((prev(cPlayerState) != 7 && cPlayerState == 7 && cLives == 01) ||
               (prev(word(0x000086)) != 80 && word(0x000086) == 80)),
     cancel = always_false(),
     submit = always_true(),
-    value = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-              low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
-              + 0)),
+    value = measured(scoreValue()),
     format = "VALUE"
 )
 
@@ -271,8 +365,8 @@ LevelLookup = {
     // Door #01
     0x01: "Sports World-1",
     0x02: "Sports World-2",
-    0x03: "Sports World-3",
     0x04: "Sports World-Bonus",
+    0x03: "Sports World-3",
     // Door #02
     0x0c: "Teddy World-1",
     0x0e: "Teddy World-2",
@@ -281,11 +375,14 @@ LevelLookup = {
     // Door #03
     0x10: "Boss Fight! Giant Teddy",
     // Door #04
-    0x13: "? World-1",
-    0x14: "? World-Bonus",
-    0x15: "? World-2",
-    0x16: "? World-Water Bonus",
-    0x17: "? World-3",
+    0x13: "Sweet World-1",
+    0x14: "Sweet World-Bonus",
+    0x15: "Sweet World-2",
+    0x16: "Sweet World-Water Bonus",
+    0x17: "Sweet World-3",
+    0x18: "Sweet World-4",
+    0x19: "Sweet World-Bonus",
+    0x1a: "Sweet World-5",
     // Door #05
     0x1c: "Industrial World-1",
     0x1b: "Industrial World-2",
@@ -388,12 +485,12 @@ rich_presence_conditional_display(cLives == 0, "Title Screen 🔫🐟")
 
 rich_presence_display("{0}{1}{2}{3}{4}{5}{6}{7} | 💯{8} | {9}",
     rich_presence_lookup("Pause", cPaused, PauseLookup, fallback=""),
-    rich_presence_lookup("Invincible", word(0x00B11E), InvincibleLookup, fallback="✨"),
-    rich_presence_lookup("Wings", byte(0x00B158), WingsLookup, fallback="🪰"),
-    rich_presence_lookup("Swim", byte(0x00B159), SwimLookup, fallback="🫧"),
-    rich_presence_lookup("DPB", byte(0x00B166), DPBLookup, fallback=""),
-    rich_presence_lookup("Icon", word(0x00AD21) + word(0x00AD23), IconLookup, fallback="🎣"),
-    rich_presence_value("Number", byte(0x00B12E)),
+    rich_presence_lookup("Invincible", cInvincibleTime, InvincibleLookup, fallback="✨"),
+    rich_presence_lookup("Wings", cWings, WingsLookup, fallback="🪰"),
+    rich_presence_lookup("Swim", cSwimming, SwimLookup, fallback="🫧"),
+    rich_presence_lookup("DPB", cVehicleControl, DPBLookup, fallback=""),
+    rich_presence_lookup("Icon", cCheatAllDoors + cCheatInfLives, IconLookup, fallback="🎣"),
+    rich_presence_value("Number", cLives),
     rich_presence_lookup("Hitpoints", byte(0x00B130), HitpointsLookup, fallback="💀"),
     rich_presence_value("Number", (low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
                                  low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 +
