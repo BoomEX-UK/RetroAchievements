@@ -1,0 +1,1 @@
+As my journey through RetroAchievements development continues, I find myself drawn to RAScript
