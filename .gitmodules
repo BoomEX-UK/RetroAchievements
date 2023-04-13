@@ -4,3 +4,6 @@
 [submodule "RATools"]
 	path = RATools
 	url = https://github.com/Jamiras/RATools.git
+[submodule "RALibretro"]
+	path = RALibretro
+	url = https://github.com/RetroAchievements/RALibretro.git
