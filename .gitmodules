@@ -1,9 +1,9 @@
 [submodule "RATutorials"]
-	path = RATutorials
+	path = sm-RATutorials
 	url = https://github.com/Etron-RA/RetroAchievements.git
 [submodule "RATools"]
-	path = RATools
+	path = sm-RATools
 	url = https://github.com/Jamiras/RATools.git
 [submodule "RALibretro"]
-	path = RALibretro
+	path = sm-RALibretro
 	url = https://github.com/RetroAchievements/RALibretro.git
