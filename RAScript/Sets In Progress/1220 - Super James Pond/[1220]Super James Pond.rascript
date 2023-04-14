@@ -86,6 +86,7 @@ cHVelocity = word(0x00B174)
 
 // $B17E: Extension Length (16-Bit)
 cExLength = word(0x00B17E)
+function cExLengthRel() => cExLength/60
 
 // $B1CA: Recent Collected Items: (40-Bit)
 //        Order: 5,4,3,2,1
@@ -104,6 +105,9 @@ cItem1 = byte(0x00B1ce)
 
 // $B12C: Continues (Upper4)
 cContinues =  high4(0x00B12C)
+
+// $B160: Umbrella Count (8-Bit)
+cUmbrellaCount = byte(0x00b160)
 
 
 // ----------------------------------------------------------------------------
@@ -274,35 +278,95 @@ achievement(
     trigger = tally(2,once(cmpItemCollected(0x30)),once(cmpItemCollected(0x31)))
 )
 
+function brollyCounter()
+{
+    // Start
+    start = once(cUmbrellaCount == 1)
+    
+    // Cancel
+    cancel = never(cUmbrellaCount == 0)
+        
+    // The goal
+    goal = cUmbrellaCount == 5
+    
+    // Trigger when the player reaches the goal
+    submit = trigger_when(goal)
+        
+    // Measure how close the player is to the goal
+    value = measured(goal)
+    
+    return start && cancel && (submit || value)
+}
+
+achievement(
+    id = 0,
+    title = "Floaty-light", points = 10,
+    description = "Have 5 Umbrellas stored up",
+    trigger = brollyCounter()
+)
+
+achievement(
+    title = "Jaws!", points = 10,
+    description = "Collect 4 sets of Chattering Teeth in a row, on a single stage, without using cheats",
+    trigger = !isCheating() && prev(cItem4) != 0x58 && cItem4 == 0x58 && cItem3 == 0x58 && cItem3 == 0x58 && cItem3 == 0x58
+)
 
 // ----------------------------------------------------------------------------
 // -- Accessory Achievements
 // ----------------------------------------------------------------------------
 
 achievement(
+    id = 308207,
     title = "Getting Over Exocoetidae", points = 1,
     description = "Fly using the Wings",
     trigger = isActiveGame() && !isCheating() && cWings != 0
 )
 
 achievement(
+    id = 308208,
     title = "Just taking the Aston Martin out for a quick spin, Q", points = 1,
     description = "Start driving the Car",
     trigger = isActiveGame() && !isCheating() && cCar != 0
 )
 
 achievement(
+    id = 308209,
     title = "Any higher, Mr. Pond, and my ears will pop.", points = 1,
     description = "Start flying the Aeroplane",
     trigger = isActiveGame() && !isCheating() && cPlane != 0
 )
 
 achievement(
+    id = 308210,
     title = "Bubble 07", points = 1,
     description = "Float away in the Bath",
     trigger = isActiveGame() && !isCheating() && cBath != 0
 )
 
+// ----------------------------------------------------------------------------
+// -- Points Based Achievements
+// ----------------------------------------------------------------------------
+
+achievement(
+    id = 0,
+    title = "Just getting warmed up, James", points = 1,
+    description = "Score 00700700 Points without using cheats",
+    trigger = isActiveGame() && !isCheating() && scoreValue() >= 700700
+)
+
+achievement(
+    id = 0,
+    title = "Shocking. Positively Shocking.", points = 10,
+    description = "Score 2,500,000 Points without using cheats",
+    trigger = isActiveGame() && !isCheating() && scoreValue() >= 2500000
+)
+
+achievement(
+    id = 0,
+    title = "Shaken, not stirred", points = 25,
+    description = "Score 5,000,000 Points without using cheats",
+    trigger = isActiveGame() && !isCheating() && scoreValue() >= 5000000
+)
 
 // ----------------------------------------------------------------------------
 // -- Other Achievements
@@ -314,18 +378,45 @@ achievement(
     trigger = stageComplete( 0x01 )
 )
 
+// cExLengthRel() = pixel count / 60
+
+function stretchMeasure()
+{
+    // Start
+    start = once(cExLength > 0x0100)
+    
+    // Cancel
+    cancel = never(cExLength == 0x0)
+        
+    // The goal
+    goal = cExLength >= 0x07BC
+    
+    // submit, value, return
+    submit = trigger_when(goal)
+    //value = measured(goal)
+    return start && cancel && submit //(submit || value)
+}
+
+achievement(
+    id = 0,
+    title = "Stretch Armstrong", points = 10,
+    description = "Stretch James Pond to over 33x his height!",
+    trigger = stretchMeasure()
+)
 
 // ----------------------------------------------------------------------------
 // -- Testing Area
 // ----------------------------------------------------------------------------
 
-achievement(
-    title = "[TEST] BCD Score", points = 0,
-    description = "",
-    trigger = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-               low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
-               + 0) == 99999999)
-)
+
+// achievement(
+//     title = "[TEST] BCD Score", points = 0,
+//     description = "",
+//     trigger = measured((low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
+//                low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
+//                + 0) == 99999999)
+// )
+
 
 // ----------------------------------------------------------------------------
 // -- Leaderboards
@@ -390,6 +481,8 @@ LevelLookup = {
     0x1f: "Industrial World-Bonus",
     0x1d: "Industrial World-4",
     0x21: "Industrial World-5",
+    0x22: "Industrial World-Bonus (Oil)",
+    0x23: "Industrial World-Bonus (Watches)",
     0x20: "Industrial World-6",
     // Door #06
     0x2b: "Boss Fight! Giant Car",
@@ -401,6 +494,7 @@ LevelLookup = {
     0x33: "Bathtub World-4",
     0x34: "Bathtub World-5",
     0x37: "Bathtub World-6",
+    0x38: "Bathtub World-Bonus (Bath)",
     0x36: "Bathtub World-7",
     // Door #08
     0x05: "Board Games World-1",
@@ -497,3 +591,4 @@ rich_presence_display("{0}{1}{2}{3}{4}{5}{6}{7} | 💯{8} | {9}",
                                  high4(0x00B123) * 10000000 + 0)),
     rich_presence_lookup("Level", word(0x000086), LevelLookup, fallback="Saving the Toy Factory")
 )
+
