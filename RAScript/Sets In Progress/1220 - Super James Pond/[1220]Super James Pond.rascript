@@ -107,7 +107,39 @@ cItem1 = byte(0x00B1ce)
 cContinues =  high4(0x00B12C)
 
 // $B160: Umbrella Count (8-Bit)
+// $b161: Unbrella Floating (8-Bit)
 cUmbrellaCount = byte(0x00b160)
+function isFloating() => byte(0x00b161) != 00
+
+// $01144a: Stage 0x05 Kaizo Block 1
+// $01144e: Stage 0x05 Kaizo Block 2
+// $011452: Stage 0x05 Kaizo Block 3
+// $011456: Stage 0x05 Kaizo Block 4
+// $01145a: Stage 0x05 Kaizo Block 5
+
+c5KB1 = byte(0x01144a)
+c5KB2 = byte(0x01144e)
+c5KB3 = byte(0x011452)
+c5KB4 = byte(0x011456)
+c5KB5 = byte(0x01145a)
+
+// $B1A2: Enemies Killed in Stage
+cEnemiesKilled = word(0x00b1a2)
+
+// $B0F2: Player Location X
+cPlayerX = word(0x00b0f2)
+
+// $B0F4: Player Location Y
+cPlayerY = word(0x00b0f4)
+
+// $B104: Level Respawn X
+cRespawnX = word(0x00b104)
+
+// $B106: Level Respawn Y
+cRespawnY = word(0x00b106) 
+
+// $B16F: Vertical Velocity
+cVelocity = dword(0x00b16f)
 
 
 // ----------------------------------------------------------------------------
@@ -125,7 +157,6 @@ cUmbrellaCount = byte(0x00b160)
 // $B134: Animation Counter (16-Bit)
 
 
-
 // ----------------------------------------------------------------------------
 // -- Useful Functions
 // ----------------------------------------------------------------------------
@@ -134,9 +165,12 @@ function isLoading() => cLoading != 00
 function isPaused() => cPaused == 00
 function isCheating() => cCheatAllDoors != 00 || cCheatInfLives != 00
 function isActiveGame() => cLives > 0 && cHP > 0
+function bcdPair(addr) => low4(addr) + high4(addr) * 10
 function scoreValue() {
-    return low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-        low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 + high4(0x00B123) * 10000000
+    return bcdPair(0x00B120) +
+    bcdPair(0x00B121) * 100 +
+    bcdPair(0x00B122) * 10000 +
+    bcdPair(0x00B123) * 1000000
 }
 
 function stageComplete( stage ){
@@ -155,7 +189,7 @@ stageEndCodes = {
     0x20: "Industrial World",
     0x2b: "Boss: Car",
     0x36: "Bathtub World",
-    0x48: "Board Game World",
+   // 0x48: "Board Game World",
     0x11: "Boss: Queen of Hearts",
     0x29: "Sky Castle World",
     0x4f: "Creative World",
@@ -188,6 +222,13 @@ achievement(
     title = "Complete Sports World", points = 5,
     description = "Complete stage 'Sports World' without using cheats",
     trigger = stageComplete(0x03) || stageComplete(0x04)
+)
+
+// Multi Exit Board Game World
+achievement(
+    title = "Complete Board Game World", points = 5,
+    description = "Complete stage 'Board Game' without using cheats",
+    trigger = stageComplete(0x48) || stageComplete(0x4B)
 )
 
 function stageAchievementBuilder( code, name, points ){
@@ -255,14 +296,20 @@ achievement(
 )
 
 achievement(
-    title = "CRT", points = 1,
-    description = "Collect the Retro Computer Screen",
+    title = "CRTube", points = 1,
+    description = "Collect the Retro Computer Screen Item",
     trigger = cmpItemCollected(0x52)
 )
 
 achievement(
+    title = "PC 3.11", points = 1,
+    description = "Collect the Retro PC Item",
+    trigger = cmpItemCollected(0x53)
+)
+
+achievement(
     title = "3½ inches of floppy goodness", points = 1,
-    description = "Collect the Floppy Disk",
+    description = "Collect the Floppy Disk Item",
     trigger = cmpItemCollected(0x54)
 )
 
@@ -275,7 +322,7 @@ achievement(
 achievement(
     title = "Join the Fanclub", points = 10,
     description = "Collect a Micket Mouse and a Teenage Mutant Turtles T-Shirt",
-    trigger = tally(2,once(cmpItemCollected(0x30)),once(cmpItemCollected(0x31)))
+    trigger = tally(2,once(cmpItemCollected(0x30)),once(cmpItemCollected(0x31))) && never(!isActiveGame())
 )
 
 function brollyCounter()
@@ -308,7 +355,7 @@ achievement(
 achievement(
     title = "Jaws!", points = 10,
     description = "Collect 4 sets of Chattering Teeth in a row, on a single stage, without using cheats",
-    trigger = !isCheating() && prev(cItem4) != 0x58 && cItem4 == 0x58 && cItem3 == 0x58 && cItem3 == 0x58 && cItem3 == 0x58
+    trigger = !isCheating() && prev(cItem4) != 0x58 && cItem4 == 0x58 && cItem3 == 0x58 && cItem2 == 0x58 && cItem1 == 0x58
 )
 
 // ----------------------------------------------------------------------------
@@ -358,7 +405,7 @@ achievement(
     id = 0,
     title = "Shocking. Positively Shocking.", points = 10,
     description = "Score 2,500,000 Points without using cheats",
-    trigger = isActiveGame() && !isCheating() && scoreValue() >= 2500000
+    trigger = isActiveGame() && !isCheating() && scoreValue() >= 2500000 
 )
 
 achievement(
@@ -402,6 +449,45 @@ achievement(
     title = "Stretch Armstrong", points = 10,
     description = "Stretch James Pond to over 33x his height!",
     trigger = stretchMeasure()
+)
+
+function measurekaizo() {
+    return cStageNumber == 0x05 &&
+    measured(tally(5,
+        once(c5KB1==02),
+        once(c5KB2==02),
+        once(c5KB3==02),
+        once(c5KB4==02),
+        once(c5KB5==02)
+    )) && never(cStageNumber != 0x05)
+}
+
+achievement(
+    id = 0,
+    title = "Kaizo Surprizo [m]", points = 5,
+    description = "Find the 5 Kaizo blocks at the start of Board Game World",
+    trigger = measurekaizo()
+)
+
+achievement(
+    id = 0,
+    title = "Licesnse to Kill", points = 25,
+    description = "Kill 25 Enemies on a Single Stage without cheating.",
+    trigger = isActiveGame() && !isCheating() && prev(cEnemiesKilled) < 25 && cEnemiesKilled == 25
+)
+
+achievement(
+    id = 0,
+    title = "Peekaboo!", points = 1,
+    description = "Find and use a Checkpoint",
+    trigger = isActiveGame() && prev(cRespawnX) != cRespawnX && (cPlayerX != cRespawnX || cPlayerY != cRespawnY)
+)
+
+achievement(
+    id = 0,
+    title = "Skydive", points = 1,
+    description = "Fall for more than 3 seconds (No Umbrellas Allowed)",
+    trigger = isActiveGame() && !isCheating() && tally(180, cPlayerState == 00) && never(cPlayerState!=00) && !isFloating() && never(cVelocity > 0x00FFFF)
 )
 
 // ----------------------------------------------------------------------------
@@ -498,21 +584,23 @@ LevelLookup = {
     0x36: "Bathtub World-7",
     // Door #08
     0x05: "Board Games World-1",
-    0x06: "Board Games World-Bonus",
-    0x07: "Board Games World-Bonus 2",
+    0x06: "Board Games World-Bonus (Umbrella)",
+    0x07: "Board Games World-Bonus (Balls)",
     0x08: "Board Games World-2",
+    0x09: "Board Games World-Bonus (Dominoes)",
     0x0a: "Board Games World-3",
     0x0b: "Board Games World-4",
     0x48: "Board Games World-5",
+    0x4b: "Board Games World-Bonus (Stack)",
     // Door #09
     0x11: "Boss Fight! Queen of Hearts",
     // Door #10
     0x25: "Sky Castle World-1",
-    0x2a: "Sky Castle World-Bonus",
+    0x2a: "Sky Castle World-Bonus (Transport)",
     0x26: "Sky Castle World-2",
     0x27: "Sky Castle World-3",
-    0x2d: "Sky Castle World-Bonus 2",
-    0x2c: "Sky Castle World-Bonus 3",
+    0x2d: "Sky Castle World-Bonus (Daytime Clouds)",
+    0x2c: "Sky Castle World-Bonus (Evening Clouds)",
     0x28: "Sky Castle World-4",
     0x29: "Sky Castle World-5",
     // Door #11
@@ -586,9 +674,7 @@ rich_presence_display("{0}{1}{2}{3}{4}{5}{6}{7} | 💯{8} | {9}",
     rich_presence_lookup("Icon", cCheatAllDoors + cCheatInfLives, IconLookup, fallback="🎣"),
     rich_presence_value("Number", cLives),
     rich_presence_lookup("Hitpoints", byte(0x00B130), HitpointsLookup, fallback="💀"),
-    rich_presence_value("Number", (low4(0x00B120) + high4(0x00B120) * 10 + low4(0x00B121) * 100 + high4(0x00B121) * 1000 +
-                                 low4(0x00B122) * 10000 + high4(0x00B122) * 100000 + low4(0x00B123) * 1000000 +
-                                 high4(0x00B123) * 10000000 + 0)),
+    rich_presence_value("Number", scoreValue()),
     rich_presence_lookup("Level", word(0x000086), LevelLookup, fallback="Saving the Toy Factory")
 )
 
