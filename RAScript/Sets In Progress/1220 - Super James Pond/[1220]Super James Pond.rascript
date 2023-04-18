@@ -107,7 +107,7 @@ cItem1 = byte(0x00B1ce)
 cContinues =  high4(0x00B12C)
 
 // $B160: Umbrella Count (8-Bit)
-// $b161: Unbrella Floating (8-Bit)
+// $b161: Umbrella Floating (8-Bit)
 cUmbrellaCount = byte(0x00b160)
 function isFloating() => byte(0x00b161) != 00
 
@@ -172,6 +172,7 @@ function scoreValue() {
     bcdPair(0x00B122) * 10000 +
     bcdPair(0x00B123) * 1000000
 }
+function noVehicleOrAccessory() => cCar == 00 && cPlane == 00 && cBath == 00 && cWings == 0 && cSwimming ==0
 
 function stageComplete( stage ){
     return !isCheating() && isActiveGame() && cStageNumber == stage && (cNextStage == 00 || cNextStage == 0x40) && isLoading()
@@ -182,57 +183,89 @@ function stageComplete( stage ){
 // ----------------------------------------------------------------------------
 
 stageEndCodes = {
-   // 0x04: "Sports World",
+   // 0x04: "Sports World", // [Manual Below]
     0x0d: "Teddy World",
     0x10: "Boss: Teddy",
     0x1a: "Sweet World World",
     0x20: "Industrial World",
     0x2b: "Boss: Car",
     0x36: "Bathtub World",
-   // 0x48: "Board Game World",
+   // 0x48: "Board Game World", // [Manual Below]
     0x11: "Boss: Queen of Hearts",
     0x29: "Sky Castle World",
-    0x4f: "Creative World",
+    0x4d: "Music World",
     0x12: "Boss: Ballerina",
-    0x24: "Bonus: Industrial World",
-    0x45: "Bonus Sweet World",
-    0x41: "Circus World"
+    0x24: "Extra: Industrial World [m]",
+    0x45: "Extra: Sweet World [m]",
+    0x49: "Circus World",
+    // 0x2e: "Boss: Evil Snowman" // [Manual Below]
 }
 
 stageEndPoints = {
-    0x04: 5,
+    0x04: 5, // [Manual Below]
     0x0d: 5,
     0x10: 10,
     0x1a: 5,
     0x20: 5,
     0x2b: 10,
-    0x36: 5,
-    0x48: 5,
+    0x36: 5, 
+    0x48: 5, // [Manual Below]
     0x11: 10,
     0x29: 5,
-    0x4f: 5,
+    0x4d: 5,
     0x12: 10,
     0x24: 5,
     0x45: 5,
-    0x41: 5   
+    0x49: 5,
+    0x2e: 50 // [Manual Below]
 }
 
-// Multi Exit Sports World
+achievementIDs = {
+    0x04: 309537, // [Manual Below]
+    0x0d: 309538,
+    0x10: 309539,
+    0x1a: 309548,
+    0x20: 309541,
+    0x2b: 309543,
+    0x36: 309544, 
+    0x48: 309546, // [Manual Below]
+    0x11: 309534,
+    0x29: 309542,
+    0x4d: 309562,
+    0x12: 309540,
+    0x24: 309566,
+    0x45: 309536,
+    0x49: 309545,
+    0x2e: 309565 // [Manual Below]
+}
+
+// 0x04 Multi Exit Sports World
 achievement(
+    id = 309537,
     title = "Complete Sports World", points = 5,
     description = "Complete stage 'Sports World' without using cheats",
     trigger = stageComplete(0x03) || stageComplete(0x04)
 )
 
-// Multi Exit Board Game World
+// 0x48 Multi Exit Board Game World
 achievement(
+    id = 309546,
     title = "Complete Board Game World", points = 5,
     description = "Complete stage 'Board Game' without using cheats",
     trigger = stageComplete(0x48) || stageComplete(0x4B)
 )
 
-function stageAchievementBuilder( code, name, points ){
+// 0x2e Final Boss does't return to Overworld
+achievement(
+    id = 309565,
+    title = "Complete Boss: Evil Snowman", points = 50,
+    description = "Complete final Boss and save Christmas without using cheats",
+    trigger = !isCheating() && isActiveGame() && cStageNumber == 0x2e && cNextStage == 0x50 && isLoading()
+)
+
+function stageAchievementBuilder( id, code, name, points ){
     achievement(
+        id = id,
         title = "Complete " + name, points = points,
         description = "Complete stage '" + name + "' without using cheats",
         trigger = stageComplete(code)
@@ -240,7 +273,7 @@ function stageAchievementBuilder( code, name, points ){
 }
 
 for k in stageEndCodes{
-   stageAchievementBuilder( k, stageEndCodes[k], stageEndPoints[k] ) 
+   stageAchievementBuilder( achievementIDs[k], k, stageEndCodes[k], stageEndPoints[k] ) 
 }
 
 
@@ -249,12 +282,14 @@ for k in stageEndCodes{
 // ----------------------------------------------------------------------------
 
 achievement(
+    id = 309527,
     title = "C.H.E.A.T. [m]", points = 5,
     description = "Collect Items in Order - C___, H_____, E____, A____, T__. (Disables other achievements until reset)",
     trigger = cItem5 == 22 && cItem4 == 100 && cItem3 == 99 && cItem2 == 33 && cItem1 == 93
 )
 
 achievement(
+    id = 309528,
     title = "P.O.W.E.R. [m]", points = 5,
     description = "Collect Items in Order - P______, O__ ___, W____, E____, R_____.",
     trigger = byte(0x00B1CA) == 60 && byte(0x00B1CB) == 81 && byte(0x00B1CC) == 3 && byte(0x00B1CD) == 99 && 
@@ -262,6 +297,7 @@ achievement(
 )
 
 achievement(
+    id = 309529,
     title = "L.I.V.E.S. [m]", points = 5,
     description = "Collect Items in Order - L___, I__ _____, V_____, E____, S______. (Disables other achievements until reset)",
     trigger = byte(0x00B1CA) == 9 && byte(0x00B1CB) == 37 && byte(0x00B1CC) == 86 && byte(0x00B1CD) == 99 && 
@@ -278,85 +314,89 @@ function cmpItemCollected( itemID ){
 }
 
 achievement(
+    id = 309530,
     title = "Bad Taste", points = 1,
     description = "Drink the poisonous potion",
-    trigger = cmpItemCollected(0x49)
+    trigger = isActiveGame() && cmpItemCollected(0x49)
 )
 
 achievement(
-    title = "Body Armour", points = 1,
+    id = 309547,
+    title = "Body Armour", points = 5,
     description = "Collect the Body Armour item",
-    trigger = cmpItemCollected(0x32)
+    trigger = isActiveGame() && cmpItemCollected(0x32)
 )
 
 achievement(
+    id = 309531,
     title = "Leprechaun's Dream", points = 1,
     description = "Collect the most valuable item in the game",
-    trigger = cmpItemCollected(0x41)
+    trigger = isActiveGame() && cmpItemCollected(0x41)
 )
 
 achievement(
+    id = 309559,
     title = "CRTube", points = 1,
     description = "Collect the Retro Computer Screen Item",
-    trigger = cmpItemCollected(0x52)
+    trigger = isActiveGame() && cmpItemCollected(0x52)
 )
 
 achievement(
+    id = 309560,
     title = "PC 3.11", points = 1,
     description = "Collect the Retro PC Item",
-    trigger = cmpItemCollected(0x53)
+    trigger = isActiveGame() && cmpItemCollected(0x53)
 )
 
 achievement(
+    id = 309549,
     title = "3½ inches of floppy goodness", points = 1,
     description = "Collect the Floppy Disk Item",
-    trigger = cmpItemCollected(0x54)
+    trigger = isActiveGame() && cmpItemCollected(0x54)
 )
 
 achievement(
+    id = 309563,
+    title = "Christmas is cancelled", points = 5,
+    description = "Collect the Santa Item",
+    trigger = isActiveGame() && cmpItemCollected(0x0a)
+)
+
+achievement(
+    id = 309533,
     title = "The King of Christmas", points = 10,
-    description = "Steal all of Stanta's crowns from outide the Toy Factory",
-    trigger = cStageNumber == 00 && cItem5 == 1 && cItem4 == 1 && cItem3 == 1 && cItem2 == 1 && cItem1 == 1
+    description = "Steal Santa's crowns from outside the Toy Factory without cheating",
+    trigger = cStageNumber == 00 && !isCheating() && cItem1 == 0x3d && (cItem2 == 0x3d || cItem3 == 0x3d || cItem4 == 0x3d || cItem5 == 0x3d)
 )
 
 achievement(
-    title = "Join the Fanclub", points = 10,
-    description = "Collect a Micket Mouse and a Teenage Mutant Turtles T-Shirt",
+    id = 309535,
+    title = "Join the Fanclub", points = 5,
+    description = "Collect a Mickey Mouse and a Teenage Mutant Turtles T-Shirt",
     trigger = tally(2,once(cmpItemCollected(0x30)),once(cmpItemCollected(0x31))) && never(!isActiveGame())
 )
 
-function brollyCounter()
-{
-    // Start
-    start = once(cUmbrellaCount == 1)
-    
-    // Cancel
-    cancel = never(cUmbrellaCount == 0)
-        
-    // The goal
-    goal = cUmbrellaCount == 5
-    
-    // Trigger when the player reaches the goal
-    submit = trigger_when(goal)
-        
-    // Measure how close the player is to the goal
-    value = measured(goal)
-    
-    return start && cancel && (submit || value)
-}
-
 achievement(
-    id = 0,
+    id = 309550,
     title = "Floaty-light", points = 10,
-    description = "Have 5 Umbrellas stored up",
-    trigger = brollyCounter()
+    description = "Finish a level with at least 1 unused Umbrella",
+    trigger = once(cUmbrellaCount > 1) && never(cUmbrellaCount == 0) &&  trigger_when(cUmbrellaCount > 1 && isLoading())
 )
 
 achievement(
+    id = 309555,
     title = "Jaws!", points = 10,
     description = "Collect 4 sets of Chattering Teeth in a row, on a single stage, without using cheats",
     trigger = !isCheating() && prev(cItem4) != 0x58 && cItem4 == 0x58 && cItem3 == 0x58 && cItem2 == 0x58 && cItem1 == 0x58
 )
+
+achievement(
+    id = 309564,
+    title = "Mary Pond-pins", points = 25,
+    description = "Collect 15 items while floating using the Umbrella, without touching the ground or using cheats",
+    trigger = !isCheating() && isFloating() && tally(15,scoreValue() != prev(scoreValue())) && never(!isFloating())
+)
+
 
 // ----------------------------------------------------------------------------
 // -- Accessory Achievements
@@ -395,22 +435,22 @@ achievement(
 // ----------------------------------------------------------------------------
 
 achievement(
-    id = 0,
-    title = "Just getting warmed up, James", points = 1,
+    id = 309552,
+    title = "Just getting warmed up, James", points = 5,
     description = "Score 00700700 Points without using cheats",
     trigger = isActiveGame() && !isCheating() && scoreValue() >= 700700
 )
 
 achievement(
-    id = 0,
-    title = "Shocking. Positively Shocking.", points = 10,
+    id = 309553,
+    title = "Shocking. Positively Shocking.", points = 25,
     description = "Score 2,500,000 Points without using cheats",
     trigger = isActiveGame() && !isCheating() && scoreValue() >= 2500000 
 )
 
 achievement(
-    id = 0,
-    title = "Shaken, not stirred", points = 25,
+    id = 309554,
+    title = "Shaken, not stirred", points = 50,
     description = "Score 5,000,000 Points without using cheats",
     trigger = isActiveGame() && !isCheating() && scoreValue() >= 5000000
 )
@@ -420,6 +460,7 @@ achievement(
 // ----------------------------------------------------------------------------
 
 achievement(
+    id = 309532,
     title = "Nothing Ventured, Nothing Gained", points = 1,
     description = "Take the quick exit from Stuffed Animal World",
     trigger = stageComplete( 0x01 )
@@ -445,7 +486,7 @@ function stretchMeasure()
 }
 
 achievement(
-    id = 0,
+    id = 309551,
     title = "Stretch Armstrong", points = 10,
     description = "Stretch James Pond to over 33x his height!",
     trigger = stretchMeasure()
@@ -463,31 +504,31 @@ function measurekaizo() {
 }
 
 achievement(
-    id = 0,
+    id = 309556,
     title = "Kaizo Surprizo [m]", points = 5,
     description = "Find the 5 Kaizo blocks at the start of Board Game World",
-    trigger = measurekaizo()
+    trigger = isActiveGame() && measurekaizo()
 )
 
 achievement(
-    id = 0,
-    title = "Licesnse to Kill", points = 25,
+    id = 309558,
+    title = "License to Kill", points = 25,
     description = "Kill 25 Enemies on a Single Stage without cheating.",
     trigger = isActiveGame() && !isCheating() && prev(cEnemiesKilled) < 25 && cEnemiesKilled == 25
 )
 
 achievement(
-    id = 0,
-    title = "Peekaboo!", points = 1,
+    id = 309561,
+    title = "Peekaboo!", points = 5,
     description = "Find and use a Checkpoint",
     trigger = isActiveGame() && prev(cRespawnX) != cRespawnX && (cPlayerX != cRespawnX || cPlayerY != cRespawnY)
 )
 
 achievement(
-    id = 0,
-    title = "Skydive", points = 1,
+    id = 309557,
+    title = "Skydive", points = 10,
     description = "Fall for more than 3 seconds (No Umbrellas Allowed)",
-    trigger = isActiveGame() && !isCheating() && tally(180, cPlayerState == 00) && never(cPlayerState!=00) && !isFloating() && never(cVelocity > 0x00FFFF)
+    trigger = isActiveGame() && !isCheating() && tally(180, cPlayerState == 00 && !isFloating() && noVehicleOrAccessory()) && never(cPlayerState!=00 || cVelocity > 0x00FFFF || isPaused() )
 )
 
 // ----------------------------------------------------------------------------
@@ -587,7 +628,7 @@ LevelLookup = {
     0x06: "Board Games World-Bonus (Umbrella)",
     0x07: "Board Games World-Bonus (Balls)",
     0x08: "Board Games World-2",
-    0x09: "Board Games World-Bonus (Dominoes)",
+    0x09: "Board Games World-Bonus (Dominos)",
     0x0a: "Board Games World-3",
     0x0b: "Board Games World-4",
     0x48: "Board Games World-5",
@@ -604,17 +645,17 @@ LevelLookup = {
     0x28: "Sky Castle World-4",
     0x29: "Sky Castle World-5",
     // Door #11
-    0x39: "Creative World-1",
-    0x3a: "Creative World-2",
-    0x3b: "Creative World-Bonus",
-    0x3c: "Creative World-3",
-    0x3d: "Creative World-4",
-    0x3e: "Creative World-5",
-    0x3f: "Creative World-6",
-    0x4c: "Creative World-Bonus 2",
-    0x4e: "Creative World-7",
-    0x4d: "Creative World-8",
-    0x4f: "Creative World-Bonus",
+    0x39: "Music World-1",
+    0x3a: "Music World-2",
+    0x3b: "Music World-Bonus (Groudhog)",
+    0x3c: "Music World-3",
+    0x3d: "Music World-4",
+    0x3e: "Music World-5",
+    0x3f: "Music World-6",
+    0x4f: "Music World-Bonus (Pencils)",
+    0x4e: "Music World-7",
+    0x4d: "Music World-8",
+    0x4c: "Music World-Bonus (Trumpet)",
     // Door #12
     0x12: "Boss Fight! The Ballerina",
     // Door #13
@@ -623,9 +664,14 @@ LevelLookup = {
     0x42: "Sweet World-Extra 1",
     0x43: "Sweet World-Extra 2",
     0x44: "Sweet World-Extra 3",
-    0x45: "Sweet World-Extra Bonus",
+    0x45: "Sweet World-Extra Bonus (Jelly)",
     // Door #15
     0x41: "Circus World-1",
+    0x46: "Circus World-Bonus (Cannon)",
+    0x49: "Circus World-2",
+    0x4a: "Circus World-Bonus (Hanger)",
+    // Door #16
+    0x2e: "Boss: Evil Snowman",
     0x50: "The World Is Safe! 🎅",
 }
 
