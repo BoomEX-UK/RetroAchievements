@@ -79,10 +79,10 @@ cBath = byte(0x00B15F)
 //        0x02=Flying
 cVehicleControl = byte(0x00B166)
 
-// $B174: Horizontal Velocity: (16-Bit Signed)
+// $B174: Horizontal Velocity: (24-bit signed?)
 //        Negative=Left
 //        Positive=Right
-cHVelocity = word(0x00B174)
+cHVelocity = tbyte(0x00B174)
 
 // $B17E: Extension Length (16-Bit)
 cExLength = word(0x00B17E)
@@ -111,11 +111,11 @@ cContinues =  high4(0x00B12C)
 cUmbrellaCount = byte(0x00b160)
 function isFloating() => byte(0x00b161) != 00
 
-// $01144a: Stage 0x05 Kaizo Block 1
-// $01144e: Stage 0x05 Kaizo Block 2
-// $011452: Stage 0x05 Kaizo Block 3
-// $011456: Stage 0x05 Kaizo Block 4
-// $01145a: Stage 0x05 Kaizo Block 5
+// $01144a: Stage 0x05 Kaizo Block 1 (8-bit)
+// $01144e: Stage 0x05 Kaizo Block 2 (8-bit)
+// $011452: Stage 0x05 Kaizo Block 3 (8-bit)
+// $011456: Stage 0x05 Kaizo Block 4 (8-bit)
+// $01145a: Stage 0x05 Kaizo Block 5 (8-bit)
 
 c5KB1 = byte(0x01144a)
 c5KB2 = byte(0x01144e)
@@ -123,23 +123,23 @@ c5KB3 = byte(0x011452)
 c5KB4 = byte(0x011456)
 c5KB5 = byte(0x01145a)
 
-// $B1A2: Enemies Killed in Stage
+// $B1A2: Enemies Killed in Stage (16-bit)
 cEnemiesKilled = word(0x00b1a2)
 
-// $B0F2: Player Location X
+// $B0F2: Player Location X (16-bit)
 cPlayerX = word(0x00b0f2)
 
-// $B0F4: Player Location Y
+// $B0F4: Player Location Y (16-bit)
 cPlayerY = word(0x00b0f4)
 
-// $B104: Level Respawn X
+// $B104: Level Respawn X (16-bit)
 cRespawnX = word(0x00b104)
 
-// $B106: Level Respawn Y
+// $B106: Level Respawn Y (16-bit)
 cRespawnY = word(0x00b106) 
 
-// $B16F: Vertical Velocity
-cVelocity = dword(0x00b16f)
+// $B16F: Vertical Velocity (24-bit signed?)
+cVelocity = tbyte(0x00b16f)
 
 
 // ----------------------------------------------------------------------------
@@ -471,7 +471,7 @@ achievement(
 function stretchMeasure()
 {
     // Start
-    start = once(cExLength > 0x0100)
+    start = once(cExLength > 0x0400)
     
     // Cancel
     cancel = never(cExLength == 0x0)
@@ -528,7 +528,7 @@ achievement(
     id = 309557,
     title = "Skydive", points = 10,
     description = "Fall for more than 3 seconds (No Umbrellas Allowed)",
-    trigger = isActiveGame() && !isCheating() && tally(180, cPlayerState == 00 && !isFloating() && noVehicleOrAccessory()) && never(cPlayerState!=00 || cVelocity > 0x00FFFF || isPaused() )
+    trigger = isActiveGame() && !isCheating() && tally(180, cPlayerState == 00 && !isFloating() && noVehicleOrAccessory()) && never(cPlayerState!=00 || cVelocity > 0xFF0000 || cVelocity == 0 || isPaused() || isLoading())
 )
 
 // ----------------------------------------------------------------------------
@@ -550,7 +550,7 @@ achievement(
 // ----------------------------------------------------------------------------
 
 leaderboard(
-    id = 111000016, title = "Hall of Fame",
+    id = 63356, title = "Hall of Fame",
     description = "A score based leaderboard for those who Saved the World (No Cheaters Please)",
     start  = !isCheating() &&
              (always_false() || (prev(word(0x000086)) != 80 && word(0x000086) == 80)),
@@ -561,7 +561,7 @@ leaderboard(
 )
 
 leaderboard(
-    id = 111000018, title = "Scoreboard",
+    id = 63357, title = "Scoreboard",
     description = "A score based leaderboard for everyone (No Cheaters Please)",
     start  = !isCheating() &&
              ((prev(cPlayerState) != 7 && cPlayerState == 7 && cLives == 01) ||
