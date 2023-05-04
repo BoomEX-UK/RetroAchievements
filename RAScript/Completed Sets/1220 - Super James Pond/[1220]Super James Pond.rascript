@@ -217,7 +217,7 @@ stageEndPoints = {
     0x24: 5,
     0x45: 5,
     0x49: 5,
-    0x2e: 50 // [Manual Below]
+    0x2e: 25 // [Manual Below]
 }
 
 achievementIDs = {
@@ -258,7 +258,7 @@ achievement(
 // 0x2e Final Boss does't return to Overworld
 achievement(
     id = 309565,
-    title = "Complete Boss: Evil Snowman", points = 50,
+    title = "Complete Boss: Evil Snowman", points = 25,
     description = "Complete final Boss and save Christmas without using cheats",
     trigger = !isCheating() && isActiveGame() && cStageNumber == 0x2e && cNextStage == 0x50 && isLoading()
 )
@@ -322,7 +322,7 @@ achievement(
 
 achievement(
     id = 309547,
-    title = "Body Armour", points = 5,
+    title = "Robocod!", points = 5,
     description = "Collect the Body Armour item",
     trigger = isActiveGame() && cmpItemCollected(0x32)
 )
@@ -406,28 +406,28 @@ achievement(
     id = 308207,
     title = "Getting Over Exocoetidae", points = 1,
     description = "Fly using the Wings",
-    trigger = isActiveGame() && !isCheating() && cWings != 0
+    trigger = isActiveGame() && !isCheating() && prev(cWings) == 00 && cWings == 0xFF
 )
 
 achievement(
     id = 308208,
     title = "Just taking the Aston Martin out for a quick spin, Q", points = 1,
     description = "Start driving the Car",
-    trigger = isActiveGame() && !isCheating() && cCar != 0
+    trigger = isActiveGame() && !isCheating() && prev(cCar)==00 && cCar == 0xFF
 )
 
 achievement(
     id = 308209,
     title = "Any higher, Mr. Pond, and my ears will pop.", points = 1,
     description = "Start flying the Aeroplane",
-    trigger = isActiveGame() && !isCheating() && cPlane != 0
+    trigger = isActiveGame() && !isCheating() && prev(cPlane) == 00 && cPlane == 0xFF
 )
 
 achievement(
     id = 308210,
     title = "Bubble 07", points = 1,
     description = "Float away in the Bath",
-    trigger = isActiveGame() && !isCheating() && cBath != 0
+    trigger = isActiveGame() && !isCheating() && prev(cBath) == 00 && cBath == 0xFF
 )
 
 // ----------------------------------------------------------------------------
@@ -462,7 +462,7 @@ achievement(
 achievement(
     id = 309532,
     title = "Nothing Ventured, Nothing Gained", points = 1,
-    description = "Take the quick exit from Stuffed Animal World",
+    description = "Take the quick exit from Sports World",
     trigger = stageComplete( 0x01 )
 )
 
@@ -514,7 +514,7 @@ achievement(
     id = 309558,
     title = "License to Kill", points = 25,
     description = "Kill 25 Enemies on a Single Stage without cheating.",
-    trigger = isActiveGame() && !isCheating() && prev(cEnemiesKilled) < 25 && cEnemiesKilled == 25
+    trigger = isActiveGame() && !isCheating() && prev(cEnemiesKilled) < 25 && cEnemiesKilled >= 25
 )
 
 achievement(
