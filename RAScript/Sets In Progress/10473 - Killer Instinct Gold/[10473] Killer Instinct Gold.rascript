@@ -924,8 +924,12 @@ for k in FighterLookup {
 // -- Achievements: Training
 // ----------------------------------------------------------------------------
 
-// $1da00b: Training- Current Round (8-Bit) {0x00-0x04 Rounds, 0x05=Results}
-tCurrentRound = byte(0x1da00b)
+// $1da00b: Training- Current Level (8-Bit) {0x00-0x04 Levels, 0x05=Results}
+// $1d880e: Training- Current Round (8-Bit)
+// $1da00f: Training- Total Rounds (8-Bit)
+tCurrentLevel = byte(0x1da00b)
+tCurrentRound = byte(0x1d880e)
+tTotalRounds = byte(0x1da00f)
 
 TrainingAddrLookup = {
     00: 0x1da043,
@@ -981,35 +985,35 @@ achievement(
     id = 0,
     title = "Studious Award", points = 5,
     description = "Complete The Full Training Schedule (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && prev(tCurrentRound) == 0x04 && tCurrentRound == 0x05
+    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && prev(tCurrentLevel) == 0x04 && tCurrentLevel == 0x05
 )
 
 achievement(
     id = 0,
     title = "Training: Standard Grade A Award", points = 5,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentRound == 0x05 && totalTrainingScore() >= 0x11
+    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentLevel == 0x05 && totalTrainingScore() >= 0x11
 )
 
 achievement(
     id = 0,
     title = "Training: Standard Grand Master Award", points = 5,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentRound == 0x05 && totalTrainingScore() == 0x14
+    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentLevel == 0x05 && totalTrainingScore() == 0x14
 )
 
 achievement(
     id = 0,
     title = "Training: Expert Grade A Award", points = 5,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentRound == 0x05 && totalTrainingScore() >= 0x11
+    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentLevel == 0x05 && totalTrainingScore() >= 0x11
 )
 
 achievement(
     id = 0,
     title = "Training: Expert Grand Master Award", points = 5,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentRound == 0x05 && totalTrainingScore() == 0x14
+    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentLevel == 0x05 && totalTrainingScore() == 0x14
 )
 
 // ----------------------------------------------------------------------------
@@ -1151,7 +1155,7 @@ for k in DifficultyLookup{
         title = "Arcade Rush - " + DifficultyLookup[k],
         description = "Beat arcade mode as fast as you can. You can do it! (No Special Options, Difficulty: "+DifficultyLookup[k]+")",
         start  = isPlayer() && !usingSpecialSettings() && cGameMode == 0x00 && cArcadeRound == 0x00 && cFightDifficulty == k && inFight(),
-        cancel = __ornext(cGameState == gTitlescreen),
+        cancel = __ornext(cGameState == gTitlescreen || prev(cArcadeRound) < cArcadeRound),
         submit = cArcadeRound == 0x0a,
         value = measured(
             prev(byte(0x1D5DE3)) != byte(0x1D5DE3)
@@ -1167,12 +1171,12 @@ for k in TrainingLookup{
     leaderboard(
         title = "Training - " + TrainingLookup[k],
         description = "Beat the full training roster as fast as you can. You can do it! (No Special Options, Difficulty: "+TrainingLookup[k]+")",
-        start  = isPlayer() && !usingSpecialSettings() && cGameMode == 0x00 && cArcadeRound == 0x00 && cFightDifficulty == k && inFight(),
+        start  = isPlayer() && !usingSpecialSettings() && cGameMode == 0x05 && tCurrentLevel == 00 && tCurrentRound == 00 && byte(0x1d882f) == 0x08 && cSetTrainingDifficulty == k && inFight(),
         cancel = __ornext(cGameState == gTitlescreen),
-        submit = cArcadeRound == 0x0a,
-        value = measured(
-            prev(byte(0x1D5DE3)) != byte(0x1D5DE3)
-            ),
+        submit = tCurrentLevel == 0x05,
+        value = 
+            prev(byte(0x1D5DE3)) != byte(0x1D5DE3) && disable_when(
+            byte(0x1d880f) != 0, until=byte(0x1d880f)==0),
         format = "FRAMES",
         lower_is_better = true,
         id = 0
@@ -1707,6 +1711,17 @@ TeamNumLookup = {
     0x010c: "12 ",
 }
 
+TrainingPhaseLookup = {
+    0x01: "☯•••",
+    0x02: "☯•••",
+    0x03: "☯☯••",
+    0x04: "☯☯••",
+    0x05: "☯☯☯•",
+    0x06: "☯☯☯•",
+    0x07: "☯☯☯☯",
+    0x08: "☯☯☯☯"
+}
+
 rich_presence_conditional_display(cGameState == gFightSummary && gFightWinner == 0x01, "{0} ({1}) {2}| Victory!",
     rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
     rich_presence_lookup("Difficulty", cSetDifficulty, DifficultyLookup),
@@ -1730,15 +1745,15 @@ rich_presence_conditional_display(inFight() && isDemo(), "🍿 Demo: {0} vs {1}"
     rich_presence_lookup("Fighter", cP2Character, FighterLookup)
 )
 
-rich_presence_conditional_display(cGameMode == 0x05, "{0}{1} {3} | {4} {5} of {6} ({2}) ",
+rich_presence_conditional_display(cGameMode == 0x05, "{0}{1} {3} | {4} {5} of {6} ({2}) {7}",
     rich_presence_lookup("Paused", cPauseMenu, PausedLookup, fallback="⏸️ "),
     rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
     rich_presence_lookup("TrainingDifficulty", cSetTrainingDifficulty, TrainingLookup),
     rich_presence_lookup("Fighter", cP1Character, FighterLookup),
-    rich_presence_lookup("TrainingName", byte(0x1da00b), TrainingNameLookup),
-    rich_presence_macro("Number",byte(0x1d880e)+1),
-    rich_presence_macro("Number",byte(0x1da00f)),
-    rich_presence_lookup("TrainingTokens", byte(0x11d882f), TrainingNameLookup)
+    rich_presence_lookup("TrainingName", tCurrentLevel, TrainingNameLookup),
+    rich_presence_macro("Number",tCurrentRound+1),
+    rich_presence_macro("Number",tTotalRounds),
+    rich_presence_lookup("TrainingPhase", byte(0x1d882f), TrainingPhaseLookup, fallback="••••")
 )
 
 rich_presence_display("{0}{1} ({2}) {3}| {4} {5} {6}v {7}{8} {9} | 📍{10}",
