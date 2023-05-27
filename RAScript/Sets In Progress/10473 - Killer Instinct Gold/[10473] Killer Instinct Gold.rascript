@@ -1,25 +1,30 @@
 // Killer Instinct Gold
 // #ID = 10473
 // Script by BoomEX
-// -- Quick Reference
-// 8-Bit = byte()
-// 16-Bit = word()
-// 24-Bit = tbyte()
-// 32-Bit = dword()
+//
+// My first set dealing with different game versions
+// USA_REV0 hash = 8E33AD20C31FEB61D7230FAD28846C5C [U0]
+// USA_REV1 hash = 4C9B419DC583C0DF4AB908ADF83BFC65 [U1] (Not Used)
+// USA_REV2 hash = DD0A82FCC10397AFB37F12BB7F94E67A [U2]
 
 // ----------------------------------------------------------------------------
-// -- Variables: Standard Options
+// -- Versioning
 // ----------------------------------------------------------------------------
-// $127BB8: Settings-Time Limit: (8-Bit) {0x00=On 0x01=Off}
-// $127BBE: Settings-Blood: (8-Bit) {0x00=Off 0x01=Low 0x02=Medium 0x03=High}
-// $127BBF: Settings-Throwing: (8-Bit) {0x00=On 0x01=Off}
-// $127bb2: Settings-Difficulty: (8-Bit) {See Lookup}
-// $127bb1: Training Difficulty: (8-Bit) {0x00=Easy 0x01=Medium 0x02=Hard}
-cSetTimeLimit = byte(0x127BB8)
-cSetBlood = byte(0x127BBE)
-cSetThrowing = byte(0x127BBF)
 
-DifficultyLookup = {
+// $0071f8: ALL-Dev Note: Version Identifier (8-Bit)
+
+lVersions = {
+    "UR0": 0x10,
+    // "UR1": 0x50, // (Not Used)
+    "UR2": 0x40
+}
+version = byte(0x71f8)
+
+// ----------------------------------------------------------------------------
+// -- Global Lookups
+// ----------------------------------------------------------------------------
+
+lDifficulty = {
     0: "V. Easy",
     1: "Easy",
     2: "Normal",
@@ -28,129 +33,13 @@ DifficultyLookup = {
     5: "Master",
 }
 
-TrainingLookup = {
+lTraining = {
     0: "Easy",
     1: "Medium",
     2: "Hard"
 }
 
-cSetDifficulty = byte(0x127bb2)
-cSetTrainingDifficulty = byte(0x127bb1)
-
-// ----------------------------------------------------------------------------
-// -- Variables: Special Options
-// ----------------------------------------------------------------------------
-// $12823F: Game-Additional Options Unlock Level (8-Bit): {0x00=(Nothing) 0x01=Opt:L1 0x02=Opt:L1 0x03=Opt:L2 0x04=Opt:L3 0x05=Opt:L4+Diff:Master 0x06=Opt:L5+Speed:Ludicrous
-cSetUnlockLevel = byte(0x12823F)
-
-// $127BBC: Settings-L1 Throw Damage: (8-Bit) {0x00=Norm 0x01=Low 0x02=None 0x03=High}
-// $127BC1: Settings-L1 Aerial Camera: (8-Bit) {0x00=Off 0x01=On}
-// $127BC2: Settings-L1 Invisible Tag: (8-Bit) {0x00=Off 0x01=On}
-// $127BC3: Settings-L1 Easy Breakers: (8-Bit) {0x00=Off 0x01=On}
-cSetThrowDamage = byte(0x127BBC)
-cSetAerialCamera = byte(0x127BC1)
-cSetInivisibleTag = byte(0x127BC2)
-cSetEasyBreakers = byte(0x127BC3)
-
-// $127BC5: Settings-L2 Powered Finishers: (8-Bit) {0x00=Off 0x01=On}
-// $127BC6: Settings-L2 Full Breakers: (8-Bit) {0x00=Off 0x01=On}
-// $127BC7: Settings-L2 Full Super Bar: (8-Bit) {0x00=Off 0x01=On}
-cSetPoweredFinishers = byte(0x127BC5)
-cSetFullBreakers = byte(0x127BC6)
-cSetFullSuperBar = byte(0x127BC7)
-
-// $127BC9: Settings-L3 Autodoubles: (8-Bit) {0x00=On 0x01=Off}
-// $127BCA: Settings-L3 Fast Fireballs: (8-Bit) {0x00=Off 0x01=On}
-// $127BCB: Settings-L3 Missiles: (8-Bit) {0x00=On 0x01=Off}
-cSetAutoDoubles = byte(0x127BC9)
-cSetFastFireballs = byte(0x127BCA)
-cSetMissiles = byte(0x127BCB)
-
-// $127BCC: Settings-L4 Cheap Juggles: (8-Bit) {0x00=Off 0x01=On}
-// $127BCD: Settings-L4 Quick Openers: (8-Bit) {0x00=Off 0x01=On}
-// $127BCE: Settings-L4 Knockdowns: (8-Bit) {0x00=On 0x01=Off}
-// $127BCF: Settings-L4 Easy Ultimates: (8-Bit) {0x00=Off 0x01=On}
-cSetCheapJuggles = byte(0x127BCC)
-cSetQuickOpeners = byte(0x127BCD)
-cSetKnockdown = byte(0x127BCE)
-cSetEasyUltimate = byte(0x127BCF)
-
-// $127BD2: Settings-L5 Blocking: (8-Bit) {0x00=On 0x01=Off}
-cSetBlocking = byte(0x127BD2)
-
-// Anti-Cheat Check
-function usingSpecialSettings(){
-    return cSetThrowDamage + cSetEasyBreakers 
-    + cSetPoweredFinishers + cSetFullBreakers + cSetFullSuperBar
-    + cSetAutoDoubles + cSetFastFireballs + cSetMissiles
-    + cSetCheapJuggles + cSetQuickOpeners + cSetKnockdown + cSetEasyUltimate
-    + cSetBlocking > 0
-}
-
-// ----------------------------------------------------------------------------
-// -- Variables: Cheats
-// ----------------------------------------------------------------------------
-// $127C2B: Cheat-Gargos Unlocked: (8-Bit) {0x00=No 0x01=Yes}
-cGargosUnlocked = byte(0x127C2B)
-
-// ----------------------------------------------------------------------------
-// -- Variables: Other
-// ----------------------------------------------------------------------------
-
-// $16b04c: Titlescreen Menu Check: (24-Bit)
-//  0x000000=Titlescreen Menu Inactive
-//  0x7f8e89=Titlescreen Menu Active
-cTitleScreenMenu = tbyte(0x16b04c)
-function onTitlescreenMenu() => cTitleScreenMenu == 0x7f8e89
-
-// $127bb3: Game Speed (8-Bit)
-cGameSpeed = byte(0x127bb3)
-
-// $04802a Game State ID: (8-Bit)
-cGameState = byte(0x04802a)
-gBootscreen = 0x11
-gTitlescreen = 0x28
-gCharacterSelect = 0x0d
-gFightSummary = 0x2a
-gCredits = 0x18
-
-// $04a2f6: Fight Over/Perfect (8-Bit)
-function gFightPerfect() => byte(0x04a2f6) == 0x01
-
-// $04a2d8: Game-Winner (8-Bit)
-gFightWinner = byte(0x04a2d8)
-
-function inFight_alt(){
-    return cGameState != gBootscreen 
-        && cGameState != gTitlescreen 
-        && cGameState != gCharacterSelect 
-        && cGameState != gFightSummary
-}
-
-// $04a2f7: Fight Over/Victory Style (8-Bit)
-gVictoryStyle = byte(0x04a2f7)
-function gVictoryUltra() => gVictoryStyle == 0x02
-function gVictoryAwesome() => __ornext(gVictoryStyle == 0x04 || gVictoryStyle == 0x05)
-
-// $1D8806: Fight-Control Input (16-Bit)
-//          0x0000=Fight Ongoing, Controls Enabled
-//          0x0001=Fight Over, P2 Disabled
-//          0x0100=Fight Over, P1 Disabled
-//          0x0101=Fight Over, Both Players Disabled
-//          0x1814=No Fight
-cFightControl = word(0x1D8806)
-function inFight() => cFightControl != 0x1814
-
-// $1D5DE1: Fight-Game Timer (16-Bit BCD)
-//          0x0909=99s On the Clock
-//          0x1105=Not in Game
-cFightTimer = word(0x1D5DE1)
-function fightTimerRemaining() => (byte(0x1D5DE1)*10) + byte(0x1D5DE2)
-
-function onSubscreenMenu() => !onTitlescreenMenu()
-
-// $04AD9C: Stage Pointer/ID: (24-Bit)
-StageLookup = {
+lStage = {
     0x018EC0: "Bridge",
     0x01419C: "Street",
     0x01869C: "Spinal Ship",
@@ -164,12 +53,8 @@ StageLookup = {
     0x019754: "Dungeon",
     0x0198B8: "Sky",
 }
-cStageID = tbyte(0x04AD9C)
-function getStageName() => StageLookup[cStageID]
 
-// $04E98F: P1 Character: (8-Bit)
-// $04E98E: P2 Character: (8-Bit)
-FighterLookup = {
+lFighter = {
     0x00: "Jago",
     0x01: "TJ Combo",
     0x02: "Spinal",
@@ -182,16 +67,8 @@ FighterLookup = {
     0x09: "Maya",
     0x0A: "Gargos",
 }
-cP1Character = byte(0x04E98F)
-cP2Character = byte(0x04E98E)
-function getCharacterName(playerNum){
-    if( playerNum == 1){
-        return FighterLookup[cP1Character]
-    } else return FighterLookup[cP2Character]
-}
 
-// $127C43: Game Mode (8-Bit)
-GameModeLookup = {
+lGameMode = {
     0: "Arcade",
     1: "Team",
     2: "Team Elimination",
@@ -199,432 +76,408 @@ GameModeLookup = {
     4: "Practice",
     5: "Training",
 }
-cGameMode = byte(0x127C43)
-function getGameModeName() => GameModeLookup[cGameMode]
-
-// $1da092: Match Difficulty (8-Bit)
-cFightDifficulty = byte(0x1da092)
-function getFightDifficultyName() => DifficultyLookup[cFightDifficulty]
-
-// $00F68C: Constant Run Timer: (32-Bit)
-cRuntime = dword(0x00F68C)
-
-// $04A2FF: Game Control: (8-Bit) {0x02=Player 0x03=Demo}
-cFightType = byte(0x04A2FF)
-function isDemo() => cFightType == 3
-function isPlayer() => cFightType == 2
-
-// $04A301: Game Pause Menu: (8-Bit) {0x00=Off >0x00=Menu Open}
-cPauseMenu = byte(0x04A301)
-function isPaused() => cPauseMenu>0
-
-// $1D3516: Fight-P1 Health: (16-Bit) {0x7800=Full}
-// $1D354C: Fight-P1 Health Bank: (8-Bit) {0x00=First Bar 0x01=Second Bar}
-cP1RoundHealth = word(0x1D3516) / 0xFF // Ignore Fractions
-cP1HealthBankUsed = byte(0x1D354C)
-function cP1TotalHealth() => 0x78 + cP1RoundHealth - (0x78 * cP1HealthBankUsed)
-
-// $1D3616: Fight-P2 Health: (16-Bit) {0x7800=Full}
-// $1D364C: Fight-P2 Health Bank: (8-Bit) {0x00=First Bar 0x01=Second Bar}
-cP2RoundHealth = word(0x1D3616) / 0xFF // Ignore Fractions
-cP2HealthBankUsed = byte(0x1D364C)
-function cP2TotalHealth() => 0x78 + cP2RoundHealth - (0x78 * cP2HealthBankUsed)
-
-// $128238: Arcade-Tower Position: (8-Bit) {0x00=First Battle 0x0a=Final Position}
-cArcadeRound = byte(0x128238)
-
-// $1D8805: Fight-Winner Decision (8-Bit) {0x00=Fight Ongoing 0x08=P2 Win 0x09=P1 Win 0x14=No Current Match (Title/Menu etc)}
-cFightStatus = byte(0x1D8805)
-function fightP1Win() => prev(cFightStatus) == 0x00 && cFightStatus == 0x09
-function fightP2Win() => prev(cFightStatus) == 0x00 && cFightStatus == 0x08
-
-// $1D9172: Fight-P1 Combo Length: (8-Bit)
-//          0x00-0x02=No Combo
-//          0x03=Triple
-//          0x04=Super
-//          0x05=Hyper
-//          0x06=Brutal
-//          0x07=Master
-//          0x08=Awesome
-//          0x09=Blaster
-//          0x0a=Monster
-//          0x0b=King
-//          0x0c-0x62=Killer (Max Combo Length is Decimal 98)
-//          0x63=C-C-C-Combo Breaker
-// $1D9173: OSD-P1 Combo Message Timeout: (8-Bit)
-//          0x00=No On Screen Message
-//          0x9F=New Combo Message, counts down to Zero
-cP1ComboLength = byte(0x1D9172)
-cP1ComboMessageTimeout = byte(0x1D9173)
-function cP1ComboBreaker() => cP1ComboLength == 0x63 && cP1ComboMessageTimeout == 1
-function cP1Combo() => cP1ComboLength < 0x63 && cP1ComboMessageTimeout == 1
-
-// $1D87FE: Fight-Stage Knockoff (16-Bit)
-//          0x0000=Normal Fighting Phase
-//          0x3972=Kock-Off Activated
-cStageKnockOff = word(0x1D87FE)
-function knockOff() => prev(cStageKnockOff) == 0x0000 && cStageKnockOff == 0x3972
-
-// $1D3361: Fight-P1 Last Move Used (8-Bit)
-//          Value changes to match 0x1d3343 however does not return to zero after move animation is over. This value will remain until the next move is used (or match over)
-//          0x00=No move used (start of match)
-//          0x06=Run Towards
-//          Glacius-
-//          0x08=Super Arctic Blast
-//          0x09=Icy Grip
-//          0x27=Liquidize
-//          Maya-
-//          0x0a=Mantis
-//          0x32=Savage Blades
-//          0x2f=Flip Kick
-//          0x27=Cobra Bite
-//          0x30=Jungle Leap
-//          0x2d=Savage Leap
-//          0x2a=Super Jungle Leap
-//          0x37=Super Mantis
-//          Spinal-
-//          0x17=Skull Scraper
-//          0x18=Grim Reaper (Super)
-//          0x36=Power Devour
-//          0x3a=Searing Skull
-//          0x41=SkeleSkewer
-//          0x43=Soul Drain
-//          0x45=Flame Blade
-//          0x46=SkeleSkewer (Finisher)
-//          0x47=Skeleport
-//          0x48=All Skulls Summon
-//          0x4a=Tranform Out (Back to Spinal)
-//          0x53=One Skull Summon
-//          0x55=Super Searing Skull (Super)
-//          0x58=Stunning Skill (Super)
-//          0x78=Skull Crush (No Mercy)
-//          0x7b=Ultimate (Lightning)
-//          Jago-
-//          0x57=Long Dragon (No Mercy)
-cP1LastMove = byte(0x1D3361)
-
-// $1d886b: Fight-Victory Style (8-Bit)
-cFightVictoryStyle = byte(0x1d886b)
-function ultraCombo() => cFightVictoryStyle == 0x02
 
 // ----------------------------------------------------------------------------
-// -- Additional Code Notes
+// -- Variables: Standard Options
 // ----------------------------------------------------------------------------
 
-// $04A328: Team Battle-P1 Data: Pt1/4 (32-Bit)
-//          Byte1: Character 2
-//          Byte2: Character 1
-//          Byte3: Team Size
-//          Byte4: Count of Defeated
-// $04A32C: Team Battle-P1 Data: Pt2/4 (32-Bit)
-//          Byte1: Character 6
-//          Byte2: Character 5
-//          Byte3: Character 4
-//          Byte4: Character 3
-// $04A330: Team Battle-P1 Data: Pt3/4 (32-Bit)
-//          Byte1: Character 10
-//          Byte2: Character 9
-//          Byte3: Character 8
-//          Byte4: Character 7
-// $04A334: Team Battle-P1 Data: Pt4/4 (32-Bit)
-//          Byte1: 0x00
-//          Byte2: 0x00
-//          Byte3: 0x00
-//          Byte4: Character 11
-// $04A338: Team Battle-P2 Data: Pt1/4 (32-Bit)
-//          Byte1: Character 2
-//          Byte2: Character 1
-//          Byte3: Team Size
-//          Byte4: Count of Defeated
-// $04A33C: Team Battle-P2 Data: Pt2/4 (32-Bit)
-//          Byte1: Character 6
-//          Byte2: Character 5
-//          Byte3: Character 4
-//          Byte4: Character 3
-// $04A340: Team Battle-P2 Data: Pt3/4 (32-Bit)
-//          Byte1: Character 10
-//          Byte2: Character 9
-//          Byte3: Character 8
-//          Byte4: Character 7
-// $04A344: Team Battle-P2 Data: Pt4/4 (32-Bit)
-//          Byte1: 0x00
-//          Byte2: 0x00
-//          Byte3: 0x00
-//          Byte4: Character 11
+vSetTimeLimit = { // Settings-Time Limit: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127cc8),
+    "UR2": byte(0x127BB8)
+}
+vSetBlood = { // Settings-Blood: (8-Bit) {0x00=Off 0x01=Low 0x02=Medium 0x03=High}
+    "UR0": byte(0x127cce),
+    "UR2": byte(0x127BBE)
+}
+vSetThrowing = { // Settings-Throwing: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127ccf),
+    "UR2": byte(0x127BBF)
+}
 
-// $1281F9: Arcade-P1 Win Streak: (8-Bit)
-// $1281FB: Arcade-P1 Fatals: (8-Bit)
-// $12820B: Arcade-P1 Max Combo: (8-Bit)
-// $12821E: Arcade-P1 Max Damage: (8-Bit)
-// $1D32B4: Dev Note: Fight & Training Data
-//          0x1d32b4-0x1da0bf (27.5kb)
-// $1D32C6: Fight-P1 Special Bar: (8-Bit)
-//          0x00=Empty
-//          0xc0=Max
-// $1D3321: Fight-P1 Using Special Move (8-Bit)
-//          0x00=No Special Move Active
-//          0x01=Special Move Active
-// $1D3343: Fight-P1 Current Move (8-Bit)
-//          Value is Non Zero whilst move animation is playing. Returns to 0x00 after move animation completes.
-//          For move Values see 0x1d3361
-// $1D3354: Fight-P1 # Finishers Used (8-Bit)
-//          0x00=None Used
-//          0x04=Enables 5th Finisher
-//          0x05=Max (5th Finisher Used)
-// $1D3359: Fight-P1 D-Pad Direction (8-Bit)
-//          0x00=Not Pressing
-//          0x01=Up
-//          0x02=Up-Right
-//          0x03=Right
-//          0x04=Down-Right
-//          0x05=Down
-//          0x06=Down-Left
-//          0x07=Left
-//          0x08=Up-Left
-// $1D33C6: Fight-P2 Special Bar: (8-Bit)
-//          0xc0=Max
-// $1D3421: Fight-P2 Using Special Move (8-Bit)
-//          0x00=No Special Move Active
-//          0x01=Special Move Active
-// $1D3443: Fight-P2 Current Move (8-Bit)
-//          Value is Non Zero whilet move animation is playing. Returns to 0x00 after move animation completes
-//          0x00=No Move Active
-//          For move Values see 0x1d3361
-// $1D3445: Training-Wooden Dummy State (8-Bit)
-//          0x00=Whole
-//          0x01=Broken
-// $1D3447: Training-Opponent Type (8-Bit)
-//          0x00=Fighter
-//          0x01=Wooden Dummy
-// $1D3449: Training-Wooden Dummy X-Coord (24-Bit)
-//          X Co-ordinate, Zero being far left of screen
-// $1D3461: Fight-P2 Last Move Used (8-Bit)
-//          Value changes to match 0x1d3343 however does not return to zero after move animation is over. This value will remain until the match has finished
-//          0x00=No move used (start of match)
-//          For move Values see 0x1d3361
-// $1D350C: Fight-P1 Jump/Gravity?: (32-Bit)
-//          16-Bit 1: Current?
-//          16-Bit 2: Max?
-// $1D3510: Fight-P1 Attack Flags: (32-Bit)
-//          2x 16-Bit
-//          0x00FF=Not Attacking
-//          0x0000=Attacking/Miss
-//          0x003F=Attacking/Hit
-// $1D3565: Fight-P1 # of projectiles on the screen (8-Bit)
-//          Number increases as they are created and decreases as they are destroyed.
-//          0x00=None
-// $1D3566: Fight-P1 iframes: (16-Bit)
-//          0x0000=Player can be hit
-//          >0x0200=Player Invincible
-// $1D35B0: Fight-P1 # of Spinal Skulls (8-Bit)
-//          0x00=No Skulls
-//          0x06=Max Skulls
-// $1D5DE3: Fight-Clock Frame Counter
-// $1D8802: Fight-Stage Knockoff Camera Focus (8-Bit)
-//          0x00=P1
-//          0x01=P2
-// $1D8803: Fight-P1 Falling Through Stage (8-Bit)
-//          0x00=Player on Ground
-//          0x01=Player Falling
-// $1D8806: Fight-Control Input Disabled (16-Bit)
-//          0x0000=Fight Ongoing, Controls Enabled
-//          0x0001=Fight Over, P2 Disabled
-//          0x0100=Fight Over, P1 Disabled
-//          0x0101=Fight Over, Both Players Disabled
-//          0x1814=No Fight
-// $1D8808: Training-Countdown Timer to next phase (16-Bit)
-//          When reaching Zero the next phase plays:
-//          - When watching a Demo and this reaches Zero the demo ends and it's the players turn.
-//          - When taking your turn and this reaches Zero, Pass/Fail is displayed
-// $1D880B: OSD-Training HUD (8-Bits)
-//          0x00=Hidden (Not Training)
-//          0x01=Visible (Training)
-//          0x81=Visible (Training)
-//          0x14=Not Training (In Menu/Options etc)
-// $1D880E: Training-Current Training Round (8-Bit)
-//          0x00=First Round
-//          0x01=Second Round
-//          0x02=Third Round
-//          Note: Upon Clearing a round, this number jumps to the next round before it's loaded. If this number jumps to Zero it means the entire level is cleared. This value pairs up with 0x1da00b
-// $1D880F: Training-Demo is Playing (8-Bit)
-//          0x00=Player Move
-//          0x01=Demo Move
-// $1D881A: OSD-Training Move Display (8-Bit)
-//          0x00=Hidden
-//          0x01=Move line 1 visible
-//          0x02=Move line 1-2 visible
-//          0x03=Move line 1-3 visible
-//          0x04=Move line 1-4 visible
-//          0x40=All lines visible (Player attmpet)
-// $1D882E: OSD-Training-Pass/Fail Flag (8-Bit)
-//          0x00=Fail
-//          0x01=Pass-CPU Phase
-//          0x02=Pass-Player Phase
-//          Note: Displays Pass/Fail message but does not affect match outcome
-// $1D882F: Training-Fail Counter (8-bit)
-//          0x08=CPU First Demo
-//          0x07=Player First Attempt (Grade A)
-//          0x06=CPU Second Demo (1 Fail)
-//          0x05=Player Second Attempt (Grade B)
-//          0x04=CPU Third Demo (2 Fail)
-//          0x03=Player Third Attempt (Grade C)
-//          0x02=CPU Fourth Demo (3 Fail)
-//          0x01=Player Fourth Attempt (Grade D)
-//          0x00=Will stay at Zero after 4 Fails, until the next Phase of Training (No Grade)
-// $1D883B: OSD-Training Freeze Countdown (8-Bit)
-//          0x00=Countdown Running
-//          0x01=Countdown Stopped
-//          Note: Visual effect, does not change countdown
-// $1D9170: Fight-P2 Combo Length: (8-Bit)
-//          0x00-0x02=No Combo
-//          0x03=Triple
-//          0x04=Super
-//          0x05=Hyper
-//          0x06=Brutal
-//          0x07=Master
-//          0x08=Awesome
-//          0x09=Blaster
-//          0x0a=Monster
-//          0x0b=King
-//          0x0c-0x62=Killer (Max Combo Length is Decimal 98)
-//          0x63=C-C-C-Combo Breaker
-// $1D9171: OSD-P2 Combo Message Timeout: (8-Bit)
-//          0x00=No On Screen Message
-//          0x9F=New Combo Message, counts down to Zero
-// $1D9180: Fight-P2 Combo % Damage (8-Bit)
-// $1D9182: Fight-P1 Combo % Damage (8-Bit)
-// $1D91B3: Fight-Round Reset Counter: (8-Bit)
-//          Note: Activated at intro or after full bar loss.When greater than 0 the players separate and "Ready" is displayed
-// $1D9F7B: Fight-P1 Input Buffer (520-Bits):
-//          First byte counts the number of concurrent inputs
-//          All following bytes are the button presses (not always sequential)
-// $1DA00B: Training-Current Level
-//          0x00=L1 Special Moves
-//          0x01=L2 Autodoubles
-//          0x02=L3 Combos
-//          0x03=L4 Counter Moves
-//          0x04=L5 Combo Breakers
-//          0x05=Results Screen
-// $1DA00F: Training-Number of Rounds to Complete Level (8-Bit)
-// $1DA013: OSD-Training Move Sequence Complete (8-Bit)
-//          0x00=No moves complete
-//          0x01=1 Move Complete
-//          0x02=2 Moves Complete
-//          0x03=3 Moves Complete
-//          0x04=4 Moves Complete
-//          0x05=5 Moves Complete
-//          Note: On CPU Turn lines become visible. On Player Turn lines become green
-// $1DA03B: Training-Difficulty (8-Bit)
-//          0x00=Standard (Normal)
-//          0x01=Beginner (Easy)
-//          0x02=Expert (Hard)
-// $1DA03D: Training-Focused Training Menu Selection (8-Bit)
-//          0x00=Exercise 1
-//          0x01=Exercise 2
-//          0x02=Exercise 3
-//          0x03=Exercise 4
-//          0x04=Exercise 5
-//          0x05=Exit
-// $1DA03F: Training-Focused Training Flag (8-Bit)
-//          0x00=Training
-//          0x01=Focused Training
-// $1DA040: Training-Level Results (32-Bit)
-//          Byte1=L4 Result
-//          Byte2=L3 Result
-//          Byte3=L2 Result
-//          Byte4=L1 Result
-//          --- Other Memory
-//          0x1da047=L5 Result
-//          -- Individual Results
-//          0x00=Ungraded
-//          0x01=Grade D
-//          0x02=Grade B
-//          0x03=Grade C
-//          0x04=Grade A
-//          -- Total Points Awards
-//          d20=Grand Master
-//          d19=A+
-//          d18=A
-//          d17=A-
-//          d16=B+
-//          d15=B
-//          d14-13=B-
-//          d12-11=C+
-//          d10=C
-//          d9-8=C-
-//          d7=D+
-//          d6=D
-//          d5-0=Ungraded
-// $1DA044: Training-Results Screen Show Timer (8-Bit)
-//          Counts up from 0x00 to 0x0f
-//          0x0f=Return to Title Screen
-// $1DA047: Training-L5 Result
-//          See Notes: 0x1da040
-// $1DA04A: Fight-P1 Button Press Flags A (8-Bit)
-// $1DA04B: Fight-P1 Button Press Flags B (8-Bit)
-// $2C8A88: Player Music Select (P2 Secret Button Combo): (8-Bit)
-//          0x00=No Selection (Random)
-//          0x01=Jago
-//          0x02=Combo
-//          0x03=Spinal
-//          0x04=Tusk
-//          0x05=Glacius
-//          0x06=Fulgore
-//          0x07=Kim
-//          0x08=Sabrewulf
-//          0x09=Orchid
-//          0x0a=Maya
-//          0x0b=Gargos
-//          0x0c=Sky
-//          0x0d=Bridge
-//          0x0e=Street
-//          0x0f=Spinal Ship
-//          0x10=Stonehenge
-//          0x11=Spaceship
-//          0x12=Museum
-//          0x13=Dojo
-//          0x14=Castle
-//          0x15=Helipad
-//          0x16=Jungle
-//          0x17=Dungeon
-//          0x18=Sky
-// $2C8A89: Player Stage Select (P1 Secret Button Combo): (8-Bit)
-//          0x00=No Selection (Random)
-//          0x01=Bridge
-//          0x02=Street
-//          0x03=Spinal Ship
-//          0x04=Stonehenge
-//          0x05=Spaceship
-//          0x06=Museum
-//          0x07=Dojo
-//          0x08=Castle
-//          0x09=Helipad
-//          0x0a=Jungle
-//          0x0b=Dungeon
-//          0x0c=Sky
-// $2D3598: "Continue" Countdown: (16-Bit)
-//          0x70 = 1 Second
-// $2D35A9: OSD-"Continue" Countdown ASCII Character: (8-Bit)
-//          Value 0x2d3598 / 0x70
-//          Heartbeat sound every time number changes
+vSetDifficulty = { // Settings-Difficulty: (8-Bit) {See Lookup}
+    "UR0": byte(0x127cc2),
+    "UR2": byte(0x127bb2)
+}
+
+vSetTrainingDifficulty = { // Training Difficulty: (8-Bit) {0x00=Easy 0x01=Medium 0x02=Hard}
+    "UR0": byte(0x127cc1),
+    "UR2": byte(0x127bb1)
+}
+
+// ----------------------------------------------------------------------------
+// -- Variables: Special Options
+// ----------------------------------------------------------------------------
+
+vSetUnlockLevel = { // Game-Additional Options Unlock Level (8-Bit): {0x00=(Nothing) 0x01=Opt:L1 0x02=Opt:L1 0x03=Opt:L2 0x04=Opt:L3 0x05=Opt:L4+Diff:Master 0x06=Opt:L5+Speed:Ludicrous
+    "UR0": byte(0x12834f),
+    "UR2": byte(0x12823f)
+} 
+
+//-Level 1 Options
+
+vSetThrowDamage = { // Settings-L1 Throw Damage: (8-Bit) {0x00=Norm 0x01=Low 0x02=None 0x03=High}
+    "UR0": byte(0x127ccc),
+    "UR2": byte(0x127bbc)
+} 
+vSetAerialCamera = { // Settings-L1 Aerial Camera: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd1),
+    "UR2": byte(0x127bc1)
+}
+vSetInivisibleTag = { // Settings-L1 Invisible Tag: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd2),
+    "UR2": byte(0x127bc2)
+}
+vSetEasyBreakers = { // Settings-L1 Easy Breakers: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd3),
+    "UR2": byte(0x127bc3)
+}
+
+//-Level 2 Options
+
+vSetPoweredFinishers = { // Settings-L2 Powered Finishers: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd5),
+    "UR2": byte(0x127bc5)
+}
+vSetFullBreakers = { // Settings-L2 Full Breakers: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd6),
+    "UR2": byte(0x127bc6)
+}
+vSetFullSuperBar = { // Settings-L2 Full Super Bar: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cd7),
+    "UR2": byte(0x127bc7)
+}
+
+//- Level 3 Options
+
+vSetAutoDoubles = { // Settings-L3 Autodoubles: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127cd9),
+    "UR2": byte(0x127bc9)
+}
+vSetFastFireballs = { // Settings-L3 Fast Fireballs: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cda),
+    "UR2": byte(0x127bca)
+}
+vSetMissiles = { // Settings-L3 Missiles: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127cdb),
+    "UR2": byte(0x127bcb)
+}
+
+//- Level 4 Options
+
+vSetCheapJuggles = { // Settings-L4 Cheap Juggles: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cdc),
+    "UR2": byte(0x127bcc)
+}
+vSetQuickOpeners = { // Settings-L4 Quick Openers: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cdd),
+    "UR2": byte(0x127bcd)
+}
+vSetKnockdown = { // Settings-L4 Knockdowns: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127cde),
+    "UR2": byte(0x127bce)
+}
+vSetEasyUltimate = { // Settings-L4 Easy Ultimates: (8-Bit) {0x00=Off 0x01=On}
+    "UR0": byte(0x127cdf),
+    "UR2": byte(0x127bcf)
+}
+
+//- Level 5 Options
+
+vSetBlocking = { // Settings-L5 Blocking: (8-Bit) {0x00=On 0x01=Off}
+    "UR0": byte(0x127ce2),
+    "UR2": byte(0x127bd2)
+}
+
+// Anti-Cheat Check
+function usingSpecialSettings( ver ){
+    return vSetThrowDamage[ver] + vSetEasyBreakers [ver]
+    + vSetPoweredFinishers[ver] + vSetFullBreakers[ver] + vSetFullSuperBar[ver]
+    + vSetAutoDoubles[ver] + vSetFastFireballs[ver] + vSetMissiles[ver]
+    + vSetCheapJuggles[ver] + vSetQuickOpeners[ver] + vSetKnockdown[ver] + vSetEasyUltimate[ver]
+    + vSetBlocking[ver] > 0
+}
+
+// ----------------------------------------------------------------------------
+// -- Variables: Cheats
+// ----------------------------------------------------------------------------
+
+vGargosUnlocked = { // Cheat-Gargos Unlocked: (8-Bit) {0x00=No 0x01=Yes}
+    "UR0": byte(0x127d3b),
+    "UR2": byte(0x127c2b)
+}
+
+// ----------------------------------------------------------------------------
+// -- Variables: Other
+// ----------------------------------------------------------------------------
+
+vGameState = { // Game State ID: (8-Bit)
+    "UR0": byte(0x04814a),
+    "UR2": byte(0x04802a)
+}
+gBootscreen = 0x11
+gTitlescreen = 0x28
+gCharacterSelect = 0x0d
+gFightSummary = 0x2a
+gCredits = 0x18
+function onTitlescreenMenu( ver ) => vGameState[ver] == gTitlescreen
+ 
+vGameSpeed = { // Game Speed (8-Bit)
+    "UR0": byte(0x127cc3),
+    "UR2": byte(0x127bb3)
+}
+
+vFightPerfect = { // Fight Over/Perfect (8-Bit)
+    "UR0": byte(0x04a3fe),
+    "UR2": byte(0x04a2f6)
+}
+function fightPerfect( ver ) => vFightPerfect[ver] == 0x01
+
+vFightWinner = { // Game-Winner (8-Bit)
+    "UR0": byte(0x04a3e0),
+    "UR2": byte(0x04a2d8)
+}
+
+function inFight_alt( ver ){ // Not Used
+    return vGameState[ver] != gBootscreen 
+        && vGameState[ver] != gTitlescreen 
+        && vGameState[ver] != gCharacterSelect 
+        && vGameState[ver] != gFightSummary
+}
+
+vVictoryStyle = { // Fight Over/Victory Style (8-Bit)
+    "UR0": byte(0x04a3ff),
+    "UR2": byte(0x04a2f7)
+}
+function gVictoryUltra( ver ) => vVictoryStyle[ver] == 0x02
+function gVictoryAwesome( ver ) => __ornext(vVictoryStyle[ver] == 0x04 || vVictoryStyle[ver] == 0x05)
+
+vFightControl = { // Fight-Control Input (16-Bit)
+    "UR0": word(0x1d8776),
+    "UR2": word(0x1d8806)
+}
+function inFight( ver ) => vFightControl[ver] != 0x1814 // 0x1814=No Fight
+
+vFightTimer = { // Fight-Game Timer (16-Bit BCD)
+    "UR0": ((byte(0x1d5d51)*10) + byte(0x1d5d52)),
+    "UR2": ((byte(0x1d5de1)*10) + byte(0x1d5de2))
+}
+function fightTimerRemaining(ver) => vFightTimer[ver]
+
+function onSubscreenMenu(ver) => !onTitlescreenMenu(ver)
+
+vStageID = { // Stage Pointer/ID: (24-Bit)
+    "UR0": tbyte(0x04aeac),
+    "UR2": tbyte(0x04ad9c)
+}
+function getStageName(ver) => StageLookup[vStageID[ver]]
+
+vP1Character = { // P1 Character: (8-Bit)
+    "UR0": byte(0x04ea9f),
+    "UR2": byte(0x04e98f)
+}
+vP2Character = { // P2 Character: (8-Bit)
+    "UR0": byte(0x04ea9e),
+    "UR2": byte(0x04e98e)
+}
+function getCharacterName(ver, playerNum){
+    if( playerNum == 1){
+        return FighterLookup[vP1Character[ver]]
+    } else return FighterLookup[vP2Character[ver]]
+}
+
+vGameMode = { // Game Mode (8-Bit)
+    "UR0": byte(0x127d53),
+    "UR2": byte(0x127c43)
+}
+function getGameModeName(ver) => GameModeLookup[vGameMode[ver]]
+
+vFightDifficulty = { // Match Difficulty (8-Bit)
+    "UR0": byte(0x1da002),
+    "UR2": byte(0x1da092)
+}
+function getFightDifficultyName() => DifficultyLookup[vFightDifficulty[ver]]
+
+vRuntime = { // Constant Run Timer: (32-Bit)
+    "UR0": dword(0x00f69c),
+    "UR2": dword(0x00f68c)
+}
+
+vFightType = { // Game Control: (8-Bit) {0x02=Player 0x03=Demo}
+    "UR0": byte(0x04a404),
+    "UR2": byte(0x04a2ff)
+}
+function isDemo(ver) => vFightType[ver] == 3
+function isPlayer(ver) => vFightType[ver] == 2
+
+vPauseMenu = { // Game Pause Menu: (8-Bit) {0x00=Off >0x00=Menu Open}
+    "UR0": byte(0x04a40f),
+    "UR2": byte(0x04a301)
+}
+function isPaused(ver) => vPauseMenu[ver]>0
+
+vP1RoundHealth = { // Fight-P1 Health: (16-Bit) {0x7800=Full}
+    "UR0": (word(0x1d3486)/ 0xFF),
+    "UR2": (word(0x1d3516)/ 0xFF)
+}
+vP1HealthBankUsed = { // Fight-P1 Health Bank: (8-Bit) {0x00=First Bar 0x01=Second Bar}
+    "UR0": byte(0x1d34bc),
+    "UR2": byte(0x1d354c)
+}
+function p1TotalHealth(ver) => 0x78 + vP1RoundHealth[ver] - (0x78 * vP1HealthBankUsed[ver])
+
+vP2RoundHealth = { // Fight-P2 Health: (16-Bit) {0x7800=Full}
+    "UR0": (word(0x1d3586) / 0xFF),
+    "UR2": (word(0x1d3616) / 0xFF)
+}
+vP2HealthBankUsed = { // Fight-P2 Health Bank: (8-Bit) {0x00=First Bar 0x01=Second Bar}
+    "UR0": byte(0x1d35bc),
+    "UR2": byte(0x1d364c)
+}
+function p2TotalHealth(ver) => 0x78 + vP2RoundHealth[ver] - (0x78 * vP2HealthBankUsed[ver])
+
+vArcadeRound = { // Arcade-Tower Position: (8-Bit) {0x00=First Battle 0x0a=Final Position}
+    "UR0": byte(0x128348),
+    "UR2": byte(0x128238)
+}
+
+vFightStatus = { // Fight-Winner Decision (8-Bit) {0x00=Fight Ongoing 0x08=P2 Win 0x09=P1 Win 0x14=No Current Match (Title/Menu etc)}
+    "UR0": byte(0x1d8775),
+    "UR2": byte(0x1d8805)
+}
+
+function fightP1Win(ver) => prev(vFightStatus[ver]) == 0x00 && vFightStatus[ver] == 0x09
+function fightP2Win(ver) => prev(vFightStatus[ver]) == 0x00 && vFightStatus[ver] == 0x08
+
+vP1ComboLength = { // Fight-P1 Combo Length: (8-Bit)
+    "UR0": byte(0x1d90e2),
+    "UR2": byte(0x1d9172)
+}
+vP1ComboMessageTimeout = { // OSD-P1 Combo Message Timeout: (8-Bit)
+    "UR0": byte(0x1d90e3),
+    "UR2": byte(0x1d9173)
+}
+function p1ComboBreaker(ver) => vP1ComboLength[ver] == 0x63 && vP1ComboMessageTimeout[ver] == 1
+function p1Combo(ver) => vP1ComboLength[ver] < 0x63 && vP1ComboMessageTimeout[ver] == 1
+
+vStageKnockOff = { // Fight-Stage Knockoff (16-Bit)
+    "UR0": word(0x1d876e),
+    "UR2": word(0x1d87fe)
+}
+function knockOff(ver) => prev(vStageKnockOff[ver]) == 0x0000 && vStageKnockOff[ver] == 0x3972
+
+vP1LastMove = { // Fight-P1 Last Move Used (8-Bit)
+    "UR0": byte(0x1d32d1),
+    "UR2": byte(0x1d3361)
+}
+
+vFightVictoryStyle = { // Fight-Victory Style (8-Bit)
+    "UR0": byte(0x1d87db),
+    "UR2": byte(0x1d886b)
+}
+function ultraCombo(ver) => vFightVictoryStyle[ver] == 0x02
+
+vCurrentLevel = { // Training- Current Level (8-Bit) {0x00-0x04 Levels, 0x05=Results}
+    "UR0": byte(0x1d9f7b),
+    "UR2": byte(0x1da00b)
+}
+
+vCurrentRound = { // Training- Current Round (8-Bit)
+    "UR0": byte(0x1d877e),
+    "UR2": byte(0x1d880e)
+}
+
+vTotalRounds = { // Training-Number of Rounds to Complete Level (8-Bit)
+    "UR0": byte(0x1d9f7f),
+    "UR2": byte(0x1da00f)
+}
+
+vP1FinisherLevel = { // Fight-P1 # Finishers Used (8-Bit)
+    "UR0": byte(0x1d32c4),
+    "UR2": byte(0x1d3354)
+}
+
+vP1SpinalSkulls = { // P1 Spinal Skull Count (8-Bit)
+    "UR0": byte(0x1d3520),
+    "UR2": byte(0x1d35b0)
+}
+
+vP1Defeated = { // Team Battle: P1 Defeated Count (8-Bit)
+    "UR0": byte(0x04a433),
+    "UR2": byte(0x04a32b)
+}
+
+vP2Defeated = { // Team Battle: P2 Defeated Count (8-Bit)
+    "UR0": byte(0x04a443),
+    "UR2": byte(0x04a33b)
+}
+
+vP2TeamSize = { // Team Battle: P2 Team Size (8-Bit)
+    "UR0": byte(0x04a442),
+    "UR2": byte(0x04a33a)
+}
+
+vP1Fatals = { // Arcade-P1 Fatals
+    "UR0": byte(0x12830b),
+    "UR2": byte(0x1281fb)
+}
+
+vP1WinStreak = { // Arcade-P1 Win Streak
+    "UR0": byte(0x128309),
+    "UR2": byte(0x1281f9)
+}
+
+vFightClockFrames = { // Fight-Clock Frame Counter
+    "UR0": byte(0x1d5d53),
+    "UR2": byte(0x1d5de3)
+}
+
+vTrainingFailCount = { // Training-Fail Counter (8-bit)
+    "UR0": byte(0x1d879f),
+    "UR2": byte(0x1d882f)
+}
+
+vTrainingDemoMode = { // Training-Demo is Playing (8-Bit) {0x00=Player Move 0x01=Demo Move}
+    "UR0": byte(0x1d877f),
+    "UR2": byte(0x1d880f) 
+}
+
+vP1TeamSize = { // Team Battle-P1 Team Size (8-Bit)
+    "UR0": byte(0x04a432),
+    "UR2": byte(0x04A32A) 
+}
+
+vP2TeamSize = { // Team Battle-P2 Team Size (8-Bit)
+    "UR0": byte(0x04a442),
+    "UR2": byte(0x04a33a) 
+}
+
+vP1TeamDefeated = { // Team Battle-P1 Count of Defeated (8-Bit)
+    "UR0": byte(0x04a433),
+    "UR2": byte(0x04A32B) 
+}
+
+vP2TeamDefeated = { // Team Battle-P2 Count of Defeated (8-Bit)
+    "UR0": byte(0x04a443),
+    "UR2": byte(0x04a33b) 
+}
 
 // ----------------------------------------------------------------------------
 // -- Achievements: Arcade Wins
 // ----------------------------------------------------------------------------
 
-arcadeAnyWinTitleLookup = {
+lArcadeAnyWinTitle = {
  0x02: "Getting Warmed Up", // Normal
  0x04: "Pushing Limits", // Extra Hard
  0x05: "The Reign of Evil is Over", // Master
 }
 
-arcadeAnyWinPointsLookup = {
+lArcadeAnyWinPoints = {
  0x02: 3, // Normal
  0x04: 10, // Extra Hard
  0x05: 25, // Master
 }
 
-arcadeCharWinTitleLookup = {
+lArcadeCharWinTitle = {
  0x00: "Alone, At Last",
  0x01: "He's Rich, He's Bad & He's Back",
  0x02: "Captain of The Dutchman",
@@ -639,46 +492,47 @@ arcadeCharWinTitleLookup = {
 }
 
 // Conditions
-function arcadeStageWin(){
-    return isPlayer() && !usingSpecialSettings() && fightP1Win() && cGameMode == 00
+function arcadeStageWin(ver){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && fightP1Win(ver) && vGameMode[ver] == 00
 }
 
-function arcadeStageLose(){
-    return isPlayer() && !usingSpecialSettings() && fightP2Win() && cGameMode == 00
+function arcadeStageLose(ver){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && fightP2Win(ver) && vGameMode[ver] == 00
 }
 
-function arcadeComplete(difficultyID){
-    return arcadeStageWin() && trigger_when((cArcadeRound == 0x0a)) && cFightDifficulty >= difficultyID
+function arcadeComplete(ver, difficultyID){
+    return arcadeStageWin(ver) && trigger_when((vArcadeRound[ver] == 0x0a)) && vFightDifficulty[ver] >= difficultyID
 }
 
-function arcadeCompleteChar(charID, difficultyID){
-    return once(cP1Character == charID && cArcadeRound == 0x00 && inFight()) && never(cP1Character != charID || onTitlescreenMenu()) && arcadeComplete(difficultyID) && cP1Character == charID
+function arcadeCompleteChar(ver, charID, difficultyID){
+    return once(vP1Character[ver] == charID && vArcadeRound[ver] == 0x00 && inFight(ver)) && never(vP1Character[ver] != charID || onTitlescreenMenu(ver)) && arcadeComplete(ver,difficultyID) && vP1Character[ver] == charID
 }
 
 // Builders
 function arcadeAnyWinBuilder (difficultyID){
     achievement(
         id = 0,
-        title = arcadeAnyWinTitleLookup[difficultyID], points = arcadeAnyWinPointsLookup[difficultyID],
-        description = "Beat the game on "+ DifficultyLookup[difficultyID] +" Difficulty or Higher (No Special Options)",
-        trigger = arcadeComplete(difficultyID)
+        title = lArcadeAnyWinTitle[difficultyID], points = lArcadeAnyWinPoints[difficultyID],
+        description = "Beat the game on "+ lDifficulty[difficultyID] +" Difficulty or Higher (No Special Options)",
+        trigger = (version == lVersions["UR0"] && arcadeComplete("UR0", difficultyID)) || (version == lVersions["UR2"] && arcadeComplete("UR2", difficultyID))
     ) 
 }
 
-function arcadeCharWinBuilder( charID, difficultyID ){    
+function arcadeCharWinBuilder(charID, difficultyID){    
     achievement(
         id = 0,
-        title = arcadeCharWinTitleLookup[charID], points = 5,
-        description = "Playing Arcade with " + FighterLookup[charID] + ", Beat the Game on Hard Difficulty or Higher (No Special Options)",
-        trigger = arcadeCompleteChar(charID, difficultyID)
+        title = lArcadeCharWinTitle[charID], points = 5,
+        description = "Playing Arcade with " + lFighter[charID] + ", Beat the Game on Hard Difficulty or Higher (No Special Options)",
+        trigger = (version == lVersions["UR0"] && arcadeCompleteChar("UR0", charID, difficultyID)) || (version == lVersions["UR2"] && arcadeCompleteChar("UR2", charID, difficultyID))
     )
 }
 
 // Loops
-for k in FighterLookup {
-   arcadeCharWinBuilder( k, 0x03 ) 
+for k in lFighter {
+   arcadeCharWinBuilder(k, 0x03 ) 
 }
-for k in DifficultyLookup {
+
+for k in lDifficulty {
     if( k > 1 && k != 3 ) arcadeAnyWinBuilder(k)
 }
 
@@ -686,27 +540,27 @@ for k in DifficultyLookup {
 // -- Achievements: Breakers
 // ----------------------------------------------------------------------------
 
-function breakerCountWin( charID ){
+function breakerCountWin( ver, charID ){
     return
     measured(
-        tally(3, cP1ComboBreaker()), 
-        when=isPlayer() && (cGameMode == 00) && (cFightDifficulty >= 2) && !usingSpecialSettings() && cP1Character == charID
+        tally(3, p1ComboBreaker(ver)), 
+        when=isPlayer(ver) && (vGameMode[ver] == 00) && (vFightDifficulty[ver] >= 2) && !usingSpecialSettings(ver) && vP1Character[ver] == charID
     )
-    && never(!inFight())
-    && fightP1Win()
+    && never(!inFight(ver))
+    && fightP1Win(ver)
 }
 
 function breakerWinBuilder( charID ){
     achievement(
         id = 0,
-        title = "Breakers: " + FighterLookup[charID], points = 5,
-        description = "Playing Arcade as "+ FighterLookup[charID] +", Perform 3x Combo Breakers in a Single Fight and Win (No Special Options, Difficulty: Normal+)",
-        trigger = breakerCountWin(charID)
+        title = "Breakers: " + lFighter[charID], points = 5,
+        description = "Playing Arcade as "+ lFighter[charID] +", Perform 3x Combo Breakers in a Single Fight and Win (No Special Options, Difficulty: Normal+)",
+        trigger = (version == lVersions["UR0"] && breakerCountWin("UR0", charID)) || (version == lVersions["UR2"] && breakerCountWin("UR2", charID))
     )
 }
 
 // Loops
-for k in FighterLookup {
+for k in lFighter {
    if(k != 0x0a) breakerWinBuilder( k ) 
 }
 
@@ -714,35 +568,25 @@ achievement(
     id = 0,
     title = "Broken Mechanics", points = 10,
     description = "Playing Arcade, Perform 5 Combo Breakers in a Single Fight and Win (No Special Options, Difficulty: Normal+)",
-    trigger = measured(
-        tally(5, cP1ComboBreaker()), 
-        when=isPlayer() && (cGameMode == 00) && (cFightDifficulty >= 2) && !usingSpecialSettings()
+    trigger = (version == lVersions["UR0"] && measured(
+        tally(5, p1ComboBreaker("UR0")), 
+        when=isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vFightDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0")
     )
-    && never(!inFight())
-    && fightP1Win()
+    && never(!inFight("UR0"))
+    && fightP1Win("UR0")) || 
+    (version == lVersions["UR2"] && measured(
+        tally(5, p1ComboBreaker("UR2")), 
+        when=isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vFightDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2")
+    )
+    && never(!inFight("UR2"))
+    && fightP1Win("UR2"))
 )
 
 // ----------------------------------------------------------------------------
 // -- Achievements: Knock-Off
 // ----------------------------------------------------------------------------
 
-// $04E98F: P1 Character: (8-Bit)
-// $04E98E: P2 Character: (8-Bit)
-FighterLookup = {
-    0x00: "Jago",
-    0x01: "TJ Combo",
-    0x02: "Spinal",
-    0x03: "Tusk",
-    0x04: "Glacius",
-    0x05: "Fulgore",
-    0x06: "Kim Wu",
-    0x07: "Sabrewulf",
-    0x08: "Black Orchid",
-    0x09: "Maya",
-    0x0A: "Gargos",
-}
-
-KnockOffStageLookup = {
+lKnockOffStage = {
     0x00: 0x018EC0,
     0x01: 0x01419C,
     0x02: 0x01869C,
@@ -753,7 +597,7 @@ KnockOffStageLookup = {
     0x07: 0x019754
 }
 
-KnockOffCharacterLookup = {
+lKnockOffCharacter = {
     0x00: 0x00,
     0x01: 0x01,
     0x02: 0x02,
@@ -764,7 +608,7 @@ KnockOffCharacterLookup = {
     0x07: 0x0a
 }
 
-KnockOffAchievementTitles = {
+lKnockOffAchievementTitles = {
     0x00: "Troubled Waters",
     0x01: "Training Hard",
     0x02: "Walk the Plank",
@@ -775,22 +619,22 @@ KnockOffAchievementTitles = {
     0x07: "Lock and Key"
 }
 
-function knockOffWin( charID, stageID ){
-    return isPlayer() && !usingSpecialSettings() && cFightStatus == 0x09 && cGameMode == 00 && cFightDifficulty >= 2 && cStageID == stageID && cP1Character == charID && knockOff()
+function knockOffWin( ver, charID, stageID ){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vFightStatus[ver] == 0x09 && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vStageID[ver] == stageID && vP1Character[ver] == charID && knockOff(ver)
 }
 
 function knockOffWinBuilder( arrID ){
-    fighterName = FighterLookup[KnockOffCharacterLookup[arrID]]
-    stageName = StageLookup[KnockOffStageLookup[arrID]]
+    fighterName = lFighter[lKnockOffCharacter[arrID]]
+    stageName = lStage[lKnockOffStage[arrID]]
     achievement(
         id = 0,
-        title = KnockOffAchievementTitles[arrID], points = 5,
+        title = lKnockOffAchievementTitles[arrID], points = 5,
         description = "Playing Arcade as "+fighterName+" on "+fighterName+"'s "+stageName+", Use Your Environment To Finish Your Opponent Off (No Special Options, Difficulty: Normal+)",
-        trigger = knockOffWin(KnockOffCharacterLookup[arrID],KnockOffStageLookup[arrID])
+        trigger = (version == lVersions["UR0"] && knockOffWin("UR0",lKnockOffCharacter[arrID],lKnockOffStage[arrID])) || (version == lVersions["UR2"] && knockOffWin("UR2",lKnockOffCharacter[arrID],lKnockOffStage[arrID]))
     )
 }
 
-for k in KnockOffCharacterLookup {
+for k in lKnockOffCharacter {
     knockOffWinBuilder( k )
 }
 
@@ -798,7 +642,8 @@ achievement(
     id = 0,
     title = "Sky-fall", points = 1,
     description = "Play a match on the hidden Sky level and launch your opponent off the edge",
-    trigger = isPlayer() && !usingSpecialSettings() && cFightStatus == 0x09 && cStageID == 0x0198B8 && knockOff()
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vFightStatus["UR0"] == 0x09 && vStageID["UR0"] == 0x0198B8 && knockOff("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vFightStatus["UR2"] == 0x09 && vStageID["UR2"] == 0x0198B8 && knockOff("UR2"))
 )
 
 // ----------------------------------------------------------------------------
@@ -851,8 +696,8 @@ ComboPointsLookup = {
     0x07: 3
 }
 
-function p1ComboSuccess( len ){
-    return isPlayer() && !usingSpecialSettings() && inFight() && cGameMode == 00 && cP1Combo() && cP1ComboLength == len
+function p1ComboSuccess( ver, len ){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && inFight(ver) && vGameMode[ver] == 00 && p1Combo(ver) && vP1ComboLength[ver] == len
 }
 
 function comboLengthBuilder( len ){
@@ -860,7 +705,7 @@ function comboLengthBuilder( len ){
         id = 0,
         title = ComboNamesLookup[len] + " Combo!", points = ComboPointsLookup[len],
         description = "Playing Arcade, Perform a Combo of "+ComboLengthLookup[len]+" Hits",
-        trigger = p1ComboSuccess(ComboLengthLookup[len])
+        trigger = ((version == lVersions["UR0"] && p1ComboSuccess("UR0",ComboLengthLookup[len])) || (version == lVersions["UR2"] && p1ComboSuccess("UR2",ComboLengthLookup[len])))
     )
 }
 
@@ -872,28 +717,29 @@ achievement(
     id = 0,
     title = "Killer Combo!", points = 4,
     description = "Playing Arcade, Perform a Combo of 12 Hits or more",
-    trigger = isPlayer() && !usingSpecialSettings() && inFight() && cGameMode == 00 && cP1Combo() && cP1ComboLength >= 12 && !ultraCombo()
+    trigger = ((version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && inFight("UR0") && vGameMode["UR0"] == 00 && p1Combo("UR0") && vP1ComboLength["UR0"] >= 12 && !ultraCombo("UR0")) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && inFight("UR2") && vGameMode["UR2"] == 00 && p1Combo("UR2") && vP1ComboLength["UR2"] >= 12 && !ultraCombo("UR2")))
 )
 
 // ----------------------------------------------------------------------------
 // -- Achievements: Ultra Academy
 // ----------------------------------------------------------------------------
 
-function ultraWin( charID ){
-    return isPlayer() && !usingSpecialSettings() && cGameMode == 00 && cFightDifficulty >= 2 && cP1Character == charID && cGameState == gFightSummary && gFightWinner == 0x01 && gVictoryUltra()
+function ultraWin( ver, charID ){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryUltra(ver)
 }
 
 function ultraWinBuilder( charID ){
     achievement(
         id = 0,
-        title = "Ultra Academy: " + FighterLookup[charID], points = 5,
-        description = "Playing Arcade as "+ FighterLookup[charID] +", Finish your opponent with an Ultra Combo (No Special Options, Difficulty: Normal+)",
-        trigger = ultraWin(charID)
+        title = "Ultra Academy: " + lFighter[charID], points = 5,
+        description = "Playing Arcade as "+ lFighter[charID] +", Finish your opponent with an Ultra Combo (No Special Options, Difficulty: Normal+)",
+        trigger = (version == lVersions["UR0"] && ultraWin("UR0",charID)) || (version == lVersions["UR2"] && ultraWin("UR2",charID))
     )
 }
 
 // Loops
-for k in FighterLookup {
+for k in lFighter {
    if(k != 0x0a) ultraWinBuilder( k ) 
 }
 
@@ -902,21 +748,21 @@ for k in FighterLookup {
 // -- Achievements: Awesome Academy
 // ----------------------------------------------------------------------------
 
-function awesomeWin( charID ){
-    return isPlayer() && !usingSpecialSettings() && cGameMode == 00 && cFightDifficulty >= 2 && cP1Character == charID && cGameState == gFightSummary && gFightWinner == 0x01 && gVictoryAwesome()
+function awesomeWin( ver, charID ){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryAwesome(ver)
 }
 
 function awesomeWinBuilder( charID ){
     achievement(
         id = 0,
-        title = "Awesome Academy: " + FighterLookup[charID], points = 5,
-        description = "Playing Arcade as "+ FighterLookup[charID] +", Finish your opponent with a No Mercy / Ultimate Combo (No Special Options, Difficulty: Normal+)",
-        trigger = awesomeWin(charID)
+        title = "Awesome Academy: " + lFighter[charID], points = 5,
+        description = "Playing Arcade as "+ lFighter[charID] +", Finish your opponent with a No Mercy / Ultimate Combo (No Special Options, Difficulty: Normal+)",
+        trigger = (version == lVersions["UR0"] && awesomeWin("UR0",charID)) || (version == lVersions["UR2"] && awesomeWin("UR2",charID))
     )
 }
 
 // Loops
-for k in FighterLookup {
+for k in lFighter {
    if(k != 0x0a) awesomeWinBuilder( k ) 
 }
 
@@ -924,22 +770,24 @@ for k in FighterLookup {
 // -- Achievements: Training
 // ----------------------------------------------------------------------------
 
-// $1da00b: Training- Current Level (8-Bit) {0x00-0x04 Levels, 0x05=Results}
-// $1d880e: Training- Current Round (8-Bit)
-// $1da00f: Training- Total Rounds (8-Bit)
-tCurrentLevel = byte(0x1da00b)
-tCurrentRound = byte(0x1d880e)
-tTotalRounds = byte(0x1da00f)
-
-TrainingAddrLookup = {
+lTrainingAddr = {
+    "UR0": {
+    00: 0x1d9fb3,
+    01: 0x1d9fb2,
+    02: 0x1d9fb1,
+    03: 0x1d9fb0,
+    04: 0x1d9fb7
+    },
+    "UR2": {
     00: 0x1da043,
     01: 0x1da042,
     02: 0x1da041,
     03: 0x1da040,
     04: 0x1da047
+    }
 }
 
-TrainingNameLookup = {
+lTrainingName = {
     00: "L1 Special Moves",
     01: "L2 Autodoubles",
     02: "L3 Combos",
@@ -947,7 +795,7 @@ TrainingNameLookup = {
     04: "L5 Combo Breakers"
 }
 
-TrainingPointsLookup = {
+lTrainingPoints = {
     00: 5,
     01: 5,
     02: 5,
@@ -955,24 +803,25 @@ TrainingPointsLookup = {
     04: 10
 }
 
-function totalTrainingScore() {
+function totalTrainingScore(ver) {
     vOut = 0
-    for k in TrainingAddrLookup {
-        vOut = vOut + byte(TrainingAddrLookup[k])
+    for k in lTrainingAddr[ver] {
+        vOut = vOut + byte(lTrainingAddr[ver][k])
     }
     return vOut
 }
 
-function trainingMode( tRound ){
-    return isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1
+function trainingMode( ver, tRound ){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 05 && vSetTrainingDifficulty[ver] >= 1
 }
 
 function trainingBuilder( lookupID ){
     achievement(
         id = 0,
-        title = "Training: " + TrainingNameLookup[lookupID], points = TrainingPointsLookup[lookupID],
+        title = "Training: " + lTrainingName[lookupID], points = lTrainingPoints[lookupID],
         description = "Complete Training Level " + (lookupID+1) + " with Grade A (No Special Options, Difficulty: Standard+)",
-        trigger = trainingMode(lookupID) && prev(byte(TrainingAddrLookup[lookupID])) == 0x00 && byte(TrainingAddrLookup[lookupID]) == 0x04
+        trigger = (version == lVersions["UR0"] && trainingMode("UR0",lookupID) && prev(byte(lTrainingAddr["UR0"][lookupID])) == 0x00 && byte(lTrainingAddr["UR0"][lookupID]) == 0x04) || 
+        (version == lVersions["UR2"] && trainingMode("UR2",lookupID) && prev(byte(lTrainingAddr["UR2"][lookupID])) == 0x00 && byte(lTrainingAddr["UR2"][lookupID]) == 0x04)
     )
 }
 
@@ -985,35 +834,40 @@ achievement(
     id = 0,
     title = "Studious Award", points = 5,
     description = "Complete The Full Training Schedule (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && prev(tCurrentLevel) == 0x04 && tCurrentLevel == 0x05
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 05 && vSetTrainingDifficulty["UR0"] >= 1 && prev(vCurrentLevel["UR0"]) == 0x04 && vCurrentLevel["UR0"] == 0x05) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 05 && vSetTrainingDifficulty["UR2"] >= 1 && prev(vCurrentLevel["UR2"]) == 0x04 && vCurrentLevel["UR2"] == 0x05)
 )
 
 achievement(
     id = 0,
-    title = "Training: Standard Grade A Award", points = 5,
+    title = "Training: Standard Grade A Award", points = 10,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentLevel == 0x05 && totalTrainingScore() >= 0x11
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 05 && vSetTrainingDifficulty["UR0"] >= 1 && vCurrentLevel["UR0"] == 0x05 && totalTrainingScore("UR0") >= 0x11)||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 05 && vSetTrainingDifficulty["UR2"] >= 1 && vCurrentLevel["UR2"] == 0x05 && totalTrainingScore("UR2") >= 0x11)
 )
 
 achievement(
     id = 0,
-    title = "Training: Standard Grand Master Award", points = 5,
+    title = "Training: Standard Grand Master Award", points = 25,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty >= 1 && tCurrentLevel == 0x05 && totalTrainingScore() == 0x14
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 05 && vSetTrainingDifficulty["UR0"] >= 1 && vCurrentLevel["UR0"] == 0x05 && totalTrainingScore("UR0") == 0x14) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 05 && vSetTrainingDifficulty["UR2"] >= 1 && vCurrentLevel["UR2"] == 0x05 && totalTrainingScore("UR2") == 0x14)
 )
 
 achievement(
     id = 0,
-    title = "Training: Expert Grade A Award", points = 5,
+    title = "Training: Expert Grade A Award", points = 10,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentLevel == 0x05 && totalTrainingScore() >= 0x11
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 05 && vSetTrainingDifficulty["UR0"] == 2 && vCurrentLevel["UR0"] == 0x05 && totalTrainingScore("UR0") >= 0x11) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 05 && vSetTrainingDifficulty["UR2"] == 2 && vCurrentLevel["UR2"] == 0x05 && totalTrainingScore("UR2") >= 0x11) 
 )
 
 achievement(
     id = 0,
-    title = "Training: Expert Grand Master Award", points = 5,
+    title = "Training: Expert Grand Master Award", points = 50,
     description = "Complete Standard Training with an Overall Grade of A or Better (No Special Options, Difficulty: Standard+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 05 && cSetTrainingDifficulty == 2 && tCurrentLevel == 0x05 && totalTrainingScore() == 0x14
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 05 && vSetTrainingDifficulty["UR0"] == 2 && vCurrentLevel["UR0"] == 0x05 && totalTrainingScore("UR0") == 0x14) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 05 && vSetTrainingDifficulty["UR2"] == 2 && vCurrentLevel["UR2"] == 0x05 && totalTrainingScore("UR2") == 0x14)
 )
 
 // ----------------------------------------------------------------------------
@@ -1024,159 +878,162 @@ achievement(
     id = 321223,
     title = "Untouchable", points = 10,
     description = "Playing Arcade, Finish a Fight with a Perfect Victory! (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameState == gFightSummary && gFightWinner == 0x01 && gFightPerfect()
+    trigger = (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameState["UR0"] == gFightSummary && vFightWinner["UR0"] == 0x01 && fightPerfect("UR0")) ||
+    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameState["UR2"] == gFightSummary && vFightWinner["UR2"] == 0x01 && fightPerfect("UR2"))
 )
 
 achievement(
     id = 0,
     title = "Cold as Ice", points = 10,
     description = "Playing Arcade as Glacius on the Glacius' Spaceship defeat your opponent using the move 'Super Arctic Blast' (No Special Options, Difficulty: Normal+)",
-    trigger = arcadeStageWin() &&  cFightDifficulty >= 2 && cP1LastMove == 0x08 && cP1Character == 0x04 && cStageID == 0x019228
+    trigger = (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x08 && vP1Character["UR0"] == 0x04 && vStageID["UR0"] == 0x019228) ||
+    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x08 && vP1Character["UR2"] == 0x04 && vStageID["UR2"] == 0x019228)
 )
 
 // Anti-Cheat Check
-function fullgoreSpecialSettings(){
-    return cSetThrowDamage + cSetEasyBreakers 
-    + cSetPoweredFinishers + cSetFullBreakers + cSetFullSuperBar
-    + cSetAutoDoubles + cSetFastFireballs + cSetMissiles
-    + cSetCheapJuggles + cSetQuickOpeners + cSetKnockdown 
-    + cSetEasyUltimate == 0 
-    && cSetBlocking == 0x01
-    && cSetBlood == 0x03
-    && cSetUnlockLevel == 0x06 && cGameSpeed == 0x03
+function fullgoreSpecialSettings(ver){
+    return vSetThrowDamage[ver] + vSetEasyBreakers[ver]
+    + vSetPoweredFinishers[ver] + vSetFullBreakers[ver] + vSetFullSuperBar[ver]
+    + vSetAutoDoubles[ver] + vSetFastFireballs[ver] + vSetMissiles[ver]
+    + vSetCheapJuggles[ver] + vSetQuickOpeners[ver] + vSetKnockdown[ver] 
+    + vSetEasyUltimate[ver] == 0 
+    && vSetBlocking[ver] == 0x01
+    && vSetBlood[ver] == 0x03
+    && vSetUnlockLevel[ver] == 0x06 && vGameSpeed[ver] == 0x03
 }
 
 achievement(
     id = 0,
     title = "Full-Gore", points = 10,
     description = "Playing Arcade as Fulgore on Fulgore's Museum, win a fight with Blocking Off, Blood High and Speed Ludicrous (No Other Special Options, Difficulty: Normal+)",
-    trigger = fullgoreSpecialSettings() && isPlayer() && fightP1Win() && cGameMode == 00 &&  cFightDifficulty >= 2 && cP1Character == 0x05 && cStageID == 0x013BF4
+    trigger = ((version == lVersions["UR0"] && fullgoreSpecialSettings("UR0") && isPlayer("UR0") && fightP1Win("UR0") && vGameMode["UR0"] == 00 &&  vFightDifficulty["UR0"] >= 2 && vP1Character["UR0"] == 0x05 && vStageID["UR0"] == 0x013BF4) ||
+    (version == lVersions["UR2"] && fullgoreSpecialSettings("UR2") && isPlayer("UR2") && fightP1Win("UR2") && vGameMode["UR2"] == 00 &&  vFightDifficulty["UR2"] >= 2 && vP1Character["UR2"] == 0x05 && vStageID["UR2"] == 0x013BF4))
 )
 
 achievement(
     id = 0,
     title = "Me Tarzan, You Pain!", points = 10,
     description = "Playing Arcade as Maya on Maya's Jungle finish your opponent with the move 'Super Jungle Leap' (No Special Options, Difficulty: Normal+)",
-    trigger = arcadeStageWin() &&  cFightDifficulty >= 2 && cP1LastMove == 0x2a && cP1Character == 0x09 && cStageID == 0x018404
+    trigger = ((version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x2a && vP1Character["UR0"] == 0x09 && vStageID["UR0"] == 0x018404) ||
+    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x2a && vP1Character["UR2"] == 0x09 && vStageID["UR2"] == 0x018404))
 )
 
 achievement(
     id = 0,
     title = "C-C-C-C-Combo Breaker", points = 1,
     description = "Playing Arcade as Combo on Combo's Street, Combo Break Another Combo's Combo (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && (cGameMode == 00) && (cFightDifficulty >= 2) && !usingSpecialSettings() && cP1ComboBreaker() && cP1Character == 0x01 && cStageID == 0x01419C
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vFightDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR0"] == 0x01419C) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vFightDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR2"] == 0x01419C)
 )
-
-// $1d5de1: Game Time Remaining (16-Bit BCD)
-cTimeRemaining = bcd(word(0x1d5de1))
 
 achievement(
     id = 321256,
     title = "Judge's Decision", points = 1,
     description = "Playing Arcade, Win a fight with a Time Out (No Special Options, Difficulty: Normal+)",
-    trigger = arcadeStageWin() &&  cFightDifficulty >= 2 && cTimeRemaining == 00
+    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vFightTimer["UR0"] == 00) ||
+                (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vFightTimer["UR2"] == 00)
 )
-
-// $1d3354: Fight-P1 # Finishers Used (8-Bit)
-cP1FinisherLevel = byte(0x1d3354)
 
 achievement(
     id = 321251,
     title = "5th Finisher", points = 1,
     description = "Playing Arcade, Use your '5th Finisher' on your opponent (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 00 && cFightDifficulty >= 2 
-        && prev(cP1FinisherLevel) == 0x04 && cP1FinisherLevel == 0x05
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 
+                    && prev(vP1FinisherLevel["UR0"]) == 0x04 && vP1FinisherLevel["UR0"] == 0x05) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 
+                    && prev(vP1FinisherLevel["UR2"]) == 0x04 && vP1FinisherLevel["UR2"] == 0x05)
 )
-
-// $1d35b0: P1 Spinal Skull Count (8-Bit)
-cP1SpinalSkulls = byte(0x1d35b0)
 
 achievement(
     id = 321257,
     title = "Pieces of Six", points = 1,
     description = "Playing Arcade as Spinal, Max out your Skull Collection (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 00 && cFightDifficulty >= 2 
-        && prev(cP1SpinalSkulls) < 0x06 && cP1SpinalSkulls == 0x06
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 
+                    && prev(vP1SpinalSkulls["UR0"]) < 0x06 && vP1SpinalSkulls["UR0"] == 0x06) || 
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 
+                    && prev(vP1SpinalSkulls["UR2"]) < 0x06 && vP1SpinalSkulls["UR2"] == 0x06)
 )
 
 achievement(
     id = 321255,
     title = "Humiliated", points = 1,
     description = "Playing Arcade, Lose the fight by being launched off the stage (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cFightStatus == 0x08 && cGameMode == 00 && cFightDifficulty >= 2 && knockOff()
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vFightStatus["UR0"] == 0x08 && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 && knockOff("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vFightStatus["UR2"] == 0x08 && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 && knockOff("UR2"))
 )
 
 achievement(
     id = 321254,
     title = "Have Mercy!", points = 1,
     description = "Playing Arcade, Lose the fight to a No Mercy / Ultimate Combo (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 00 && cFightDifficulty >= 2 && cGameState == gFightSummary && gFightWinner == 0x02 && gVictoryAwesome()
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 && vGameState["UR0"] == gFightSummary && vFightWinner["UR0"] == 0x02 && gVictoryAwesome("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 && vGameState["UR2"] == gFightSummary && vFightWinner["UR2"] == 0x02 && gVictoryAwesome("UR2"))
 )
-
-// $04a32b: Team Battle: P1 Defeated Count (8-Bit)
-cP1Defeated = byte(0x04a32b)
-cP2Defeated = byte(0x04a33b)
-CP2TeamSize = byte(0x04a33a)
 
 achievement(
     id = 321250,
     title = "5-Up!", points = 10,
     description = "Win 5x Team Battle or more without losing a round (No Special Options, Difficulty: Normal+)",
-    trigger = isPlayer() && !usingSpecialSettings() && cGameMode == 01 && cFightDifficulty >= 2 && CP2TeamSize >= 0x05 && cP1Defeated == 0 && cP2Defeated == CP2TeamSize
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 01 && vFightDifficulty["UR0"] >= 2 && vP2TeamSize["UR0"] >= 0x05 && vP1Defeated["UR0"] == 0 && vP2Defeated["UR0"] == vP2TeamSize["UR0"]) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 01 && vFightDifficulty["UR2"] >= 2 && vP2TeamSize["UR2"] >= 0x05 && vP1Defeated["UR2"] == 0 && vP2Defeated["UR2"] == vP2TeamSize["UR2"]) 
 )
-
-// $1281fb: Arcade-P1 Fatals
-cP1Fatals = byte(0x1281fb)
 
 achievement(
     id = 321253,
     title = "Fatal Instinct", points = 25,
     description = "Playing Arcade Mode, Beat the Game By Performing A 'Fatal' In Every Match (No Special Options, Difficulty: Standard+)",
-    trigger = awesomeWin(cP1Character) && (cArcadeRound == 0x0a) && cFightDifficulty >= 2 && cP1Fatals == 0x0a
+    trigger =   (version == lVersions["UR0"] && awesomeWin("UR0", vP1Character["UR0"]) && (vArcadeRound["UR0"] == 0x0a) && vFightDifficulty["UR0"] >= 2 && vP1Fatals["UR0"] == 0x0a) ||
+                (version == lVersions["UR2"] && awesomeWin("UR2", vP1Character["UR2"]) && (vArcadeRound["UR2"] == 0x0a) && vFightDifficulty["UR2"] >= 2 && vP1Fatals["UR2"] == 0x0a)
 )
-
-// $1281f9: Arcade-P1 Win Streak
-cP1WinStreak = byte(0x1281f9)
 
 achievement(
     id = 321261,
     title = "Victory, No Question", points = 25,
     description = "Beat Arcade Mode without using a Continue (No Special Options, Difficulty: Normal+)",
-    trigger = arcadeStageWin() && (cArcadeRound == 0x0a) && cFightDifficulty >= 2 && cP1WinStreak == 0x0a
+    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") && (vArcadeRound["UR0"] == 0x0a) && vFightDifficulty["UR0"] >= 2 && vP1WinStreak["UR0"] == 0x0a) ||
+                (version == lVersions["UR2"] && arcadeStageWin("UR2") && (vArcadeRound["UR2"] == 0x0a) && vFightDifficulty["UR2"] >= 2 && vP1WinStreak["UR2"] == 0x0a)
 )
 
 // ----------------------------------------------------------------------------
 // -- Leaderboards
 // ----------------------------------------------------------------------------
 
-// Arcade Leaderboards
-for k in DifficultyLookup{
+// Arcade Clear Speed
+for k in lDifficulty{
     leaderboard(
-        title = "Arcade Rush - " + DifficultyLookup[k],
-        description = "Beat arcade mode as fast as you can. You can do it! (No Special Options, Difficulty: "+DifficultyLookup[k]+")",
-        start  = isPlayer() && !usingSpecialSettings() && cGameMode == 0x00 && cArcadeRound == 0x00 && cFightDifficulty == k && inFight(),
-        cancel = __ornext(cGameState == gTitlescreen || prev(cArcadeRound) < cArcadeRound),
-        submit = cArcadeRound == 0x0a,
-        value = measured(
-            prev(byte(0x1D5DE3)) != byte(0x1D5DE3)
-            ),
+        title = "Arcade Rush - " + lDifficulty[k],
+        description = "Beat arcade mode as fast as you can. You can do it! (No Special Options, Difficulty: "+lDifficulty[k]+")",
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vArcadeRound["UR0"] == 0x00 && vFightDifficulty["UR0"] == k && inFight("UR0")) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vArcadeRound["UR2"] == 0x00 && vFightDifficulty["UR2"] == k && inFight("UR2")),
+        cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen || prev(vArcadeRound["UR0"]) < vArcadeRound["UR0"])) ||
+                    (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen || prev(vArcadeRound["UR2"]) < vArcadeRound["UR2"])),
+        submit =    (version == lVersions["UR0"] && vArcadeRound["UR0"] == 0x0a) ||
+                    (version == lVersions["UR2"] && vArcadeRound["UR2"] == 0x0a),
+        value =     max_of(
+                        measured(prev(vFightClockFrames["UR0"]) != vFightClockFrames["UR0"], when=version == lVersions["UR0"]), 
+                        measured(prev(vFightClockFrames["UR2"]) != vFightClockFrames["UR2"], when=version == lVersions["UR2"])
+                    ),
         format = "FRAMES",
         lower_is_better = true,
-        id = 0
+id = 0
     ) 
 }
 
-// Arcade Training
-for k in TrainingLookup{
+// Arcade Training Speed
+for k in lTraining{
     leaderboard(
-        title = "Training - " + TrainingLookup[k],
-        description = "Beat the full training roster as fast as you can. You can do it! (No Special Options, Difficulty: "+TrainingLookup[k]+")",
-        start  = isPlayer() && !usingSpecialSettings() && cGameMode == 0x05 && tCurrentLevel == 00 && tCurrentRound == 00 && byte(0x1d882f) == 0x08 && cSetTrainingDifficulty == k && inFight(),
-        cancel = __ornext(cGameState == gTitlescreen),
-        submit = tCurrentLevel == 0x05,
-        value = 
-            prev(byte(0x1D5DE3)) != byte(0x1D5DE3) && disable_when(
-            byte(0x1d880f) != 0, until=byte(0x1d880f)==0),
+        title = "Training - " + lTraining[k],
+        description = "Beat the full training roster as fast as you can. You can do it! (No Special Options, Difficulty: "+lTraining[k]+")",
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x05 && vCurrentLevel["UR0"] == 00 && vCurrentRound["UR0"] == 00 && vTrainingFailCount["UR0"] == 0x08 && vSetTrainingDifficulty["UR0"] == k && inFight("UR0")) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x05 && vCurrentLevel["UR2"] == 00 && vCurrentRound["UR2"] == 00 && vTrainingFailCount["UR2"] == 0x08 && vSetTrainingDifficulty["UR2"] == k && inFight("UR2")),
+        cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen)) || 
+                    (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen)),
+        submit =    (version == lVersions["UR0"] && vCurrentLevel["UR0"] == 0x05) ||
+                    (version == lVersions["UR2"] && vCurrentLevel["UR0"] == 0x05),
+        value =     max_of(
+                        measured(prev(vFightClockFrames["UR0"]) != vFightClockFrames["UR0"],when=version == lVersions["UR0"] && vTrainingDemoMode["UR0"]==0),
+                        measured(prev(vFightClockFrames["UR2"]) != vFightClockFrames["UR2"],when=version == lVersions["UR2"] && vTrainingDemoMode["UR2"]==0)
+                    ),
         format = "FRAMES",
         lower_is_better = true,
         id = 0
@@ -1722,53 +1579,60 @@ TrainingPhaseLookup = {
     0x08: "☯☯☯☯"
 }
 
-rich_presence_conditional_display(cGameState == gFightSummary && gFightWinner == 0x01, "{0} ({1}) {2}| Victory!",
-    rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
-    rich_presence_lookup("Difficulty", cSetDifficulty, DifficultyLookup),
-    rich_presence_lookup("RoundNum", (cGameMode * 0xFF + cArcadeRound), RoundNumLookup, fallback="")
+for k in lVersions {
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gFightSummary && vFightWinner[k] == 0x01, "{0} ({1}) {2}| Victory!",
+        rich_presence_lookup("GameMode", vGameMode[k], lGameMode),
+        rich_presence_lookup("Difficulty", vSetDifficulty[k], lDifficulty),
+        rich_presence_lookup("RoundNum", (vGameMode[k] * 0xFF + vArcadeRound[k]), RoundNumLookup, fallback="")
+    )
+    
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gFightSummary && vFightWinner[k] == 0x02, "{0} ({1}) {2}| 💀 Continue?",
+        rich_presence_lookup("GameMode", vGameMode[k], lGameMode),
+        rich_presence_lookup("Difficulty", vSetDifficulty[k], lDifficulty),
+        rich_presence_lookup("RoundNum", (vGameMode[k] * 0xFF + vArcadeRound[k]), RoundNumLookup, fallback="")
+    )  
+    
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gBootscreen, "🔥 Loading Screen..")
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gTitlescreen, "🔥 Main Menu (Version {0})",
+        k
+    )
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gCharacterSelect, "🔥 Getting Ready to Play {0} Mode",
+        rich_presence_lookup("GameMode", vGameMode[k], lGameMode)
+    )
+    
+    rich_presence_conditional_display(version == lVersions[k] && inFight(k) && isDemo(k), "🍿 Demo: {0} vs {1}",
+        rich_presence_lookup("Fighter", vP1Character[k], lFighter),
+        rich_presence_lookup("Fighter", vP2Character[k], lFighter)
+    )
+
+    rich_presence_conditional_display(version == lVersions[k] && vGameMode[k] == 0x05, "{0}{1} {3} | {4} {5} of {6} ({2}) {7}",
+        rich_presence_lookup("Paused", vPauseMenu[k], PausedLookup, fallback="⏸️ "),
+        rich_presence_lookup("GameMode", vGameMode[k], lGameMode),
+        rich_presence_lookup("TrainingDifficulty", vSetTrainingDifficulty[k], lTraining),
+        rich_presence_lookup("Fighter", vP1Character[k], lFighter),
+        rich_presence_lookup("TrainingName", vCurrentLevel[k], lTrainingName),
+        rich_presence_macro("Number",vCurrentRound[k]+1),
+        rich_presence_macro("Number",vTotalRounds[k]),
+        rich_presence_lookup("TrainingPhase", vTrainingFailCount[k], TrainingPhaseLookup, fallback="••••")
+    )
+
+    rich_presence_conditional_display(version == lVersions[k] , "{0}{1} ({2}) {3}| {4} {5} {6}v {7}{8} {9} | 📍{10}",
+        rich_presence_lookup("Paused", vPauseMenu[k], PausedLookup, fallback="⏸️ "),
+        rich_presence_lookup("GameMode", vGameMode[k], lGameMode),
+        rich_presence_lookup("Difficulty", vSetDifficulty[k], lDifficulty),
+        rich_presence_lookup("RoundNum", (vGameMode[k] * 0x100 + vArcadeRound[k]), RoundNumLookup, fallback=""),
+        rich_presence_lookup("Fighter", vP1Character[k], lFighter),
+        rich_presence_lookup("HPBarL", p1TotalHealth(k), HPBarLLookup, fallback="▒▒▒▒▒❤"),
+        rich_presence_lookup("TeamNum", (vGameMode[k] * 0xFF + vP1TeamSize[k] + 0x00 - vP1TeamDefeated[k]), TeamNumLookup, fallback=""),
+        rich_presence_lookup("TeamNum", (vGameMode[k] * 0xFF + vP1TeamSize[k] + 0x00 - vP1TeamDefeated[k]), TeamNumLookup, fallback=""),
+        rich_presence_lookup("HPBarR", p2TotalHealth(k), HPBarRLookup, fallback="❤▒▒▒▒▒"),
+        rich_presence_lookup("Fighter", vP2Character[k], lFighter),
+        rich_presence_lookup("Stage", tbyte(0x04AD9C), lStage, fallback="Unkown")
+    )
+
+
+}
+
+rich_presence_display("Killer Instinct Gold Version not Recognised ({0})",
+    rich_presence_macro("Number",version)
 )
-
-rich_presence_conditional_display(cGameState == gFightSummary && gFightWinner == 0x02, "{0} ({1}) {2}| 💀 Continue?",
-    rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
-    rich_presence_lookup("Difficulty", cSetDifficulty, DifficultyLookup),
-    rich_presence_lookup("RoundNum", (cGameMode * 0xFF + cArcadeRound), RoundNumLookup, fallback="")
-)
-
-rich_presence_conditional_display(cGameState == gBootscreen, "🔥 Loading Screen..")
-rich_presence_conditional_display(cGameState == gTitlescreen, "🔥 Main Menu")
-rich_presence_conditional_display(cGameState == gCharacterSelect, "🔥 Getting Ready to Play {0} Mode",
-    rich_presence_lookup("GameMode", cGameMode, GameModeLookup)
-)
-
-rich_presence_conditional_display(inFight() && isDemo(), "🍿 Demo: {0} vs {1}",
-    rich_presence_lookup("Fighter", cP1Character, FighterLookup),
-    rich_presence_lookup("Fighter", cP2Character, FighterLookup)
-)
-
-rich_presence_conditional_display(cGameMode == 0x05, "{0}{1} {3} | {4} {5} of {6} ({2}) {7}",
-    rich_presence_lookup("Paused", cPauseMenu, PausedLookup, fallback="⏸️ "),
-    rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
-    rich_presence_lookup("TrainingDifficulty", cSetTrainingDifficulty, TrainingLookup),
-    rich_presence_lookup("Fighter", cP1Character, FighterLookup),
-    rich_presence_lookup("TrainingName", tCurrentLevel, TrainingNameLookup),
-    rich_presence_macro("Number",tCurrentRound+1),
-    rich_presence_macro("Number",tTotalRounds),
-    rich_presence_lookup("TrainingPhase", byte(0x1d882f), TrainingPhaseLookup, fallback="••••")
-)
-
-rich_presence_display("{0}{1} ({2}) {3}| {4} {5} {6}v {7}{8} {9} | 📍{10}",
-    rich_presence_lookup("Paused", cPauseMenu, PausedLookup, fallback="⏸️ "),
-    rich_presence_lookup("GameMode", cGameMode, GameModeLookup),
-    rich_presence_lookup("Difficulty", cSetDifficulty, DifficultyLookup),
-    rich_presence_lookup("RoundNum", (cGameMode * 0x100 + cArcadeRound), RoundNumLookup, fallback=""),
-    rich_presence_lookup("Fighter", cP1Character, FighterLookup),
-    rich_presence_lookup("HPBarL", cP1TotalHealth(), HPBarLLookup, fallback="▒▒▒▒▒❤"),
-    rich_presence_lookup("TeamNum", (cGameMode * 0xFF + byte(0x04A32A) + 0x00 - byte(0x04A32B)), TeamNumLookup, fallback=""),
-    rich_presence_lookup("TeamNum", (cGameMode * 0xFF + byte(0x04A33A) + 0x00 - byte(0x04A33B)), TeamNumLookup, fallback=""),
-    rich_presence_lookup("HPBarR", cP2TotalHealth(), HPBarRLookup, fallback="❤▒▒▒▒▒"),
-    rich_presence_lookup("Fighter", cP2Character, FighterLookup),
-    rich_presence_lookup("Stage", tbyte(0x04AD9C), StageLookup, fallback="Unkown")
-)
-
-
-
