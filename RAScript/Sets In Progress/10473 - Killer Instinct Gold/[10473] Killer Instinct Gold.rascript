@@ -475,6 +475,25 @@ vP2TeamDefeated = { // Team Battle-P2 Count of Defeated (8-Bit)
     "UR2": byte(0x04a33b) 
 }
 
+vMenuL = {
+    "UR0": bit5(0x06f0d6),
+    "UR2": bit5(0x06efc6) 
+}
+
+vMenuB = {
+    "UR0": bit7(0x06f0d7),
+    "UR2": bit7(0x06efc7) 
+}
+
+vArcadeDamage = {
+    "UR0": byte(0x12832a),
+    "UR2": byte(0x12821e) 
+}
+
+vArcadeCombo = {
+    "UR0": byte(0x128312),
+    "UR2": byte(0x12820b) 
+}
 // ----------------------------------------------------------------------------
 // -- Achievements: Arcade Wins
 // ----------------------------------------------------------------------------
@@ -611,6 +630,17 @@ lKnockOffStage = {
     0x07: 0x019754
 }
 
+lKnockOffStageName = {
+    0x00: "Bridge",
+    0x01: "Street",
+    0x02: "Ship",
+    0x03: "Stonehenge",
+    0x04: "Dojo",
+    0x05: "Castle",
+    0x06: "Helipad",
+    0x07: "Dungeon"
+}
+
 function getlKnockoffStage( type, ID ){
     if( type == "UR0") return lKnockOffStage[ID]-0x50
     else return lKnockOffStage[ID]
@@ -644,7 +674,7 @@ function knockOffWin( ver, charID, stageID ){
 
 function knockOffWinBuilder( arrID ){
     fighterName = lFighter[lKnockOffCharacter[arrID]]
-    stageName = lStage[lKnockOffStage[arrID]]
+    stageName = lKnockOffStageName[arrID]
     achievement(
         id = 0,
         title = lKnockOffAchievementTitles[arrID], points = 5,
@@ -1021,9 +1051,9 @@ achievement(
 for k in lDifficulty{
     leaderboard(
         title = "Arcade Rush - " + lDifficulty[k],
-        description = "Beat arcade mode as fast as you can. You can do it! (No Special Options, Difficulty: "+lDifficulty[k]+")",
-        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vArcadeRound["UR0"] == 0x00 && vFightDifficulty["UR0"] == k && inFight("UR0")) ||
-                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vArcadeRound["UR2"] == 0x00 && vFightDifficulty["UR2"] == k && inFight("UR2")),
+        description = "Beat arcade mode as fast as you can. Hold L+B entering Match 1 to Skip (No Special Options, Difficulty: "+lDifficulty[k]+")",
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vArcadeRound["UR0"] == 0x00 && vFightDifficulty["UR0"] == k && vFightTimer["UR0"] == 99 && vFightClockFrames["UR0"] == 0xc0 && (vMenuL["UR0"] + vMenuB["UR0"] < 2)) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vArcadeRound["UR2"] == 0x00 && vFightDifficulty["UR2"] == k && vFightTimer["UR2"] == 99 && vFightClockFrames["UR2"] == 0xc0 && (vMenuL["UR2"] + vMenuB["UR2"] < 2)),
         cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen || prev(vArcadeRound["UR0"]) < vArcadeRound["UR0"])) ||
                     (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen || prev(vArcadeRound["UR2"]) < vArcadeRound["UR2"])),
         submit =    (version == lVersions["UR0"] && vArcadeRound["UR0"] == 0x0a) ||
@@ -1055,6 +1085,42 @@ for k in lTraining{
                     ),
         format = "FRAMES",
         lower_is_better = true,
+        id = 0
+    ) 
+}
+
+for k in lFighter {
+    leaderboard(
+        title = "Combo Damage - " + lFighter[k],
+        description = "% of Damage from a Single Combo in Arcade Mode (No Special Options, Difficulty: Normal+, Minimum 10%)",
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeDamage["UR0"] >= 10) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeDamage["UR2"] >= 10),
+        cancel =    always_false(),
+        submit =    always_true(),
+        value =     max_of(
+                        measured(vArcadeDamage["UR0"],when=version == lVersions["UR0"]),
+                        measured(vArcadeDamage["UR2"],when=version == lVersions["UR2"])
+                    ),
+        format = "VALUE",
+        lower_is_better = false,
+        id = 0
+    ) 
+}
+
+for k in lFighter {
+    if(k != 0x0a ) leaderboard(
+        title = "Combo Length - " + lFighter[k],
+        description = "Length of a Single Combo in Arcade Mode (No Special Options, Difficulty: Normal+, Minimum 12 Hits)",
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeCombo["UR0"] >= 12) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeCombo["UR2"] >= 12),
+        cancel =    always_false(),
+        submit =    always_true(),
+        value =     max_of(
+                        measured(vArcadeCombo["UR0"],when=version == lVersions["UR0"]),
+                        measured(vArcadeCombo["UR2"],when=version == lVersions["UR2"])
+                    ),
+        format = "VALUE",
+        lower_is_better = false,
         id = 0
     ) 
 }
