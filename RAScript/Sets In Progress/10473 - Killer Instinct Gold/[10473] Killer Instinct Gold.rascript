@@ -40,18 +40,32 @@ lTraining = {
 }
 
 lStage = {
-    0x018EC0: "Bridge",
-    0x01419C: "Street",
-    0x01869C: "Spinal Ship",
-    0x015BB4: "Stonehenge",
-    0x019228: "Spaceship",
-    0x013BF4: "Museum",
-    0x016874: "Dojo",
-    0x0170B4: "Castle",
-    0x017AA0: "Helipad",
-    0x018404: "Jungle",
-    0x019754: "Dungeon",
-    0x0198B8: "Sky",
+    // UR0
+    0x018E70: "🗺️Bridge",
+    0x01414C: "🗺️Street",
+    0x01864C: "🗺️Spinal Ship",
+    0x015B64: "🗺️Stonehenge",
+    0x0191D8: "🗺️Spaceship",
+    0x013BA4: "🗺️Museum",
+    0x016824: "🗺️Dojo",
+    0x017064: "🗺️Castle",
+    0x017A50: "🗺️Helipad",
+    0x0183B4: "🗺️Jungle",
+    0x019704: "🗺️Dungeon",
+    0x019868: "🗺️Sky",
+    // UR2 
+    0x018EC0: "📍Bridge",
+    0x01419C: "📍Street",
+    0x01869C: "📍Spinal Ship",
+    0x015BB4: "📍Stonehenge",
+    0x019228: "📍Spaceship",
+    0x013BF4: "📍Museum",
+    0x016874: "📍Dojo",
+    0x0170B4: "📍Castle",
+    0x017AA0: "📍Helipad",
+    0x018404: "📍Jungle",
+    0x019754: "📍Dungeon",
+    0x0198B8: "📍Sky",
 }
 
 lFighter = {
@@ -597,6 +611,11 @@ lKnockOffStage = {
     0x07: 0x019754
 }
 
+function getlKnockoffStage( type, ID ){
+    if( type == "UR0") return lKnockOffStage[ID]-0x50
+    else return lKnockOffStage[ID]
+}
+
 lKnockOffCharacter = {
     0x00: 0x00,
     0x01: 0x01,
@@ -630,7 +649,7 @@ function knockOffWinBuilder( arrID ){
         id = 0,
         title = lKnockOffAchievementTitles[arrID], points = 5,
         description = "Playing Arcade as "+fighterName+" on "+fighterName+"'s "+stageName+", Use Your Environment To Finish Your Opponent Off (No Special Options, Difficulty: Normal+)",
-        trigger = (version == lVersions["UR0"] && knockOffWin("UR0",lKnockOffCharacter[arrID],lKnockOffStage[arrID])) || (version == lVersions["UR2"] && knockOffWin("UR2",lKnockOffCharacter[arrID],lKnockOffStage[arrID]))
+        trigger = (version == lVersions["UR0"] && knockOffWin("UR0",lKnockOffCharacter[arrID],getlKnockoffStage("UR0",arrID))) || (version == lVersions["UR2"] && knockOffWin("UR2",lKnockOffCharacter[arrID],getlKnockoffStage("UR2",arrID)))
     )
 }
 
@@ -1616,7 +1635,7 @@ for k in lVersions {
         rich_presence_lookup("TrainingPhase", vTrainingFailCount[k], TrainingPhaseLookup, fallback="••••")
     )
 
-    rich_presence_conditional_display(version == lVersions[k] , "{0}{1} ({2}) {3}| {4} {5} {6}v {7}{8} {9} | 📍{10}",
+    rich_presence_conditional_display(version == lVersions[k] , "{0}{1} ({2}) {3}| {4} {5} {6}v {7}{8} {9} | {10}",
         rich_presence_lookup("Paused", vPauseMenu[k], PausedLookup, fallback="⏸️ "),
         rich_presence_lookup("GameMode", vGameMode[k], lGameMode),
         rich_presence_lookup("Difficulty", vSetDifficulty[k], lDifficulty),
@@ -1627,7 +1646,7 @@ for k in lVersions {
         rich_presence_lookup("TeamNum", (vGameMode[k] * 0xFF + vP1TeamSize[k] + 0x00 - vP1TeamDefeated[k]), TeamNumLookup, fallback=""),
         rich_presence_lookup("HPBarR", p2TotalHealth(k), HPBarRLookup, fallback="❤▒▒▒▒▒"),
         rich_presence_lookup("Fighter", vP2Character[k], lFighter),
-        rich_presence_lookup("Stage", tbyte(0x04AD9C), lStage, fallback="Unkown")
+        rich_presence_lookup("Stage", vStageID[k], lStage, fallback="Unkown")
     )
 
 
