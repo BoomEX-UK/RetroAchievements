@@ -53,7 +53,7 @@ lStage = {
     0x0183B4: "🗺️Jungle",
     0x019704: "🗺️Dungeon",
     0x019868: "🗺️Sky",
-    // UR2 
+    // UR2 = UR0+0x50
     0x018EC0: "📍Bridge",
     0x01419C: "📍Street",
     0x01869C: "📍Spinal Ship",
@@ -1612,9 +1612,7 @@ for k in lVersions {
     )  
     
     rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gBootscreen, "🔥 Loading Screen..")
-    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gTitlescreen, "🔥 Main Menu (Version {0})",
-        k
-    )
+    rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gTitlescreen, "🔥 Main Menu")
     rich_presence_conditional_display(version == lVersions[k] && vGameState[k] == gCharacterSelect, "🔥 Getting Ready to Play {0} Mode",
         rich_presence_lookup("GameMode", vGameMode[k], lGameMode)
     )
