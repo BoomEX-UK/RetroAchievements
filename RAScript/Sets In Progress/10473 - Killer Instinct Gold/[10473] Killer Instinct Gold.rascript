@@ -33,6 +33,15 @@ lDifficulty = {
     5: "Master",
 }
 
+lArcadeTotalRounds = {
+    0: 0x09,
+    1: 0x0a,
+    2: 0x0a,
+    3: 0x0a,
+    4: 0x0a,
+    5: 0x0a,
+}
+
 lTraining = {
     0: "Easy",
     1: "Medium",
@@ -305,11 +314,11 @@ vGameMode = { // Game Mode (8-Bit)
 }
 function getGameModeName(ver) => GameModeLookup[vGameMode[ver]]
 
-vFightDifficulty = { // Match Difficulty (8-Bit)
-    "UR0": byte(0x1da002),
-    "UR2": byte(0x1da092)
-}
-function getFightDifficultyName() => DifficultyLookup[vFightDifficulty[ver]]
+//vFightDifficulty = { // Match Difficulty (8-Bit): Removed due to problems with Fight Data Scrub at the end of a match
+//    "UR0": byte(0x1da002),
+//    "UR2": byte(0x1da092)
+//}
+//function getFightDifficultyName() => DifficultyLookup[vFightDifficulty[ver]]
 
 vRuntime = { // Constant Run Timer: (32-Bit)
     "UR0": dword(0x00f69c),
@@ -534,11 +543,15 @@ function arcadeStageLose(ver){
 }
 
 function arcadeComplete(ver, difficultyID){
-    return arcadeStageWin(ver) && trigger_when((vArcadeRound[ver] == 0x0a)) && vFightDifficulty[ver] >= difficultyID
+    return arcadeStageWin(ver) && trigger_when((vArcadeRound[ver] == 0x0a)) && vSetDifficulty[ver] >= difficultyID
+}
+
+function arcadeComplete_trigger(ver, difficultyID){
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && trigger_when((vArcadeRound[ver] == 0x0a) && fightP1Win(ver)) && vSetDifficulty[ver] >= difficultyID
 }
 
 function arcadeCompleteChar(ver, charID, difficultyID){
-    return once(vP1Character[ver] == charID && vArcadeRound[ver] == 0x00 && inFight(ver)) && never(vP1Character[ver] != charID || onTitlescreenMenu(ver)) && arcadeComplete(ver,difficultyID) && vP1Character[ver] == charID
+    return once(vP1Character[ver] == charID && vArcadeRound[ver] == 0x00 && inFight(ver)) && never(version==lVersions[ver] && vP1Character[ver] != charID || onTitlescreenMenu(ver)) && arcadeComplete_trigger(ver,difficultyID) && vP1Character[ver] == charID
 }
 
 // Builders
@@ -556,7 +569,8 @@ function arcadeCharWinBuilder(charID, difficultyID){
         id = 0,
         title = lArcadeCharWinTitle[charID], points = 5,
         description = "Playing Arcade with " + lFighter[charID] + ", Beat the Game on Hard Difficulty or Higher (No Special Options)",
-        trigger = (version == lVersions["UR0"] && arcadeCompleteChar("UR0", charID, difficultyID)) || (version == lVersions["UR2"] && arcadeCompleteChar("UR2", charID, difficultyID))
+        trigger = (version == lVersions["UR0"] && arcadeCompleteChar("UR0", charID, difficultyID)) || 
+        (version == lVersions["UR2"] && arcadeCompleteChar("UR2", charID, difficultyID))
     )
 }
 
@@ -577,7 +591,7 @@ function breakerCountWin( ver, charID ){
     return
     measured(
         tally(3, p1ComboBreaker(ver)), 
-        when=isPlayer(ver) && (vGameMode[ver] == 00) && (vFightDifficulty[ver] >= 2) && !usingSpecialSettings(ver) && vP1Character[ver] == charID
+        when=isPlayer(ver) && (vGameMode[ver] == 00) && (vSetDifficulty[ver] >= 2) && !usingSpecialSettings(ver) && vP1Character[ver] == charID
     )
     && never(!inFight(ver))
     && fightP1Win(ver)
@@ -588,7 +602,8 @@ function breakerWinBuilder( charID ){
         id = 0,
         title = "Breakers: " + lFighter[charID], points = 5,
         description = "Playing Arcade as "+ lFighter[charID] +", Perform 3x Combo Breakers in a Single Fight and Win (No Special Options, Difficulty: Normal+)",
-        trigger = (version == lVersions["UR0"] && breakerCountWin("UR0", charID)) || (version == lVersions["UR2"] && breakerCountWin("UR2", charID))
+        trigger =   (version == lVersions["UR0"] && breakerCountWin("UR0", charID)) ||
+                    (version == lVersions["UR2"] && breakerCountWin("UR2", charID))
     )
 }
 
@@ -603,13 +618,13 @@ achievement(
     description = "Playing Arcade, Perform 5 Combo Breakers in a Single Fight and Win (No Special Options, Difficulty: Normal+)",
     trigger = (version == lVersions["UR0"] && measured(
         tally(5, p1ComboBreaker("UR0")), 
-        when=isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vFightDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0")
+        when=isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vSetDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0")
     )
     && never(!inFight("UR0"))
     && fightP1Win("UR0")) || 
     (version == lVersions["UR2"] && measured(
         tally(5, p1ComboBreaker("UR2")), 
-        when=isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vFightDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2")
+        when=isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vSetDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2")
     )
     && never(!inFight("UR2"))
     && fightP1Win("UR2"))
@@ -659,7 +674,7 @@ lKnockOffCharacter = {
 
 lKnockOffAchievementTitles = {
     0x00: "Troubled Waters",
-    0x01: "Training Hard",
+    0x01: "Train-ing Hard",
     0x02: "Walk the Plank",
     0x03: "The Secret of Stonehenge",
     0x04: "Dojo, Oh No!",
@@ -669,7 +684,7 @@ lKnockOffAchievementTitles = {
 }
 
 function knockOffWin( ver, charID, stageID ){
-    return isPlayer(ver) && !usingSpecialSettings(ver) && vFightStatus[ver] == 0x09 && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vStageID[ver] == stageID && vP1Character[ver] == charID && knockOff(ver)
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vFightStatus[ver] == 0x09 && vGameMode[ver] == 00 && vSetDifficulty[ver] >= 2 && vStageID[ver] == stageID && vP1Character[ver] == charID && knockOff(ver)
 }
 
 function knockOffWinBuilder( arrID ){
@@ -775,7 +790,7 @@ achievement(
 // ----------------------------------------------------------------------------
 
 function ultraWin( ver, charID ){
-    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryUltra(ver)
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vSetDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryUltra(ver)
 }
 
 function ultraWinBuilder( charID ){
@@ -798,7 +813,7 @@ for k in lFighter {
 // ----------------------------------------------------------------------------
 
 function awesomeWin( ver, charID ){
-    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vFightDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryAwesome(ver)
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && vSetDifficulty[ver] >= 2 && vP1Character[ver] == charID && vGameState[ver] == gFightSummary && vFightWinner[ver] == 0x01 && gVictoryAwesome(ver)
 }
 
 function awesomeWinBuilder( charID ){
@@ -935,8 +950,8 @@ achievement(
     id = 0,
     title = "Cold as Ice", points = 10,
     description = "Playing Arcade as Glacius on the Glacius' Spaceship defeat your opponent using the move 'Super Arctic Blast' (No Special Options, Difficulty: Normal+)",
-    trigger = (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x08 && vP1Character["UR0"] == 0x04 && vStageID["UR0"] == 0x019228) ||
-    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x08 && vP1Character["UR2"] == 0x04 && vStageID["UR2"] == 0x019228)
+    trigger = (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vSetDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x08 && vP1Character["UR0"] == 0x04 && vStageID["UR0"] == 0x019228) ||
+    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vSetDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x08 && vP1Character["UR2"] == 0x04 && vStageID["UR2"] == 0x019228)
 )
 
 // Anti-Cheat Check
@@ -955,41 +970,41 @@ achievement(
     id = 0,
     title = "Full-Gore", points = 10,
     description = "Playing Arcade as Fulgore on Fulgore's Museum, win a fight with Blocking Off, Blood High and Speed Ludicrous (No Other Special Options, Difficulty: Normal+)",
-    trigger = ((version == lVersions["UR0"] && fullgoreSpecialSettings("UR0") && isPlayer("UR0") && fightP1Win("UR0") && vGameMode["UR0"] == 00 &&  vFightDifficulty["UR0"] >= 2 && vP1Character["UR0"] == 0x05 && vStageID["UR0"] == 0x013BF4) ||
-    (version == lVersions["UR2"] && fullgoreSpecialSettings("UR2") && isPlayer("UR2") && fightP1Win("UR2") && vGameMode["UR2"] == 00 &&  vFightDifficulty["UR2"] >= 2 && vP1Character["UR2"] == 0x05 && vStageID["UR2"] == 0x013BF4))
+    trigger = ((version == lVersions["UR0"] && fullgoreSpecialSettings("UR0") && isPlayer("UR0") && fightP1Win("UR0") && vGameMode["UR0"] == 00 &&  vSetDifficulty["UR0"] >= 2 && vP1Character["UR0"] == 0x05 && vStageID["UR0"] == 0x013BF4) ||
+    (version == lVersions["UR2"] && fullgoreSpecialSettings("UR2") && isPlayer("UR2") && fightP1Win("UR2") && vGameMode["UR2"] == 00 &&  vSetDifficulty["UR2"] >= 2 && vP1Character["UR2"] == 0x05 && vStageID["UR2"] == 0x013BF4))
 )
 
 achievement(
     id = 0,
     title = "Me Tarzan, You Pain!", points = 10,
     description = "Playing Arcade as Maya on Maya's Jungle finish your opponent with the move 'Super Jungle Leap' (No Special Options, Difficulty: Normal+)",
-    trigger = ((version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x2a && vP1Character["UR0"] == 0x09 && vStageID["UR0"] == 0x018404) ||
-    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x2a && vP1Character["UR2"] == 0x09 && vStageID["UR2"] == 0x018404))
+    trigger = ((version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vSetDifficulty["UR0"] >= 2 && vP1LastMove["UR0"] == 0x2a && vP1Character["UR0"] == 0x09 && vStageID["UR0"] == 0x018404) ||
+    (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vSetDifficulty["UR2"] >= 2 && vP1LastMove["UR2"] == 0x2a && vP1Character["UR2"] == 0x09 && vStageID["UR2"] == 0x018404))
 )
 
 achievement(
     id = 0,
     title = "C-C-C-C-Combo Breaker", points = 1,
     description = "Playing Arcade as Combo on Combo's Street, Combo Break Another Combo's Combo (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vFightDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR0"] == 0x01419C) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vFightDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR2"] == 0x01419C)
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vSetDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR0"] == 0x01419C) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vSetDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR2"] == 0x01419C)
 )
 
 achievement(
     id = 321256,
     title = "Judge's Decision", points = 1,
     description = "Playing Arcade, Win a fight with a Time Out (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vFightDifficulty["UR0"] >= 2 && vFightTimer["UR0"] == 00) ||
-                (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vFightDifficulty["UR2"] >= 2 && vFightTimer["UR2"] == 00)
+    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") &&  vSetDifficulty["UR0"] >= 2 && vFightTimer["UR0"] == 00) ||
+                (version == lVersions["UR2"] && arcadeStageWin("UR2") &&  vSetDifficulty["UR2"] >= 2 && vFightTimer["UR2"] == 00)
 )
 
 achievement(
     id = 321251,
     title = "5th Finisher", points = 1,
     description = "Playing Arcade, Use your '5th Finisher' on your opponent (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vSetDifficulty["UR0"] >= 2 
                     && prev(vP1FinisherLevel["UR0"]) == 0x04 && vP1FinisherLevel["UR0"] == 0x05) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vSetDifficulty["UR2"] >= 2 
                     && prev(vP1FinisherLevel["UR2"]) == 0x04 && vP1FinisherLevel["UR2"] == 0x05)
 )
 
@@ -997,9 +1012,9 @@ achievement(
     id = 321257,
     title = "Pieces of Six", points = 1,
     description = "Playing Arcade as Spinal, Max out your Skull Collection (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vSetDifficulty["UR0"] >= 2 
                     && prev(vP1SpinalSkulls["UR0"]) < 0x06 && vP1SpinalSkulls["UR0"] == 0x06) || 
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vSetDifficulty["UR2"] >= 2 
                     && prev(vP1SpinalSkulls["UR2"]) < 0x06 && vP1SpinalSkulls["UR2"] == 0x06)
 )
 
@@ -1007,40 +1022,40 @@ achievement(
     id = 321255,
     title = "Humiliated", points = 1,
     description = "Playing Arcade, Lose the fight by being launched off the stage (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vFightStatus["UR0"] == 0x08 && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 && knockOff("UR0")) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vFightStatus["UR2"] == 0x08 && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 && knockOff("UR2"))
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vFightStatus["UR0"] == 0x08 && vGameMode["UR0"] == 00 && vSetDifficulty["UR0"] >= 2 && knockOff("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vFightStatus["UR2"] == 0x08 && vGameMode["UR2"] == 00 && vSetDifficulty["UR2"] >= 2 && knockOff("UR2"))
 )
 
 achievement(
     id = 321254,
     title = "Have Mercy!", points = 1,
     description = "Playing Arcade, Lose the fight to a No Mercy / Ultimate Combo (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vFightDifficulty["UR0"] >= 2 && vGameState["UR0"] == gFightSummary && vFightWinner["UR0"] == 0x02 && gVictoryAwesome("UR0")) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vFightDifficulty["UR2"] >= 2 && vGameState["UR2"] == gFightSummary && vFightWinner["UR2"] == 0x02 && gVictoryAwesome("UR2"))
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 00 && vSetDifficulty["UR0"] >= 2 && vGameState["UR0"] == gFightSummary && vFightWinner["UR0"] == 0x02 && gVictoryAwesome("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 00 && vSetDifficulty["UR2"] >= 2 && vGameState["UR2"] == gFightSummary && vFightWinner["UR2"] == 0x02 && gVictoryAwesome("UR2"))
 )
 
 achievement(
     id = 321250,
     title = "5-Up!", points = 10,
     description = "Win 5x Team Battle or more without losing a round (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 01 && vFightDifficulty["UR0"] >= 2 && vP2TeamSize["UR0"] >= 0x05 && vP1Defeated["UR0"] == 0 && vP2Defeated["UR0"] == vP2TeamSize["UR0"]) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 01 && vFightDifficulty["UR2"] >= 2 && vP2TeamSize["UR2"] >= 0x05 && vP1Defeated["UR2"] == 0 && vP2Defeated["UR2"] == vP2TeamSize["UR2"]) 
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 01 && vSetDifficulty["UR0"] >= 2 && vP2TeamSize["UR0"] >= 0x05 && vP1Defeated["UR0"] == 0 && vP2Defeated["UR0"] == vP2TeamSize["UR0"]) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 01 && vSetDifficulty["UR2"] >= 2 && vP2TeamSize["UR2"] >= 0x05 && vP1Defeated["UR2"] == 0 && vP2Defeated["UR2"] == vP2TeamSize["UR2"]) 
 )
 
 achievement(
     id = 321253,
     title = "Fatal Instinct", points = 25,
     description = "Playing Arcade Mode, Beat the Game By Performing A 'Fatal' In Every Match (No Special Options, Difficulty: Standard+)",
-    trigger =   (version == lVersions["UR0"] && awesomeWin("UR0", vP1Character["UR0"]) && (vArcadeRound["UR0"] == 0x0a) && vFightDifficulty["UR0"] >= 2 && vP1Fatals["UR0"] == 0x0a) ||
-                (version == lVersions["UR2"] && awesomeWin("UR2", vP1Character["UR2"]) && (vArcadeRound["UR2"] == 0x0a) && vFightDifficulty["UR2"] >= 2 && vP1Fatals["UR2"] == 0x0a)
+    trigger =   (version == lVersions["UR0"] && awesomeWin("UR0", vP1Character["UR0"]) && (vArcadeRound["UR0"] == 0x0a) && vSetDifficulty["UR0"] >= 2 && vP1Fatals["UR0"] == 0x0a) ||
+                (version == lVersions["UR2"] && awesomeWin("UR2", vP1Character["UR2"]) && (vArcadeRound["UR2"] == 0x0a) && vSetDifficulty["UR2"] >= 2 && vP1Fatals["UR2"] == 0x0a)
 )
 
 achievement(
     id = 321261,
     title = "Victory, No Question", points = 25,
     description = "Beat Arcade Mode without using a Continue (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") && (vArcadeRound["UR0"] == 0x0a) && vFightDifficulty["UR0"] >= 2 && vP1WinStreak["UR0"] == 0x0a) ||
-                (version == lVersions["UR2"] && arcadeStageWin("UR2") && (vArcadeRound["UR2"] == 0x0a) && vFightDifficulty["UR2"] >= 2 && vP1WinStreak["UR2"] == 0x0a)
+    trigger =   (version == lVersions["UR0"] && arcadeStageWin("UR0") && (vArcadeRound["UR0"] == 0x0a) && vSetDifficulty["UR0"] >= 2 && vP1WinStreak["UR0"] == 0x0a) ||
+                (version == lVersions["UR2"] && arcadeStageWin("UR2") && (vArcadeRound["UR2"] == 0x0a) && vSetDifficulty["UR2"] >= 2 && vP1WinStreak["UR2"] == 0x0a)
 )
 
 // ----------------------------------------------------------------------------
@@ -1052,12 +1067,12 @@ for k in lDifficulty{
     leaderboard(
         title = "Arcade Rush - " + lDifficulty[k],
         description = "Beat arcade mode as fast as you can. Hold L+B entering Match 1 to Skip (No Special Options, Difficulty: "+lDifficulty[k]+")",
-        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vArcadeRound["UR0"] == 0x00 && vFightDifficulty["UR0"] == k && vFightTimer["UR0"] == 99 && vFightClockFrames["UR0"] == 0xc0 && (vMenuL["UR0"] + vMenuB["UR0"] < 2)) ||
-                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vArcadeRound["UR2"] == 0x00 && vFightDifficulty["UR2"] == k && vFightTimer["UR2"] == 99 && vFightClockFrames["UR2"] == 0xc0 && (vMenuL["UR2"] + vMenuB["UR2"] < 2)),
-        cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen || prev(vArcadeRound["UR0"]) < vArcadeRound["UR0"])) ||
-                    (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen || prev(vArcadeRound["UR2"]) < vArcadeRound["UR2"])),
-        submit =    (version == lVersions["UR0"] && vArcadeRound["UR0"] == 0x0a) ||
-                    (version == lVersions["UR2"] && vArcadeRound["UR2"] == 0x0a),
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vArcadeRound["UR0"] == 0x00 && vSetDifficulty["UR0"] == k && vFightTimer["UR0"] == 99 && vFightClockFrames["UR0"] == 0xc0 && (vMenuL["UR0"] + vMenuB["UR0"] < 2)) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vArcadeRound["UR2"] == 0x00 && vSetDifficulty["UR2"] == k && vFightTimer["UR2"] == 99 && vFightClockFrames["UR2"] == 0xc0 && (vMenuL["UR2"] + vMenuB["UR2"] < 2)),
+        cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen || prev(vArcadeRound["UR0"]) > vArcadeRound["UR0"])) ||
+                    (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen || prev(vArcadeRound["UR2"]) > vArcadeRound["UR2"])),
+        submit =    (version == lVersions["UR0"] && vArcadeRound["UR0"] == lArcadeTotalRounds[k] && fightP1Win("UR0")) ||
+                    (version == lVersions["UR2"] && vArcadeRound["UR2"] == lArcadeTotalRounds[k] && fightP1Win("UR2")),
         value =     max_of(
                         measured(prev(vFightClockFrames["UR0"]) != vFightClockFrames["UR0"], when=version == lVersions["UR0"]), 
                         measured(prev(vFightClockFrames["UR2"]) != vFightClockFrames["UR2"], when=version == lVersions["UR2"])
@@ -1093,8 +1108,8 @@ for k in lFighter {
     leaderboard(
         title = "Combo Damage - " + lFighter[k],
         description = "% of Damage from a Single Combo in Arcade Mode (No Special Options, Difficulty: Normal+, Minimum 10%)",
-        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeDamage["UR0"] >= 10) ||
-                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeDamage["UR2"] >= 10),
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeDamage["UR0"] >= 10 && vSetDifficulty["UR0"] >= 0x02) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeDamage["UR2"] >= 10 && vSetDifficulty["UR2"] >= 0x02),
         cancel =    always_false(),
         submit =    always_true(),
         value =     max_of(
@@ -1111,8 +1126,8 @@ for k in lFighter {
     if(k != 0x0a ) leaderboard(
         title = "Combo Length - " + lFighter[k],
         description = "Length of a Single Combo in Arcade Mode (No Special Options, Difficulty: Normal+, Minimum 12 Hits)",
-        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeCombo["UR0"] >= 12) ||
-                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeCombo["UR2"] >= 12),
+        start  =    (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 0x00 && vP1Character["UR0"] == k && prev(vGameState["UR0"]) != 0x2a && vGameState["UR0"] == 0x2a && vArcadeCombo["UR0"] >= 12 && vSetDifficulty["UR0"] >= 0x02) ||
+                    (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 0x00 && vP1Character["UR2"] == k && prev(vGameState["UR2"]) != 0x2a && vGameState["UR2"] == 0x2a && vArcadeCombo["UR2"] >= 12 && vSetDifficulty["UR2"] >= 0x02),
         cancel =    always_false(),
         submit =    always_true(),
         value =     max_of(
