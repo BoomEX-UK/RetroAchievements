@@ -1093,7 +1093,7 @@ for k in lTraining{
         cancel =    (version == lVersions["UR0"] && __ornext(vGameState["UR0"] == gTitlescreen)) || 
                     (version == lVersions["UR2"] && __ornext(vGameState["UR2"] == gTitlescreen)),
         submit =    (version == lVersions["UR0"] && vCurrentLevel["UR0"] == 0x05) ||
-                    (version == lVersions["UR2"] && vCurrentLevel["UR0"] == 0x05),
+                    (version == lVersions["UR2"] && vCurrentLevel["UR2"] == 0x05),
         value =     max_of(
                         measured(prev(vFightClockFrames["UR0"]) != vFightClockFrames["UR0"],when=version == lVersions["UR0"] && vTrainingDemoMode["UR0"]==0),
                         measured(prev(vFightClockFrames["UR2"]) != vFightClockFrames["UR2"],when=version == lVersions["UR2"] && vTrainingDemoMode["UR2"]==0)
