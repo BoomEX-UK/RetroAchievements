@@ -212,12 +212,29 @@ vSetBlocking = { // Settings-L5 Blocking: (8-Bit) {0x00=On 0x01=Off}
 }
 
 // Anti-Cheat Check
-function usingSpecialSettings( ver ){
+function usingSpecialSettings_old( ver ){
     return vSetThrowDamage[ver] + vSetEasyBreakers [ver]
     + vSetPoweredFinishers[ver] + vSetFullBreakers[ver] + vSetFullSuperBar[ver]
     + vSetAutoDoubles[ver] + vSetFastFireballs[ver] + vSetMissiles[ver]
     + vSetCheapJuggles[ver] + vSetQuickOpeners[ver] + vSetKnockdown[ver] + vSetEasyUltimate[ver]
     + vSetBlocking[ver] > 0
+}
+
+function usingSpecialSettings( ver ){
+    return (
+    vSetThrowDamage[ver]        != 0 ||
+    vSetEasyBreakers[ver]       != 0 ||
+    vSetPoweredFinishers[ver]   != 0 ||
+    vSetFullBreakers[ver]       != 0 ||
+    vSetFullSuperBar[ver]       != 0 ||
+    vSetAutoDoubles[ver]        != 0 ||
+    vSetFastFireballs[ver]      != 0 ||
+    vSetMissiles[ver]           != 0 ||
+    vSetCheapJuggles[ver]       != 0 ||
+    vSetQuickOpeners[ver]       != 0 ||
+    vSetKnockdown[ver]          != 0 ||
+    vSetEasyUltimate[ver]       != 0 ||
+    vSetBlocking[ver]           != 0)
 }
 
 // ----------------------------------------------------------------------------
@@ -547,7 +564,7 @@ function arcadeComplete(ver, difficultyID){
 }
 
 function arcadeComplete_trigger(ver, difficultyID){
-    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && trigger_when((vArcadeRound[ver] == 0x0a) && fightP1Win(ver)) && vSetDifficulty[ver] >= difficultyID
+    return isPlayer(ver) && !usingSpecialSettings(ver) && vGameMode[ver] == 00 && ((vArcadeRound[ver] == 0x0a) && fightP1Win(ver)) && vSetDifficulty[ver] >= difficultyID
 }
 
 function arcadeCompleteChar(ver, charID, difficultyID){
@@ -568,7 +585,7 @@ function arcadeCharWinBuilder(charID, difficultyID){
     achievement(
         id = 0,
         title = lArcadeCharWinTitle[charID], points = 5,
-        description = "Playing Arcade with " + lFighter[charID] + ", beat the game on Hard difficulty or higher (No Special Options)",
+        description = "Playing Arcade as " + lFighter[charID] + " without switching characters, beat the game on Hard difficulty or higher (No Special Options)",
         trigger = (version == lVersions["UR0"] && arcadeCompleteChar("UR0", charID, difficultyID)) || 
         (version == lVersions["UR2"] && arcadeCompleteChar("UR2", charID, difficultyID))
     )
@@ -591,7 +608,7 @@ function breakerCountWin( ver, charID ){
     return
     measured(
         tally(3, p1ComboBreaker(ver)), 
-        when=isPlayer(ver) && (vGameMode[ver] == 00) && (vSetDifficulty[ver] >= 2) && !usingSpecialSettings(ver) && vP1Character[ver] == charID
+        when=isPlayer(ver) && (vGameMode[ver] == 00) && (vSetDifficulty[ver] >= 2) && !usingSpecialSettings_old(ver) && vP1Character[ver] == charID
     )
     && never(!inFight(ver))
     && fightP1Win(ver)

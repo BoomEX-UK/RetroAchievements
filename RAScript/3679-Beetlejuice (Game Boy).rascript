@@ -81,7 +81,7 @@ obj_area_house = {
     "mgBonusWinCon" : (
         once(vStage == tmpOverworld && vPlayerX < 0x005000 && vPlayerY > 0x01E000) && 
         never(prev(vLives) > vLives || prev(vHP) > vHP || vStage != tmpOverworld || vHouseStaircaseState != 0) && 
-        trigger_when(vPlayerY < 0x003F00)
+        trigger_when(vPlayerY <= 0x003F00)
     )
 
 }
