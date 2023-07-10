@@ -44,6 +44,7 @@ vSlideGameHearts = byte(0xcaf8) // Game-Slide Minigame Hearts (8-Bit)
 vSlideGameStatus = byte(0xc909) // System-Slide Bonus Minigame State (8-Bit)
 vFunnyFaceProgress = word(0xce04) // Game-Funny Faces Progress Bar (16-Bit)
 vBonusGameTimer = byte(0xcb43) // Game-Level Timer (8-Bit BCD)
+vBonusGameFrameCounter = byte(0xcb42) // Game-Level Timer Ticker (8-Bit)
 vDripPipeProgress = word(0xcb01) // Dripping Pipe Bar Progress (16-Bit)
 vGameBoilerProgress = byte(0xcaf8) // Game-Boiler Room Game Phase (8-Bit)
 vOddSpookOut1UpX = tbyte(0xcd00)
@@ -72,11 +73,11 @@ obj_area_house = {
     "areaID": tmparea,
     "mgType": mg_areaAndBonus,
     "mgAreaTitle"    : "The Key to the Attic",
-    "mgAreaDesc"     : "Climb Into The Attic",
+    "mgAreaDesc"     : "Climb into the attic",
     "mgAreaPoints"   : 5,
     "mgAreaWinCon"   : (prev(vStage) == tmpOverworld && vStage == 0x0e),
     "mgBonusTitle"  : "Running Amok",
-    "mgBonusDesc"   : "Run From the Ground Floor of the House to the Top Floor Without Falling on the Stairs, Taking Damage or Entering a Door",
+    "mgBonusDesc"   : "Run from the ground floor of the house to the top floor without falling on the stairs, taking damage or entering a door",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
         once(vStage == tmpOverworld && vPlayerX < 0x005000 && vPlayerY > 0x01E000) && 
@@ -97,7 +98,7 @@ obj_area_mg_house_laundry = {
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Domestic Bliss",
-    "mgBonusDesc"   : "Beat the Laundry Room Area without Taking Damage",
+    "mgBonusDesc"   : "Beat the laundry room area without taking damage",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -113,7 +114,7 @@ obj_area_mg_house_kitchen = {
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Chef’s Kiss",
-    "mgBonusDesc"   : "Beat the Kitchen Area without Taking Damage",
+    "mgBonusDesc"   : "Beat the kitchen area without taking damage",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -129,7 +130,7 @@ obj_area_mg_house_livingroom = {
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Room for the Living",
-    "mgBonusDesc"   : "Beat the Living Room Area without taking damage",
+    "mgBonusDesc"   : "Beat the living room area without taking damage",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -145,7 +146,7 @@ obj_area_mg_house_funnyface = {
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Flawed Beauty",
-    "mgBonusDesc"   : "Win the Funny Faces Contest without missing a move",
+    "mgBonusDesc"   : "Win the Funny Faces contest without missing a move",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (once(vStage == tmpid && vFunnyFaceProgress == 0) && never( prev(vFunnyFaceProgress) > 0 && prev(vFunnyFaceProgress) < vFunnyFaceProgress) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -161,7 +162,7 @@ obj_area_mg_house_bathroom = {
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Undead Plumber",
-    "mgBonusDesc"   : "Beat the Bathroom Area in under 30 Seconds",
+    "mgBonusDesc"   : "Beat the bathroom area in under 30 Seconds",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (once(vStage == tmpid && vBonusGameTimer == 0x60) && never(vBonusGameTimer < 0x30) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -177,7 +178,7 @@ obj_area_mg_house_boiler = {
     "mgPoints": 2,
     "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
     "mgBonusTitle"  : "Poltergushed",
-    "mgBonusDesc"   : "Beat the Boiler Room Area Without Catching a Possessed Drip Or Taking Damage",
+    "mgBonusDesc"   : "Beat the boiler room area without catching a possessed drip or taking damage",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (once(vDripPipeProgress == 0 && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP || (prev(vDripPipeProgress) > vDripPipeProgress && vGameBoilerProgress == 0)) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
 }
@@ -193,7 +194,7 @@ obj_area_attic = {
     "areaID": tmparea,
     "mgType": mg_area,
     "mgAreaTitle"   : "Up, Up and Away",
-    "mgAreaDesc"    : "Escape the House",
+    "mgAreaDesc"    : "Escape the house",
     "mgAreaPoints"  : 5,
     "mgAreaWinCon"  : (prev(vStage) == tmpOverworld && vStage == 0x14)
 }
@@ -209,7 +210,7 @@ obj_area_mg_attic_oddspook = {
     "mgPoints": 3,
     "winCon": (vStage == tmpid && vOddSpookOut1UpY >= 0x3200 && vOddSpookOut1UpY <= 0x5000),
     "mgBonusTitle"  : "Identity Parade",
-    "mgBonusDesc"   : "Beat the Odd-Spook-Out Bonus Stage without making a mistake",
+    "mgBonusDesc"   : "Beat the Odd-Spook-Out bonus stage without making a mistake",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (
             once(prev(vStage) == tmpOverworld && vStage == tmpid) && 
@@ -229,7 +230,7 @@ obj_area_mg_attic_spotspook = {
     "mgPoints": 5,
     "winCon": (vStage == tmpid && vSpotTheSpook1UpY >= 0x3200 && vSpotTheSpook1UpY <= 0x5000),
     "mgBonusTitle"  : "20/20 Vision",
-    "mgBonusDesc"   : "Beat Spot-the-Spook Bonus Stage without making a mistake",
+    "mgBonusDesc"   : "Beat Spot-the-Spook bonus stage without making a mistake",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
             once(prev(vStage) == tmpOverworld && vStage == tmpid) && 
@@ -247,7 +248,7 @@ obj_area_graveyard_house = {
     "areaID": 3,
     "mgType": mg_area,
     "mgAreaTitle"   : "Digging a Grave",
-    "mgAreaDesc"    : "Enter the Mines Under the Graveyard",
+    "mgAreaDesc"    : "Enter the mines under the graveyard",
     "mgAreaPoints"  : 5,
     "mgAreaWinCon"  : (prev(vStage) == 0x14 && vStage == 0x1c)
 }
@@ -278,7 +279,7 @@ obj_area_mg_graveyard_pairsa = {
     "mgPoints": 3,
     "winCon": (vStage == 0x1a && vPairsGameID == 0 && vLives > prev(vLives)),
     "mgBonusTitle"  : "Two’s Company",
-    "mgBonusDesc"   : "Beat the Pairs Game Round 1 in under 70 Seconds",
+    "mgBonusDesc"   : "Beat the pairs game round 1 in under 70 seconds",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (once(vStage == 0x1a && vBonusGameTimer == 0x99) && never(vBonusGameTimer < 0x29) && (vStage == 0x1a && vPairsGameID == 0 && trigger_when(vLives > prev(vLives))))   
 }
@@ -293,7 +294,7 @@ obj_area_mg_graveyard_pairsb = {
     "mgPoints": 5,
     "winCon": (vStage == 0x1a && vPairsGameID == 1 && vLives > prev(vLives)),
     "mgBonusTitle"  : "What a Pair!",
-    "mgBonusDesc"   : "Beat the Pairs Game Round 2 in under 70 Seconds",
+    "mgBonusDesc"   : "Beat the pairs game round 2 in under 70 seconds",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (once(vStage == 0x1a && vBonusGameTimer == 0x79) && never(vBonusGameTimer < 0x09) && (vStage == 0x1a && vPairsGameID == 1 && trigger_when(vLives > prev(vLives))))   
 
@@ -332,7 +333,7 @@ obj_area_underground_cart2b = {
     "areaID": 4,
     "mgType": mg_area,
     "mgAreaTitle"   : "Hell in a Minecart",
-    "mgAreaDesc"    : "Successfully cross the Mine Cart Tracks",
+    "mgAreaDesc"    : "Successfully cross the mine cart tracks",
     "mgAreaPoints"  : 10,
     "mgAreaWinCon"  : (prev(vStage) == 0x22 && vStage == 0x28)
 }
@@ -344,7 +345,7 @@ obj_area_mg_underground_slidingpuzzle = {
     "areaID": 4,
     "mgType": mg_bonus,
     "mgBonusTitle"  : "A Picture of Perfection",
-    "mgBonusDesc"   : "Beat Face Slide Bonus With at least 2 Hearts",
+    "mgBonusDesc"   : "Beat the face slide bonus with at least 2 hearts remaining",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (vStage == 0x22 && vSlideGameHearts >= 2 && prev(vSlideGameStatus) == 0x0a && trigger_when(vSlideGameStatus == 0x00))
 }
@@ -384,7 +385,7 @@ obj_area_final_boss = {
     "mgAreaPoints"  : 25,
     "mgAreaWinCon"  : (prev(vStage) == 0x2c && vStage == 0x30),
     "mgBonusTitle"  : "Ghostbusters!",
-    "mgBonusDesc"   : "Defeat the Demon Lord of the Netherworld With at Least 3 Lives Remaining",
+    "mgBonusDesc"   : "Defeat the Demon Lord of the Netherworld with at least 3 lives remaining",
     "mgBonusPoints" : 50,
     "mgBonusWinCon" : (prev(vStage) == 0x2c && vStage == 0x30 && vLives >= 3),
 
@@ -430,7 +431,7 @@ obj_bonus_grossRating = {
     "areaID": -1,
     "mgType": mg_bonus,
     "mgBonusTitle"  : "Rudiculus Maximus",
-    "mgBonusDesc"   : "Start with the Maximum Gross Rating (100)!",
+    "mgBonusDesc"   : "Start with the maximum gross rating (100)!",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
         vStage == 0x08 && vFunnyFaceGrossRating == 00 && 
@@ -448,7 +449,7 @@ obj_bonus_solveDemonPuzzleRush = {
     "areaID": -1,
     "mgType": mg_bonus,
     "mgBonusTitle"  : "Podium Position",
-    "mgBonusDesc"   : "Solve the Gargoyle Statue Puzzle in Less Than 3mins 30sec (Mini Game Time Not Counted)",
+    "mgBonusDesc"   : "Solve the gargoyle statue puzzle in less than 3mins 30sec (Mini game time not counted)",
     "mgBonusPoints" : 25,
     "mgBonusWinCon" : (
         once(vStage == 0x14 && prev(vFirstGargoyleStatueID) != 0x56 && vFirstGargoyleStatueID == 0x56) &&
@@ -581,17 +582,55 @@ for v in lMgArea{
 // -- Leaderboards
 // ----------------------------------------------------------------------------
 
+//- Removed as overlaps with 2x Pairs Game achievements/leaderboard
+
 leaderboard(
     title       = "Podium Position Leaderboard",
     description = "How Fast Can You Solve the Gargoyle Statue Puzzle in The Graveyard?",
     start       = state_ingame && !playerCheated() && vStage == 0x14 &&
                 prev(vFirstGargoyleStatueID) != 0x56 && vFirstGargoyleStatueID == 0x56,
-    cancel      = vStage != 0x14 && vStage != 0x16 && vStage != 0x18 && vStage != 0x1a,
-    submit      = vGargoyleSolved,
+    cancel      = __ornext(!state_ingame) && vStage != 0x1a && prior(vStage) != 0x1a,
+    submit      = __ornext(vGargoyleSolved),
     value       = measured(prev(vFrameCounter) != vFrameCounter, when=vStage != 0x1a),
     format      = "FRAMES",
     lower_is_better = true,
     id = 0
+) 
+
+leaderboard(
+    title       = "Undead Plumber Leaderboard",
+    description = "How fast can you fix the pipes in the Bathroom?",
+    start       = state_ingame && !playerCheated() && vStage == 0x0a && vBonusGameTimer == 0x60 && vBonusGameFrameCounter != prev(vBonusGameFrameCounter),
+    cancel      = __ornext((vStage != 0x0a && vStage != 0x00) || (!state_ingame)),
+    submit      = prev(vStage) == 0x0a && vStage == 0x00,
+    value       = measured((60-bcd(vBonusGameTimer))*60 + (vBonusGameFrameCounter*2)),
+    format      = "FRAMES",
+    lower_is_better = true,
+    id = 71163
+) 
+
+leaderboard(
+    title       = "Pairs Game #1 Leaderboard",
+    description = "How fast can you win the first Pairs game?",
+    start       = state_ingame && !playerCheated() && vStage == 0x1a && prev(vStage) ==0x16,
+    cancel      = (vStage != 0x1a && vStage != 0x16 && vBonusGameTimer == 0x00 && vBonusGameFrameCounter == 0x1d) || __ornext(!state_ingame && vBonusGameTimer != 0x99),
+    submit      = prev(vStage) == 0x1a && vStage == 0x16 && vBonusGameTimer > 0x00,
+    value       = measured((99-bcd(vBonusGameTimer))*60 + (vBonusGameFrameCounter*2)),
+    format      = "FRAMES",
+    lower_is_better = true,
+    id = 71164
+) 
+
+leaderboard(
+    title       = "Pairs Game #2 Leaderboard",
+    description = "How fast can you win the second Pairs game?",
+    start       = state_ingame && !playerCheated() && vStage == 0x1a && prev(vStage) == 0x18,
+    cancel      = (vStage != 0x1a && vStage != 0x18 && vBonusGameTimer == 0x00 && vBonusGameFrameCounter == 0x1d) || __ornext(!state_ingame && vBonusGameTimer != 0x79),
+    submit      = prev(vStage) == 0x1a && vStage == 0x18 && vBonusGameTimer > 0x00,
+    value       = measured((79-bcd(vBonusGameTimer))*60 + (vBonusGameFrameCounter*2)),
+    format      = "FRAMES",
+    lower_is_better = true,
+    id = 71165
 ) 
 
 // ----------------------------------------------------------------------------
@@ -610,4 +649,5 @@ rich_presence_conditional_display(state_ingame, "{4}{5}{0} {1} | {2}: {3} ",
 rich_presence_display("{0}",
     rich_presence_lookup("lSystemOverlay", vSystemOverlay, lSystemOverlay, fallback="Meeting Lydia")
 )
+
 
