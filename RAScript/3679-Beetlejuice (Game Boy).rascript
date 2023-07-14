@@ -39,6 +39,13 @@ mg_levelAndBonus = 3
 mg_area = 4
 mg_areaAndBonus = 5
 
+//-Constant Locations
+overworld_house = 0x00
+overworld_attic = 0x0e
+overworld_graveyard_house   = 0x14
+overworld_graveyard_street  = 0x16
+overworld_graveyard_hills   = 0x18
+
 vPairsGameID = byte(0xcaf4) // System-Pairs Game Identifier (8-Bit)
 vSlideGameHearts = byte(0xcaf8) // Game-Slide Minigame Hearts (8-Bit)
 vSlideGameStatus = byte(0xc909) // System-Slide Bonus Minigame State (8-Bit)
@@ -63,11 +70,10 @@ vFirstGargoyleStatueID = byte(0xcc08)
 
 //- A1 House
 
-tmpOverworld = 0x00
 tmparea = 0x01
 
 obj_area_house = {
-    "id": tmpOverworld,
+    "id": overworld_house,
     "name": "House",
     "desc": "Exploring the House",
     "areaID": tmparea,
@@ -75,13 +81,13 @@ obj_area_house = {
     "mgAreaTitle"    : "The Key to the Attic",
     "mgAreaDesc"     : "Climb into the attic",
     "mgAreaPoints"   : 5,
-    "mgAreaWinCon"   : (prev(vStage) == tmpOverworld && vStage == 0x0e),
+    "mgAreaWinCon"   : (prev(vStage) == overworld_house && vStage == 0x0e),
     "mgBonusTitle"  : "Running Amok",
     "mgBonusDesc"   : "Run from the ground floor of the house to the top floor without falling on the stairs, taking damage or entering a door",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
-        once(vStage == tmpOverworld && vPlayerX < 0x005000 && vPlayerY > 0x01E000) && 
-        never(prev(vLives) > vLives || prev(vHP) > vHP || vStage != tmpOverworld || vHouseStaircaseState != 0) && 
+        once(vStage == overworld_house && vPlayerX < 0x005000 && vPlayerY > 0x01E000) && 
+        never(prev(vLives) > vLives || prev(vHP) > vHP || vStage != overworld_house || vHouseStaircaseState != 0) && 
         trigger_when(vPlayerY <= 0x003F00)
     )
 
@@ -96,11 +102,11 @@ obj_area_mg_house_laundry = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "Wash Away Your Sins",
     "mgPoints": 1,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Domestic Bliss",
     "mgBonusDesc"   : "Beat the laundry room area without taking damage",
     "mgBonusPoints" : 5,
-    "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(prev(vStage) == overworld_house && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 tmpid = 0x04
@@ -112,11 +118,11 @@ obj_area_mg_house_kitchen = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "A Hand in the Kitchen",
     "mgPoints": 1,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Chef’s Kiss",
     "mgBonusDesc"   : "Beat the kitchen area without taking damage",
     "mgBonusPoints" : 5,
-    "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(prev(vStage) == overworld_house && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 tmpid = 0x06
@@ -128,11 +134,11 @@ obj_area_mg_house_livingroom = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "No Time for TV",
     "mgPoints": 1,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Room for the Living",
     "mgBonusDesc"   : "Beat the living room area without taking damage",
     "mgBonusPoints" : 5,
-    "mgBonusWinCon" : (once(prev(vStage) == tmpOverworld && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(prev(vStage) == overworld_house && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 tmpid = 0x08
@@ -144,11 +150,11 @@ obj_area_mg_house_funnyface = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "Freaky Faces",
     "mgPoints": 1,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Flawed Beauty",
     "mgBonusDesc"   : "Win the Funny Faces contest without missing a move",
     "mgBonusPoints" : 5,
-    "mgBonusWinCon" : (once(vStage == tmpid && vFunnyFaceProgress == 0) && never( prev(vFunnyFaceProgress) > 0 && prev(vFunnyFaceProgress) < vFunnyFaceProgress) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(vStage == tmpid && vFunnyFaceProgress == 0) && never( prev(vFunnyFaceProgress) > 0 && prev(vFunnyFaceProgress) < vFunnyFaceProgress) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 tmpid = 0x0a
@@ -160,11 +166,11 @@ obj_area_mg_house_bathroom = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "Personal Hygene",
     "mgPoints": 1,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Undead Plumber",
     "mgBonusDesc"   : "Beat the bathroom area in under 30 Seconds",
     "mgBonusPoints" : 5,
-    "mgBonusWinCon" : (once(vStage == tmpid && vBonusGameTimer == 0x60) && never(vBonusGameTimer < 0x30) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(vStage == tmpid && vBonusGameTimer == 0x60) && never(vBonusGameTimer < 0x30) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 tmpid = 0x0c
@@ -176,19 +182,18 @@ obj_area_mg_house_boiler = {
     "mgType": mg_levelAndBonus,
     "mgTitle": "Drip Drip",
     "mgPoints": 2,
-    "winCon": (prev(vStage) == tmpid && vStage == tmpOverworld),
+    "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Poltergushed",
     "mgBonusDesc"   : "Beat the boiler room area without catching a possessed drip or taking damage",
     "mgBonusPoints" : 10,
-    "mgBonusWinCon" : (once(vDripPipeProgress == 0 && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP || (prev(vDripPipeProgress) > vDripPipeProgress && vGameBoilerProgress == 0)) && prev(vStage) == tmpid && trigger_when(vStage == tmpOverworld))
+    "mgBonusWinCon" : (once(vDripPipeProgress == 0 && vStage == tmpid) && never(prev(vLives) > vLives || prev(vHP) > vHP || (prev(vDripPipeProgress) > vDripPipeProgress && vGameBoilerProgress == 0)) && prev(vStage) == tmpid && trigger_when(vStage == overworld_house))
 }
 
 //- A2 Attic
 
 tmparea = 0x02
-tmpOverworld = 0x0e
 obj_area_attic = {
-    "id": tmpOverworld,
+    "id": overworld_attic,
     "name": "Attic",
     "desc": "Exploring Attic",
     "areaID": tmparea,
@@ -196,7 +201,7 @@ obj_area_attic = {
     "mgAreaTitle"   : "Up, Up and Away",
     "mgAreaDesc"    : "Escape the house",
     "mgAreaPoints"  : 5,
-    "mgAreaWinCon"  : (prev(vStage) == tmpOverworld && vStage == 0x14)
+    "mgAreaWinCon"  : (prev(vStage) == overworld_attic && vStage == 0x14)
 }
 
 tmpid = 0x10
@@ -213,7 +218,7 @@ obj_area_mg_attic_oddspook = {
     "mgBonusDesc"   : "Beat the Odd-Spook-Out bonus stage without making a mistake",
     "mgBonusPoints" : 5,
     "mgBonusWinCon" : (
-            once(prev(vStage) == tmpOverworld && vStage == tmpid) && 
+            once(prev(vStage) == overworld_attic && vStage == tmpid) && 
             never(vOddSpookOut1UpY < 0x1e00 && vOddSpookOut1UpX > 0 && vOddSpookOutHit == 0x30) && 
             (vStage == tmpid && trigger_when(vOddSpookOut1UpY >= 0x3200 && vOddSpookOut1UpY <= 0x5000))
     )
@@ -233,7 +238,7 @@ obj_area_mg_attic_spotspook = {
     "mgBonusDesc"   : "Beat Spot-the-Spook bonus stage without making a mistake",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
-            once(prev(vStage) == tmpOverworld && vStage == tmpid) && 
+            once(prev(vStage) == overworld_attic && vStage == tmpid) && 
             never(byte(0xc0ed) == 0x40 || byte(0xc0ed) == 0x50) && 
             (vStage == tmpid && trigger_when(vSpotTheSpook1UpY >= 0x3200 && vSpotTheSpook1UpY <= 0x5000))
     )
@@ -242,7 +247,7 @@ obj_area_mg_attic_spotspook = {
 //- A3 Graveyard
 
 obj_area_graveyard_house = {
-    "id": 0x14,
+    "id": overworld_graveyard_house,
     "name": "Graveyard",
     "desc": "Outside the House",
     "areaID": 3,
@@ -250,11 +255,11 @@ obj_area_graveyard_house = {
     "mgAreaTitle"   : "Digging a Grave",
     "mgAreaDesc"    : "Enter the mines under the graveyard",
     "mgAreaPoints"  : 5,
-    "mgAreaWinCon"  : (prev(vStage) == 0x14 && vStage == 0x1c)
+    "mgAreaWinCon"  : (prev(vStage) == overworld_graveyard_house && vStage == 0x1c)
 }
 
 obj_area_graveyard_street = {
-    "id": 0x16,
+    "id": overworld_graveyard_street,
     "name": "Graveyard",
     "desc": "Crossing the Street",
     "areaID": 3,
@@ -262,7 +267,7 @@ obj_area_graveyard_street = {
 }
 
 obj_area_graveyard_hills = {
-    "id": 0x18,
+    "id": overworld_graveyard_hills,
     "name": "Graveyard",
     "desc": "Climbing the Hills",
     "areaID": 3,
@@ -582,8 +587,6 @@ for v in lMgArea{
 // -- Leaderboards
 // ----------------------------------------------------------------------------
 
-//- Removed as overlaps with 2x Pairs Game achievements/leaderboard
-
 leaderboard(
     title       = "Podium Position Leaderboard",
     description = "How Fast Can You Solve the Gargoyle Statue Puzzle in The Graveyard?",
@@ -594,7 +597,7 @@ leaderboard(
     value       = measured(prev(vFrameCounter) != vFrameCounter, when=vStage != 0x1a),
     format      = "FRAMES",
     lower_is_better = true,
-    id = 0
+    id = 71166
 ) 
 
 leaderboard(
@@ -637,7 +640,7 @@ leaderboard(
 // -- Rich Presence
 // ----------------------------------------------------------------------------
 
-rich_presence_conditional_display(state_ingame, "{4}{5}{0} {1} | {2}: {3} ",
+rich_presence_conditional_display(state_ingame, "{4}{5}{0} {1} | {2}: {3}",
     rich_presence_macro("Number",vLives),
     rich_presence_lookup("lHP", vHP, lHP),
     rich_presence_lookup("lAreaNumber", vStage, lAreaNumber, fallback="S?"),
