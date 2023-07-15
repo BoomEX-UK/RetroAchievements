@@ -58,6 +58,7 @@ vOddSpookOut1UpX = tbyte(0xcd00)
 vOddSpookOut1UpY = tbyte(0xcd03)
 vOddSpookOutHit = byte(0xc94d)
 vSpotTheSpook1UpY = tbyte(0xcb03)
+vSpotTheSpookResult = byte(0xc0ed)
 vHouseStaircaseState = byte(0xca0d) // Game-House Staircase State (8-Bit)
 vFunnyFaceGrossRating = byte(0xcb73) // Game-Funny Faces Gross Rating (8-Bit BCD)
 vFunnyFaceSelection = byte(0xc909) // System-Funny Faces Selection Number (8-Bit)
@@ -86,7 +87,7 @@ obj_area_house = {
     "mgBonusDesc"   : "Run from the ground floor of the house to the top floor without falling on the stairs, taking damage or entering a door",
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
-        once(vStage == overworld_house && vPlayerX < 0x005000 && vPlayerY > 0x01E000) && 
+        once(vStage == overworld_house && vPlayerX < 0x005000 && vPlayerX > 0x001000 && vPlayerY == 0x01EFFF) && 
         never(prev(vLives) > vLives || prev(vHP) > vHP || vStage != overworld_house || vHouseStaircaseState != 0) && 
         trigger_when(vPlayerY <= 0x003F00)
     )
@@ -239,7 +240,7 @@ obj_area_mg_attic_spotspook = {
     "mgBonusPoints" : 10,
     "mgBonusWinCon" : (
             once(prev(vStage) == overworld_attic && vStage == tmpid) && 
-            never(byte(0xc0ed) == 0x40 || byte(0xc0ed) == 0x50) && 
+            never(vSpotTheSpookResult == 0x40 || vSpotTheSpookResult == 0x50) && 
             (vStage == tmpid && trigger_when(vSpotTheSpook1UpY >= 0x3200 && vSpotTheSpook1UpY <= 0x5000))
     )
 }
@@ -652,5 +653,6 @@ rich_presence_conditional_display(state_ingame, "{4}{5}{0} {1} | {2}: {3}",
 rich_presence_display("{0}",
     rich_presence_lookup("lSystemOverlay", vSystemOverlay, lSystemOverlay, fallback="Meeting Lydia")
 )
+
 
 

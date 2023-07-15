@@ -73,7 +73,7 @@ function cheatprotection() => cheat_all_leagues + cheat_all_cars +
 //               Emulator Version: 1.15.0
 achievement(
     title = "They Call Me a Pro", points = 10,
-    description = "Win 1st in every race_arena in Professional",
+    description = "Win 1st in every race & arena in Professional",
     id = 48451, badge = "49309", published = "23/05/2017 07:20:44", modified = "22/10/2019 16:39:01",
     trigger =
         cheatprotection()  &&
