@@ -1005,7 +1005,7 @@ achievement(
     title = "C-C-C-C-Combo Breaker", points = 1,
     description = "Playing Arcade as Combo on Combo's Street, combo break another Combo's combo (No Special Options, Difficulty: Normal+)",
     trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && (vGameMode["UR0"] == 00) && (vSetDifficulty["UR0"] >= 2) && !usingSpecialSettings("UR0") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR0"] == 0x01419C) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vSetDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2") && p1ComboBreaker("UR0") && vP1Character["UR0"] == 0x01 && vStageID["UR2"] == 0x01419C)
+                (version == lVersions["UR2"] && isPlayer("UR2") && (vGameMode["UR2"] == 00) && (vSetDifficulty["UR2"] >= 2) && !usingSpecialSettings("UR2") && p1ComboBreaker("UR2") && vP1Character["UR2"] == 0x01 && vStageID["UR2"] == 0x01419C)
 )
 
 achievement(
@@ -1058,16 +1058,16 @@ achievement(
     id = 321250,
     title = "5-Up!", points = 10,
     description = "Win 5x Team Battle or more without losing a round (No Special Options, Difficulty: Normal+)",
-    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 01 && vSetDifficulty["UR0"] >= 2 && vP2TeamSize["UR0"] >= 0x05 && vP1Defeated["UR0"] == 0 && vP2Defeated["UR0"] == vP2TeamSize["UR0"]) ||
-                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 01 && vSetDifficulty["UR2"] >= 2 && vP2TeamSize["UR2"] >= 0x05 && vP1Defeated["UR2"] == 0 && vP2Defeated["UR2"] == vP2TeamSize["UR2"]) 
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && vGameMode["UR0"] == 01 && vSetDifficulty["UR0"] >= 2 && vP2TeamSize["UR0"] >= 0x05 && vP1Defeated["UR0"] == 0 && fightP1Win("UR0")) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && vGameMode["UR2"] == 01 && vSetDifficulty["UR2"] >= 2 && vP2TeamSize["UR2"] >= 0x05 && vP1Defeated["UR2"] == 0 && fightP1Win("UR2")) 
 )
 
 achievement(
     id = 321253,
     title = "Fatal Instinct", points = 25,
     description = "Playing Arcade Mode, beat the game by performing a 'Fatal' in every match (No Special Options, Difficulty: Standard+)",
-    trigger =   (version == lVersions["UR0"] && awesomeWin("UR0", vP1Character["UR0"]) && (vArcadeRound["UR0"] == 0x0a) && vSetDifficulty["UR0"] >= 2 && vP1Fatals["UR0"] == 0x0a) ||
-                (version == lVersions["UR2"] && awesomeWin("UR2", vP1Character["UR2"]) && (vArcadeRound["UR2"] == 0x0a) && vSetDifficulty["UR2"] >= 2 && vP1Fatals["UR2"] == 0x0a)
+    trigger =   (version == lVersions["UR0"] && isPlayer("UR0") && !usingSpecialSettings("UR0") && fightP1Win("UR0") && vArcadeRound["UR0"] == 0x0a && vSetDifficulty["UR0"] >= 2 && vP1Fatals["UR0"] >= 0x0a) ||
+                (version == lVersions["UR2"] && isPlayer("UR2") && !usingSpecialSettings("UR2") && fightP1Win("UR2") && vArcadeRound["UR2"] == 0x0a && vSetDifficulty["UR2"] >= 2 && vP1Fatals["UR2"] >= 0x0a)
 )
 
 achievement(
