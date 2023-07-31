@@ -67,23 +67,6 @@ function cheatprotection() => cheat_all_leagues + cheat_all_cars +
 // - Unresolved
 // -------------------------------------
 
-// Ticket 58432: Unlocked despite coming second in the Junkyard arena. Using the police car.
-//               RetroAchievements Hash: 7FCCB47498EEC06E96AE9372247D1E90
-//               Emulator: RALibRetro (Parallel)
-//               Emulator Version: 1.15.0
-achievement(
-    title = "They Call Me a Pro", points = 10,
-    description = "Win 1st in every race & arena in Professional",
-    id = 48451, badge = "49309", published = "23/05/2017 07:20:44", modified = "22/10/2019 16:39:01",
-    trigger =
-        cheatprotection()  &&
-        exp_level == 0x02 &&
-        current_track == tracks["alpine_ridge"] &&
-        word(0x126188) == 0x0F && 
-        prev(race_results_total_score) == 0x87 &&
-        race_results_total_score == 0x00
-)
-
 // -------------------------------------
 // - Resolved
 // -------------------------------------
@@ -223,4 +206,25 @@ achievement(
         car_selected == cars["baja_buggy"] &&
         prev(race_total_score) < 500 &&
         race_total_score >= 500
+)
+
+// -------------------------------------
+// - Closed
+// -------------------------------------
+
+// Ticket 58432: Unlocked despite coming second in the Junkyard arena. Using the police car.
+//               RetroAchievements Hash: 7FCCB47498EEC06E96AE9372247D1E90
+//               Emulator: RALibRetro (Parallel)
+//               Emulator Version: 1.15.0
+achievement(
+    title = "They Call Me a Pro", points = 10,
+    description = "Win 1st in every race & arena in Professional",
+    id = 48451, badge = "49309", published = "23/05/2017 07:20:44", modified = "22/10/2019 16:39:01",
+    trigger =
+        cheatprotection()  &&
+        exp_level == 0x02 &&
+        current_track == tracks["alpine_ridge"] &&
+        word(0x126188) == 0x0F && 
+        prev(race_results_total_score) == 0x87 &&
+        race_results_total_score == 0x00
 )
