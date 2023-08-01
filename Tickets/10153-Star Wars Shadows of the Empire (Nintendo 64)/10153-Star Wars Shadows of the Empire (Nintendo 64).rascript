@@ -24,6 +24,14 @@ const_titlescreen    = 0
 const_saveSelect     = 3
 const_saveLoaded     = 2
 
+// Hoth 0x00
+hoth_phase = byte(0x0E183C)
+const_hoth_drone = 0
+const_hoth_atst = 1
+const_hoth_atat1 = 2
+const_hoth_atat2 = 3
+const_hoth_results = 4
+
 // Sewers 0x07
 dianoga_hp = float(0x1be114)
 sewer_underwaterTime = float(0x0e0e30)
@@ -42,55 +50,6 @@ weapon_selected_xizor = byte(0x1B006E)
 // -------------------------------------
 // - Unresolved
 // -------------------------------------
-
-// Ticket 58400: I didn't actually unlock this one, but it triggered. I was playing the level on hard, failed, went
-//               back to the main menu, started a different level (I think Gall Spaceportl), and it triggered. Guessing
-//               it needs to reset on changing level, or if it already does, I guess the level ID must not change soon
-//               enough to prevent the achievement popping, but haven't looked at the code.
-//               RetroAchievements Hash: C7B40352AAD8D863D88D51672F9A0087
-//               Emulator: RetroArch (Mupen64-Next)
-//               Emulator Version: 1.14.0
-achievement(
-    title = "No Need For Tow Cables", points = 10,
-    description = "Destroy the AT-ATs without the use of Tow Cables (On Hard or Jedi).",
-    id = 56670, badge = "59174", published = "26/12/2017 19:11:52", modified = "06/01/2021 01:35:58",
-    trigger = byte(0x0E1898) == 0x03 && byte(0x18DCA2) == 0x00 && once(current_level_time == 0x4001) && never(byte(0x0E1898)
-               == 0x05) && never(byte(0x0E1898) == 0xFF) && main_menu_id != const_titlescreen && main_menu_id != 0x57 &&
-              ((get_file_stats("current_stage") == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BC79) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BCF7) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BD6D) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BC03) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BC79) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BCF7) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BD6D) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BC03) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BC79) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BCF7) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BD6D) == 0x00 && word(0x1ECF5E) > 0xA000 && word(0x1ECD16) == 0x00) ||
-               (byte(0x18BC03) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BC79) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BCF7) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) > 0xA000) ||
-               (byte(0x18BD6D) == 0x00 && word(0x1ECF5E) == 0x00 && word(0x1ECD16) > 0xA000))
-)
-
-// Ticket 56480: за 21 секунду проходил все равно трофей не падает
-//               RetroAchievements Hash: C7B40352AAD8D863D88D51672F9A0087
-//               Emulator: RetroArch (Основной)
-//               Emulator Version: 1.3
-achievement(
-    title = "Speedy in a Speeder", points = 5,
-    description = "Complete the first stage of the Battle of Hoth in 25 seconds or less.",
-    id = 56671, badge = "59175", published = "26/12/2017 19:12:01", modified = "12/09/2020 17:10:15",
-    trigger = prev(byte(0x0E183C)) == 0x00 && byte(0x0E183C) == 0x01 && current_level_time <= 0x39 && never(current_level_time >
-               0x39) && byte(0x1EB22A) != 0x41F0 && never(main_menu_id == const_titlescreen) &&
-              ((byte(0x18BC03) == 0x00) ||
-               (byte(0x18BC79) == 0x00) ||
-               (byte(0x18BCF7) == 0x00) ||
-               (byte(0x18BD6D) == 0x00))
-)
-
-
 
 // -------------------------------------
 // - Resolved
@@ -165,6 +124,42 @@ achievement(
         never(sewer_underwaterTime == 0) && 
         trigger_when(dianoga_hp < 1)
 )
+
+// Ticket 56480: за 21 секунду проходил все равно трофей не падает
+//               RetroAchievements Hash: C7B40352AAD8D863D88D51672F9A0087
+//               Emulator: RetroArch (Основной)
+//               Emulator Version: 1.3
+achievement(
+    title = "Speedy in a Speeder", points = 5,
+    description = "Complete the first stage of the Battle of Hoth in 25 seconds or less. (Any Difficulty)",
+    id = 56671, badge = "59175", published = "26/12/2017 19:12:01", modified = "12/09/2020 17:10:15",
+    trigger =
+        get_file_stats("current_stage") == 0x00 &&
+        prev(hoth_phase) == const_hoth_drone &&
+        trigger_when(hoth_phase == const_hoth_atst) &&
+        once(prev(current_level_time) == 0 && current_level_time > 0 && get_file_stats("current_stage") == 0x00) &&
+        never(current_level_time == 00 || tally(45*25,prev(current_level_time) != current_level_time) || get_file_stats("current_stage") != 00)
+)
+
+// Ticket 58400: I didn't actually unlock this one, but it triggered. I was playing the level on hard, failed, went
+//               back to the main menu, started a different level (I think Gall Spaceportl), and it triggered. Guessing
+//               it needs to reset on changing level, or if it already does, I guess the level ID must not change soon
+//               enough to prevent the achievement popping, but haven't looked at the code.
+//               RetroAchievements Hash: C7B40352AAD8D863D88D51672F9A0087
+//               Emulator: RetroArch (Mupen64-Next)
+//               Emulator Version: 1.14.0
+achievement(
+    title = "No Need For Tow Cables", points = 10,
+    description = "Destroy the AT-ATs without the use of Tow Cables (On Hard or Jedi).",
+    id = 56670, badge = "59174", published = "26/12/2017 19:11:52", modified = "06/01/2021 01:35:58",
+    trigger =
+        get_file_stats("current_stage") == 0x00 &&
+        get_file_stats("difficulty") > 0x02 &&
+        prev(hoth_phase) == const_hoth_atat2 &&
+        hoth_phase == const_hoth_results &&
+        stage_challengePoints == 0
+)
+
 
 // -------------------------------------
 // - Closed
