@@ -5,213 +5,360 @@
 // -- Global Lookups
 // ----------------------------------------------------------------------------
 
-stages = {
+version = byte(0x000004)
+versions =  {
+    "EUR": 0x14,
+    "USA": 0x24
+}
+
+eur_offset = 0x1E60 // Most used offset, works for most in-game data (not all system data)
+constant_zero = 0x09 // Address for zero counts
+
+stages = { // base addresses are USA
     "brain" : {
         "id": 0x00,
         "name": "Brain",
         "udders_total": 0x01,
-        "udders_count": byte(0x0c61f5),
+        "udders_count": {
+            "USA": 0x0c61f5,
+            "EUR": 0
+        },
         "udders_ach_id": 175222,
         "udders_ach_points": 0,
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "hub_memory" : {
         "id": 0x01,
         "name": "Memory Hub",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "coup_detat" : {
         "id": 0x02,
         "name": "Coup D'Etat",
         "udders_total": 0x03,
-        "udders_count": byte(0x0c61fb),
+        "udders_count": {
+            "USA": 0x0c61fb,
+            "EUR": 0
+        },
         "udders_ach_id": 175221,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61e1)
+        "marbles_count": {
+            "USA": 0x0c61e1,
+            "EUR": 0
+        }
     },
     "barn_to_be_wild": {
         "id": 0x03,
         "name": "Barn to be Wild",
         "udders_total": 0x07,
-        "udders_count": byte(0x0c61fa),
+        "udders_count": {
+            "USA": 0x0c61fa,
+            "EUR": 0
+        },
         "udders_ach_id": 175220,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61e0)
+        "marbles_count": {
+            "USA": 0x0c61e0,
+            "EUR": 0
+        }
     },
     "psycrow":  {
         "id": 0x04,
         "name": "Psycrow",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c61f9),
+        "udders_count": {
+            "USA": 0x0c61f9,
+            "EUR": 0
+        },
         "udders_ach_id": 175225,
         "udders_ach_points": 0,
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "hub_happiness" : {
         "id": 0x05,
         "name": "Happiness Hub",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "lord_of_the_fries" : {
         "id": 0x06,
         "name": "Lord of the Fries",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c61ff),
+        "udders_count": {
+            "USA": 0x0c61ff,
+            "EUR": 0
+        },
         "udders_ach_id": 175224,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61e5)
+        "marbles_count": {
+            "USA": 0x0c61e5,
+            "EUR": 0
+        }
     },
     "hungry_tonite": {
         "id": 0x07,
         "name": "Hungry Tonite?",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c61fe),
+        "udders_count": {
+            "USA": 0x0c61fe,
+            "EUR": 0
+        },
         "udders_ach_id": 175223,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61e4)
+        "marbles_count": {
+            "USA": 0x0c61e4,
+            "EUR": 0
+        }
     },
     "fatty_roswell": {
         "id": 0x08,
         "name": "Fatty Roswell",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c61fd),
+        "udders_count": {
+            "USA": 0x0c61fd,
+            "EUR": 0
+        },
         "udders_ach_id": 175227,
         "udders_ach_points": 0,
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "hub_fear": {
         "id": 0x09,
         "name": "Fear Hub",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "mansion_lobby": {
         "id": 0x0a,
         "name": "Mansion Lobby",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "poultrygeist": {
         "id": 0x0b,
         "name": "Poultrygeist",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c6202),
+        "udders_count": {
+            "USA": 0x0c6202,
+            "EUR": 0
+        },
         "udders_ach_id": 175226,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61e8)
+        "marbles_count": {
+            "USA": 0x0c61e8,
+            "EUR": 0
+        }
     },
     "poultrygeist_too": {
         "id": 0x0c,
         "name": "Poultrygeist Too",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c6201),
+        "udders_count": {
+            "USA": 0x0c6201,
+            "EUR": 0
+        },
         "udders_ach_id": 175231,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61ef)
+        "marbles_count": {
+            "USA": 0x0c61ef,
+            "EUR": 0
+        }
     },
     "death_wormed_up": {
         "id": 0x0d,
         "name": "Death Wormed Up",
         "udders_total": 0x06,
-        "udders_count": byte(0x0c6200),
+        "udders_count": {
+            "USA": 0x0c6200,
+            "EUR": 0
+        },
         "udders_ach_id": 175230,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61ee)
+        "marbles_count": {
+            "USA": 0x0c61ee,
+            "EUR": 0
+        }
     },
     "boogie_nights": {
         "id": 0x0e,
         "name": "Boogie Nights",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c6207),
+        "udders_count": {
+            "USA": 0x0c6207,
+            "EUR": 0
+        },
         "udders_ach_id": 175229,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61ed)
+        "marbles_count": {
+            "USA": 0x0c61ed,
+            "EUR": 0
+        }
     },
     "monkey_for_a_head": {
         "id": 0x0f,
         "name": "Monkey for a Head",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c6206),
+        "udders_count": {
+            "USA": 0x0c6206,
+            "EUR": 0
+        },
         "udders_ach_id": 175228,
         "udders_ach_points": 0,
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "hub_fantasy": {
         "id": 0x10,
         "name": "Fantasy Hub",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "violent_death_valley": {
         "id": 0x11,
         "name": "Violent Death Valley",
         "udders_total": 0x06,
-        "udders_count": byte(0x0c6204),
+        "udders_count": {
+            "USA": 0x0c6204,
+            "EUR": 0
+        },
         "udders_ach_id": 175234,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61f2)
+        "marbles_count": {
+            "USA": 0x0c61f2,
+            "EUR": 0
+        }
     },
     "good_bad_elderly": {
         "id": 0x12,
         "name": "The Good, Bad and The Elderly",
         "udders_total": 0x06,
-        "udders_count": byte(0x0c620b),
+        "udders_count": {
+            "USA": 0x0c620b,
+            "EUR": 0
+        },
         "udders_ach_id": 175233,
         "udders_ach_points": 0,
         "marbles_total": 100,
-        "marbles_count": byte(0x0c61f1)
+        "marbles_count": {
+            "USA": 0x0c61f1,
+            "EUR": 0
+        }
     },
     "bob_and_no4": {
         "id": 0x13,
         "name": "Bob and Number 4",
         "udders_total": 0x05,
-        "udders_count": byte(0x0c620a),
+        "udders_count": {
+            "USA": 0x0c620a,
+            "EUR": 0
+        },
         "udders_ach_id": 175232,
         "udders_ach_points": 0,
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "boss_final": {
         "id": 0x14,
         "name": "Final Boss",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0,
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
     "intro_dance": {
         "id": 0x15,
         "name": "Accordian Dance",
         "udders_total": 0,
-        "udders_count": 0,
+        "udders_count": {
+            "USA": 0,
+            "EUR": 0
+        },
         "marbles_total": 0,
-        "marbles_count": 0
+        "marbles_count": {
+            "USA": 0,
+            "EUR": 0
+        }
     },
+}
+
+// - USA EUR version building
+for stage in stages {
+    if(stages[stage]["udders_total"] > 0 )  stages[stage]["udders_count"]["EUR"]    = stages[stage]["udders_count"]["USA"] + eur_offset
+    if(stages[stage]["marbles_total"] > 0 ) stages[stage]["marbles_count"]["EUR"]   = stages[stage]["marbles_count"]["USA"] + eur_offset
 }
 
 //- RP Lookups
@@ -375,35 +522,63 @@ sanity_ach_ids = {
     }
 }
 
+pause_menu = {
+    "EUR": word(0x084e5e),
+    "USA": word(0x084dc2),
+} 
 
 // ----------------------------------------------------------------------------
 // -- Global Variables
 // ----------------------------------------------------------------------------
 
-current_stage_id    = dword(0x0e03e4)
-current_weapon_id   = dword(0x0c6a8c)
-current_saveslot    = word(0x0c6182)
-earthworm_kim_model = byte(0x0c6dc3)
-live_pointer = dword(0x0b70bc)
-function titlescreen()  => current_saveslot == 0xFFFF
-function save_menu()    => current_saveslot != 0xFFFF && live_pointer == 0x0000
-function in_game()      => __ornext(current_saveslot != 0xFFFF && live_pointer != 0x0000)
-function is_earthworm_kim() => earthworm_kim_model == 0x01
+current_stage_id = {
+    "USA":  dword(0x0a93c4),
+    "EUR":  dword(0x0a9464)
+}
+current_weapon_id   = {
+    "USA": dword(0x0c6a8c),
+    "EUR": dword(0x0c6a8c + eur_offset)
+}
+current_saveslot    = {
+    "USA": word(0x0c6182),
+    "EUR": word(0x0c6182 + eur_offset)
+}
+earthworm_kim_model = {
+    "USA": byte(0x0c6dc3),
+    "EUR": byte(0x0c6dc3 + eur_offset)
+}
+live_pointer = { // Still Not Confirmed
+    "USA": dword(0x0bc118),
+    "EUR": dword(0x0bc1b8)
+}
+function titlescreen(ver)       => current_saveslot[ver] == 0xFFFF
+function save_menu(ver)         => current_saveslot[ver] != 0xFFFF && live_pointer[ver] == 0x0000
+function in_game(ver)           => __ornext(current_saveslot[ver] != 0xFFFF && live_pointer[ver] != 0x0000)
+function is_earthworm_kim(ver)  => earthworm_kim_model[ver] == 0x01
+function cheats_off(ver)        => pause_menu[ver] != 0x1440
 
-function total_udders(){
+
+function total_udders(ver){
     total = 0
     for stage in stages {
-        if (stages[stage]["udders_total"] > 0) total = total + stages[stage]["udders_count"]
+        if (stages[stage]["udders_total"] > 0) total = total + byte(stages[stage]["udders_count"][ver])
     }
     return total
 }
 
-function total_marbles( ){
+function total_marbles(ver){
     total = 0
     for stage in stages {
-        if (stages[stage]["marbles_total"] > 0) total = total + stages[stage]["marbles_count"]
+        if (stages[stage]["marbles_total"] > 0) total = total + byte(stages[stage]["marbles_count"][ver])
     }
     return total
+}
+
+for stage in stages {
+    for ver in versions {
+       if( stages[stage]["udders_total"] == 0 ) stages[stage]["udders_count"][ver] = constant_zero
+        if( stages[stage]["marbles_total"] == 0 ) stages[stage]["marbles_count"][ver] = constant_zero
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -418,11 +593,23 @@ for stage in stages {
             description = "Collect All of the Golden Udders in the Stage '" + stages[stage]["name"] + "'",
             id = stages[stage]["udders_ach_id"],
             //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-            trigger = 
-                in_game() &&
-                current_stage_id == stages[stage]["id"] &&
-                prev(stages[stage]["udders_count"]) == stages[stage]["udders_total"]-1 &&
-                stages[stage]["udders_count"] == stages[stage]["udders_total"]
+            trigger = (
+                (
+                    version == versions["EUR"] &&
+                    cheats_off("EUR") &&
+                    in_game("EUR") &&
+                    current_stage_id["EUR"] == stages[stage]["id"] &&
+                    prev(byte(stages[stage]["udders_count"]["EUR"])) == stages[stage]["udders_total"]-1 &&
+                    byte(stages[stage]["udders_count"]["EUR"]) == stages[stage]["udders_total"]
+                ) || (
+                    version == versions["USA"] &&
+                    cheats_off("USA") &&
+                    in_game("USA") &&
+                    current_stage_id["USA"] == stages[stage]["id"] &&
+                    prev(byte(stages[stage]["udders_count"]["USA"])) == stages[stage]["udders_total"]-1 &&
+                    byte(stages[stage]["udders_count"]["USA"]) == stages[stage]["udders_total"]
+                )
+            )
         )
     }
 }
@@ -434,10 +621,21 @@ for achid in sanity_ach_ids {
         description = "Collect Enough Marbles To Become As Smart As '" + sanity_ach_ids[achid]["name"] + "'",
         id = sanity_ach_ids[achid]["id"],
         //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-        trigger = 
-            in_game() &&
-            prev(total_marbles()) == achid-1 &&
-            total_marbles() == achid
+        trigger = (
+            (
+                version == versions["EUR"] &&
+                cheats_off("EUR") &&
+                in_game("EUR") &&
+                prev(total_marbles("EUR")) == achid-1 &&
+                total_marbles("EUR") == achid
+            ) || (
+                version == versions["USA"] &&
+                cheats_off("USA") &&
+                in_game("USA") &&
+                prev(total_marbles("USA")) == achid-1 &&
+                total_marbles("USA") == achid
+            )
+        )
     )
 }
 
@@ -449,10 +647,21 @@ for weapon in weapons {
             description = "Become Even More Dangerous by Finding The '" + weapons[weapon]["name"] + "'",
             id = 0,
             //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-            trigger = 
-                in_game() &&
-                prev(current_weapon_id) != weapons[weapon]["id"] &&
-                current_weapon_id == weapons[weapon]["id"]
+            trigger = (
+                (
+                    version == versions["EUR"] &&
+                    cheats_off("EUR") &&
+                    in_game("EUR") &&
+                    prev(current_weapon_id["EUR"]) != weapons[weapon]["id"] &&
+                    current_weapon_id["EUR"] == weapons[weapon]["id"]
+                ) || (
+                    version == versions["USA"] &&
+                    cheats_off("USA") &&
+                    in_game("USA") &&
+                    prev(current_weapon_id["USA"]) != weapons[weapon]["id"] &&
+                    current_weapon_id["USA"] == weapons[weapon]["id"]
+                )
+            )
         )
     }
 }
@@ -479,26 +688,32 @@ weapon_lookup = {
     weapons["gun_gnome"]["id"]: "🍄",
 }
 
-rich_presence_conditional_display(titlescreen(), "{0} Titlescreen",
-        rich_presence_lookup("jim_kim", earthworm_kim_model, jim_kim_lookup)
-)
+for ver in versions {
+    rich_presence_conditional_display(version == versions[ver] && !cheats_off(ver), "⚠️ Debug Menu Is Enabled – Achievements Will Not Trigger Until Game Is Reset")
+    
+    rich_presence_conditional_display(version == versions[ver] && titlescreen(ver), "{0} Titlescreen",
+            rich_presence_lookup("jim_kim", earthworm_kim_model[ver], jim_kim_lookup)
+    )
 
-rich_presence_conditional_display(save_menu(), "{0} Loading ..",
-        rich_presence_lookup("jim_kim", earthworm_kim_model, jim_kim_lookup)
-)
+    rich_presence_conditional_display(version == versions[ver] && save_menu(ver), "{0} Loading ..",
+            rich_presence_lookup("jim_kim", earthworm_kim_model[ver], jim_kim_lookup)
+    )
 
-for stage in stages {
-    rich_presence_conditional_display(in_game() && current_stage_id == stages[stage]["id"], "{0}{1} Exploring {2} 🐄:{3}/{4} 🔮:{5}/{6} | Total: 🐄{7}/74 🔮{8}/1000",
-            rich_presence_lookup("weapon", current_weapon_id, weapon_lookup,fallback="?"),
-            rich_presence_lookup("jim_kim", earthworm_kim_model, jim_kim_lookup),
-            stages[stage]["name"],
-            rich_presence_macro("Number", stages[stage]["udders_count"]),
-            rich_presence_macro("Number", stages[stage]["udders_total"]),
-            rich_presence_macro("Number", stages[stage]["marbles_count"]),
-            rich_presence_macro("Number", stages[stage]["marbles_total"]),
-            rich_presence_macro("Number", total_udders()),
-            rich_presence_macro("Number", total_marbles())
-    )  
+    for stage in stages {
+        rich_presence_conditional_display(version == versions[ver] && in_game(ver) && current_stage_id[ver] == stages[stage]["id"], "{0}{1} Exploring {2} 🐄:{3}/{4} 🔮:{5}/{6} | Total: 🐄{7}/74 🔮{8}/1000",
+                rich_presence_lookup("weapon", current_weapon_id[ver], weapon_lookup,fallback="?"),
+                rich_presence_lookup("jim_kim", earthworm_kim_model[ver], jim_kim_lookup),
+                stages[stage]["name"],
+                rich_presence_macro("Number", byte(stages[stage]["udders_count"][ver])),
+                rich_presence_macro("Number", stages[stage]["udders_total"]),
+                rich_presence_macro("Number", byte(stages[stage]["marbles_count"][ver])),
+                rich_presence_macro("Number", stages[stage]["marbles_total"]),
+                rich_presence_macro("Number", total_udders(ver)),
+                rich_presence_macro("Number", total_marbles(ver))
+        )  
+    }
 }
 
-rich_presence_display("🪱 Playing Earthworm Jim 3D")
+rich_presence_display("🪱 Playing Earthworm Jim 3D (v{0})",
+    rich_presence_macro("Number",version)
+)
