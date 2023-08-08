@@ -551,9 +551,14 @@ live_pointer = { // Still Not Confirmed
     "USA": dword(0x0bc118),
     "EUR": dword(0x0bc1b8)
 }
+
+boss_psycrow_marbles = {
+    "USA": byte(0x218afb)
+}
+
 function titlescreen(ver)       => current_saveslot[ver] == 0xFFFF
-function save_menu(ver)         => current_saveslot[ver] != 0xFFFF && live_pointer[ver] == 0x0000
-function in_game(ver)           => __ornext(current_saveslot[ver] != 0xFFFF && live_pointer[ver] != 0x0000)
+//function save_menu(ver)         => current_saveslot[ver] != 0xFFFF && live_pointer[ver] == 0x0000
+function in_game(ver)           => !titlescreen(ver) //__ornext(current_saveslot[ver] != 0xFFFF && live_pointer[ver] != 0x0000)
 function is_earthworm_kim(ver)  => earthworm_kim_model[ver] == 0x01
 function cheats_off(ver)        => pause_menu[ver] != 0x1440
 
@@ -587,84 +592,127 @@ for stage in stages {
 
 for stage in stages {
     if( stages[stage]["udders_total"] > 0 ){
+        triggers = []
+        for ver in versions {
+            array_push(triggers,
+                version == versions[ver] &&
+                cheats_off(ver) &&
+                in_game(ver) &&
+                current_stage_id[ver] == stages[stage]["id"] &&
+                prev(byte(stages[stage]["udders_count"][ver])) == stages[stage]["udders_total"]-1 &&
+                byte(stages[stage]["udders_count"][ver]) == stages[stage]["udders_total"]
+            )
+        }
         achievement(
             title = "Golden Udders: " + stages[stage]["name"],
             points = stages[stage]["udders_ach_points"],
             description = "Collect All of the Golden Udders in the Stage '" + stages[stage]["name"] + "'",
             id = stages[stage]["udders_ach_id"],
-            //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-            trigger = (
-                (
-                    version == versions["EUR"] &&
-                    cheats_off("EUR") &&
-                    in_game("EUR") &&
-                    current_stage_id["EUR"] == stages[stage]["id"] &&
-                    prev(byte(stages[stage]["udders_count"]["EUR"])) == stages[stage]["udders_total"]-1 &&
-                    byte(stages[stage]["udders_count"]["EUR"]) == stages[stage]["udders_total"]
-                ) || (
-                    version == versions["USA"] &&
-                    cheats_off("USA") &&
-                    in_game("USA") &&
-                    current_stage_id["USA"] == stages[stage]["id"] &&
-                    prev(byte(stages[stage]["udders_count"]["USA"])) == stages[stage]["udders_total"]-1 &&
-                    byte(stages[stage]["udders_count"]["USA"]) == stages[stage]["udders_total"]
-                )
-            )
+            trigger = any_of(triggers, t => t)
         )
     }
 }
 
 for achid in sanity_ach_ids {
+    triggers = []
+    for ver in versions {
+        array_push(triggers,
+            version == versions[ver] &&
+            cheats_off(ver) &&
+            in_game(ver) &&
+            prev(total_marbles(ver)) == achid-1 &&
+            total_marbles(ver) == achid
+        )
+    }
     achievement(
         title = "You're As Smart As " + sanity_ach_ids[achid]["name"] +  "!",
         points = sanity_ach_ids[achid]["points"],
         description = "Collect Enough Marbles To Become As Smart As '" + sanity_ach_ids[achid]["name"] + "'",
         id = sanity_ach_ids[achid]["id"],
-        //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-        trigger = (
-            (
-                version == versions["EUR"] &&
-                cheats_off("EUR") &&
-                in_game("EUR") &&
-                prev(total_marbles("EUR")) == achid-1 &&
-                total_marbles("EUR") == achid
-            ) || (
-                version == versions["USA"] &&
-                cheats_off("USA") &&
-                in_game("USA") &&
-                prev(total_marbles("USA")) == achid-1 &&
-                total_marbles("USA") == achid
-            )
-        )
+        trigger = any_of(triggers, t => t)
     )
 }
 
 for weapon in weapons {
     if( weapons[weapon]["id"] != 0) {
+        triggers = []
+        for ver in versions {
+            array_push(triggers,
+                version == versions[ver] &&
+                cheats_off(ver) &&
+                in_game(ver) &&
+                prev(current_weapon_id[ver]) != weapons[weapon]["id"] &&
+                current_weapon_id[ver] == weapons[weapon]["id"]
+            )
+        }
         achievement(
             title = "Up Your Arsenal: Acquire the " + weapons[weapon]["name"],
             points = weapons[weapon]["points"],
             description = "Become Even More Dangerous by Finding The '" + weapons[weapon]["name"] + "'",
             id = 0,
-            //badge = "00000", published = "30/09/2021 11:55:54", modified = "30/09/2021 11:55:54",
-            trigger = (
-                (
-                    version == versions["EUR"] &&
-                    cheats_off("EUR") &&
-                    in_game("EUR") &&
-                    prev(current_weapon_id["EUR"]) != weapons[weapon]["id"] &&
-                    current_weapon_id["EUR"] == weapons[weapon]["id"]
-                ) || (
-                    version == versions["USA"] &&
-                    cheats_off("USA") &&
-                    in_game("USA") &&
-                    prev(current_weapon_id["USA"]) != weapons[weapon]["id"] &&
-                    current_weapon_id["USA"] == weapons[weapon]["id"]
-                )
-            )
+            trigger = any_of(triggers, t => t)
         )
     }
 }
+
+// ----------------------------------------------------------------------------
+// -- Boss Domination
+// ----------------------------------------------------------------------------
+
+boss_marbles = {
+    "USA": byte( tbyte(0x0ca6a0) + 0x7f),
+    "EUR": byte( tbyte(0x0cc500) + 0x7f) // check
+}
+
+jim_marbles = {
+    "USA": byte( tbyte(0x0ca6a0) + 0x33),
+    "EUR": byte( tbyte(0x0cc500) + 0x33) // check
+}
+
+boss_ready = {
+    "USA": byte(0x0a9cbd),
+    "EUR": byte(0x0a9d5d) // check
+}
+
+bosses = {
+    "psy": {
+        "name": "psycrow"
+    },
+    "fr": {
+        "name": "fatty_roswell"
+    },
+    "mo": {
+        "name": "monkey_for_a_head"
+    },
+    "fb": {
+        "name": "boss_final"
+    },
+}
+
+for boss in bosses {
+    triggers = []
+    for ver in versions {
+        array_push(triggers,
+            version == versions[ver] &&
+            cheats_off(ver) &&
+            in_game(ver) &&
+            once( version == versions[ver] && current_stage_id[ver] == stages[bosses[boss]["name"]]["id"] && boss_ready[ver] == 0 ) &&
+            never( (version == versions[ver] && boss_marbles[ver] >= 50) || (version == versions[ver] && current_stage_id[ver] != stages[bosses[boss]["name"]]["id"]) ) &&
+            trigger_when(boss_marbles[ver] == 0 && jim_marbles[ver] == 100)
+        )
+    }
+    achievement(
+        title = "Halfwit: " + stages[bosses[boss]["name"]]["name"],
+        points = 0,
+        description = "Don’t Let '"+stages[bosses[boss]["name"]]["name"]+"' Get More Than Half the Marbles",
+        id = 0,
+        trigger = any_of(triggers, t => t)
+    )
+}
+
+// Psycrow no more than 50 marbles?
+// Fatty Roswell Marbles
+// 
 
 // ----------------------------------------------------------------------------
 // -- Rich Presence
@@ -692,10 +740,6 @@ for ver in versions {
     rich_presence_conditional_display(version == versions[ver] && !cheats_off(ver), "⚠️ Debug Menu Is Enabled – Achievements Will Not Trigger Until Game Is Reset")
     
     rich_presence_conditional_display(version == versions[ver] && titlescreen(ver), "{0} Titlescreen",
-            rich_presence_lookup("jim_kim", earthworm_kim_model[ver], jim_kim_lookup)
-    )
-
-    rich_presence_conditional_display(version == versions[ver] && save_menu(ver), "{0} Loading ..",
             rich_presence_lookup("jim_kim", earthworm_kim_model[ver], jim_kim_lookup)
     )
 
