@@ -13,11 +13,15 @@ versions =  {
 
 eur_offset = 0x1E60 // Most used offset, works for most in-game data (not all system data)
 constant_zero = 0x09 // Address for zero counts
+const_type_hub = 0
+const_type_stage = 1
+const_type_boss = 2
 
 stages = { // base addresses are USA
     "brain" : {
         "id": 0x00,
         "name": "Brain",
+        "stage_type": const_type_stage,
         "udders_total": 0x01,
         "udders_count": {
             "USA": 0x0c61f5,
@@ -34,6 +38,7 @@ stages = { // base addresses are USA
     "hub_memory" : {
         "id": 0x01,
         "name": "Memory Hub",
+        "stage_type": const_type_hub,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -48,6 +53,7 @@ stages = { // base addresses are USA
     "coup_detat" : {
         "id": 0x02,
         "name": "Coup D'Etat",
+        "stage_type": const_type_stage,
         "udders_total": 0x03,
         "udders_count": {
             "USA": 0x0c61fb,
@@ -64,6 +70,7 @@ stages = { // base addresses are USA
     "barn_to_be_wild": {
         "id": 0x03,
         "name": "Barn to be Wild",
+        "stage_type": const_type_stage,
         "udders_total": 0x07,
         "udders_count": {
             "USA": 0x0c61fa,
@@ -80,6 +87,7 @@ stages = { // base addresses are USA
     "psycrow":  {
         "id": 0x04,
         "name": "Psycrow",
+        "stage_type": const_type_boss,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c61f9,
@@ -96,6 +104,7 @@ stages = { // base addresses are USA
     "hub_happiness" : {
         "id": 0x05,
         "name": "Happiness Hub",
+        "stage_type": const_type_hub,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -110,6 +119,7 @@ stages = { // base addresses are USA
     "lord_of_the_fries" : {
         "id": 0x06,
         "name": "Lord of the Fries",
+        "stage_type": const_type_stage,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c61ff,
@@ -126,6 +136,7 @@ stages = { // base addresses are USA
     "hungry_tonite": {
         "id": 0x07,
         "name": "Hungry Tonite?",
+        "stage_type": const_type_stage,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c61fe,
@@ -142,6 +153,7 @@ stages = { // base addresses are USA
     "fatty_roswell": {
         "id": 0x08,
         "name": "Fatty Roswell",
+        "stage_type": const_type_boss,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c61fd,
@@ -158,6 +170,7 @@ stages = { // base addresses are USA
     "hub_fear": {
         "id": 0x09,
         "name": "Fear Hub",
+        "stage_type": const_type_hub,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -172,6 +185,7 @@ stages = { // base addresses are USA
     "mansion_lobby": {
         "id": 0x0a,
         "name": "Mansion Lobby",
+        "stage_type": const_type_stage,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -186,6 +200,7 @@ stages = { // base addresses are USA
     "poultrygeist": {
         "id": 0x0b,
         "name": "Poultrygeist",
+        "stage_type": const_type_stage,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c6202,
@@ -202,6 +217,7 @@ stages = { // base addresses are USA
     "poultrygeist_too": {
         "id": 0x0c,
         "name": "Poultrygeist Too",
+        "stage_type": const_type_stage,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c6201,
@@ -218,6 +234,7 @@ stages = { // base addresses are USA
     "death_wormed_up": {
         "id": 0x0d,
         "name": "Death Wormed Up",
+        "stage_type": const_type_stage,
         "udders_total": 0x06,
         "udders_count": {
             "USA": 0x0c6200,
@@ -234,6 +251,7 @@ stages = { // base addresses are USA
     "boogie_nights": {
         "id": 0x0e,
         "name": "Boogie Nights",
+        "stage_type": const_type_stage,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c6207,
@@ -250,6 +268,7 @@ stages = { // base addresses are USA
     "monkey_for_a_head": {
         "id": 0x0f,
         "name": "Monkey for a Head",
+        "stage_type": const_type_boss,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c6206,
@@ -266,6 +285,7 @@ stages = { // base addresses are USA
     "hub_fantasy": {
         "id": 0x10,
         "name": "Fantasy Hub",
+        "stage_type": const_type_hub,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -280,6 +300,7 @@ stages = { // base addresses are USA
     "violent_death_valley": {
         "id": 0x11,
         "name": "Violent Death Valley",
+        "stage_type": const_type_stage,
         "udders_total": 0x06,
         "udders_count": {
             "USA": 0x0c6204,
@@ -296,6 +317,7 @@ stages = { // base addresses are USA
     "good_bad_elderly": {
         "id": 0x12,
         "name": "The Good, Bad and The Elderly",
+        "stage_type": const_type_stage,
         "udders_total": 0x06,
         "udders_count": {
             "USA": 0x0c620b,
@@ -312,6 +334,7 @@ stages = { // base addresses are USA
     "bob_and_no4": {
         "id": 0x13,
         "name": "Bob and Number 4",
+        "stage_type": const_type_boss,
         "udders_total": 0x05,
         "udders_count": {
             "USA": 0x0c620a,
@@ -328,6 +351,7 @@ stages = { // base addresses are USA
     "boss_final": {
         "id": 0x14,
         "name": "Final Boss",
+        "stage_type": const_type_boss,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -342,6 +366,7 @@ stages = { // base addresses are USA
     "intro_dance": {
         "id": 0x15,
         "name": "Accordian Dance",
+        "stage_type": const_type_hub,
         "udders_total": 0,
         "udders_count": {
             "USA": 0,
@@ -547,18 +572,13 @@ earthworm_kim_model = {
     "USA": byte(0x0c6dc3),
     "EUR": byte(0x0c6dc3 + eur_offset)
 }
-live_pointer = { // Still Not Confirmed
-    "USA": dword(0x0bc118),
-    "EUR": dword(0x0bc1b8)
-}
 
 boss_psycrow_marbles = {
     "USA": byte(0x218afb)
 }
 
 function titlescreen(ver)       => current_saveslot[ver] == 0xFFFF
-//function save_menu(ver)         => current_saveslot[ver] != 0xFFFF && live_pointer[ver] == 0x0000
-function in_game(ver)           => !titlescreen(ver) //__ornext(current_saveslot[ver] != 0xFFFF && live_pointer[ver] != 0x0000)
+function in_game(ver)           => !titlescreen(ver)
 function is_earthworm_kim(ver)  => earthworm_kim_model[ver] == 0x01
 function cheats_off(ver)        => pause_menu[ver] != 0x1440
 
@@ -599,7 +619,7 @@ for stage in stages {
                 cheats_off(ver) &&
                 in_game(ver) &&
                 current_stage_id[ver] == stages[stage]["id"] &&
-                prev(byte(stages[stage]["udders_count"][ver])) == stages[stage]["udders_total"]-1 &&
+                prev(byte(stages[stage]["udders_count"][ver])) < stages[stage]["udders_total"] &&
                 byte(stages[stage]["udders_count"][ver]) == stages[stage]["udders_total"]
             )
         }
@@ -659,34 +679,22 @@ for weapon in weapons {
 // -- Boss Domination
 // ----------------------------------------------------------------------------
 
-boss_marbles = {
-    "USA": byte( tbyte(0x0ca6a0) + 0x7f),
-    "EUR": byte( tbyte(0x0cc500) + 0x7f) // check
+boss_pointer = {
+    "USA": tbyte(0x0ca6a0),
+    "EUR": tbyte(0x0cc500)
 }
 
-jim_marbles = {
-    "USA": byte( tbyte(0x0ca6a0) + 0x33),
-    "EUR": byte( tbyte(0x0cc500) + 0x33) // check
-}
+boss_marbles_offset = 0x7f
+jim_marbles_offset  = 0x33
 
 boss_ready = {
     "USA": byte(0x0a9cbd),
-    "EUR": byte(0x0a9d5d) // check
+    "EUR": byte(0x0a9d5d)
 }
 
-bosses = {
-    "psy": {
-        "name": "psycrow"
-    },
-    "fr": {
-        "name": "fatty_roswell"
-    },
-    "mo": {
-        "name": "monkey_for_a_head"
-    },
-    "fb": {
-        "name": "boss_final"
-    },
+bosses = []
+for stage in stages {
+    if( stages[stage]["stage_type"] == const_type_boss ) array_push(bosses,stage)
 }
 
 for boss in bosses {
@@ -696,23 +704,27 @@ for boss in bosses {
             version == versions[ver] &&
             cheats_off(ver) &&
             in_game(ver) &&
-            once( version == versions[ver] && current_stage_id[ver] == stages[bosses[boss]["name"]]["id"] && boss_ready[ver] == 0 ) &&
-            never( (version == versions[ver] && boss_marbles[ver] >= 50) || (version == versions[ver] && current_stage_id[ver] != stages[bosses[boss]["name"]]["id"]) ) &&
-            trigger_when(boss_marbles[ver] == 0 && jim_marbles[ver] == 100)
+            once(
+                version == versions[ver] &&
+                current_stage_id[ver] == stages[boss]["id"] &&
+                prev(boss_ready[ver]) == 0 &&
+                boss_ready[ver] == 1 
+            ) &&
+            never(
+                (version == versions[ver] && byte(boss_pointer[ver] + boss_marbles_offset) >= 50) ||
+                (version == versions[ver] && current_stage_id[ver] != stages[boss]["id"])
+            ) &&
+            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100)
         )
     }
     achievement(
-        title = "Halfwit: " + stages[bosses[boss]["name"]]["name"],
+        title = "Halfwit: " + stages[boss]["name"],
         points = 0,
-        description = "Don’t Let '"+stages[bosses[boss]["name"]]["name"]+"' Get More Than Half the Marbles",
+        description = "Don’t Let '"+stages[boss]["name"]+"' Get More Than Half the Marbles",
         id = 0,
         trigger = any_of(triggers, t => t)
     )
 }
-
-// Psycrow no more than 50 marbles?
-// Fatty Roswell Marbles
-// 
 
 // ----------------------------------------------------------------------------
 // -- Rich Presence
