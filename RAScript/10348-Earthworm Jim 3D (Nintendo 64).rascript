@@ -27,7 +27,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61f5,
             "EUR": 0
         },
-        "udders_ach_id": 175222,
+        "udders_ach_id": 344286,
         "udders_ach_points": 0,
         "marbles_total": 0,
         "marbles_count": {
@@ -59,7 +59,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61fb,
             "EUR": 0
         },
-        "udders_ach_id": 175221,
+        "udders_ach_id": 344287,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -76,7 +76,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61fa,
             "EUR": 0
         },
-        "udders_ach_id": 175220,
+        "udders_ach_id": 344283,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -93,7 +93,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61f9,
             "EUR": 0
         },
-        "udders_ach_id": 175225,
+        "udders_ach_id": 344296,
         "udders_ach_points": 0,
         "marbles_total": 0,
         "marbles_count": {
@@ -125,7 +125,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61ff,
             "EUR": 0
         },
-        "udders_ach_id": 175224,
+        "udders_ach_id": 344292,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -142,7 +142,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61fe,
             "EUR": 0
         },
-        "udders_ach_id": 175223,
+        "udders_ach_id": 344291,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -159,7 +159,7 @@ stages = { // base addresses are USA
             "USA": 0x0c61fd,
             "EUR": 0
         },
-        "udders_ach_id": 175227,
+        "udders_ach_id": 344289,
         "udders_ach_points": 0,
         "marbles_total": 0,
         "marbles_count": {
@@ -206,7 +206,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6202,
             "EUR": 0
         },
-        "udders_ach_id": 175226,
+        "udders_ach_id": 344294,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -223,7 +223,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6201,
             "EUR": 0
         },
-        "udders_ach_id": 175231,
+        "udders_ach_id": 344295,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -240,7 +240,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6200,
             "EUR": 0
         },
-        "udders_ach_id": 175230,
+        "udders_ach_id": 344288,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -257,7 +257,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6207,
             "EUR": 0
         },
-        "udders_ach_id": 175229,
+        "udders_ach_id": 344285,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -274,7 +274,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6206,
             "EUR": 0
         },
-        "udders_ach_id": 175228,
+        "udders_ach_id": 344293,
         "udders_ach_points": 0,
         "marbles_total": 0,
         "marbles_count": {
@@ -306,7 +306,7 @@ stages = { // base addresses are USA
             "USA": 0x0c6204,
             "EUR": 0
         },
-        "udders_ach_id": 175234,
+        "udders_ach_id": 344297,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -323,7 +323,7 @@ stages = { // base addresses are USA
             "USA": 0x0c620b,
             "EUR": 0
         },
-        "udders_ach_id": 175233,
+        "udders_ach_id": 344290,
         "udders_ach_points": 0,
         "marbles_total": 100,
         "marbles_count": {
@@ -340,7 +340,7 @@ stages = { // base addresses are USA
             "USA": 0x0c620a,
             "EUR": 0
         },
-        "udders_ach_id": 175232,
+        "udders_ach_id": 344284,
         "udders_ach_points": 0,
         "marbles_total": 0,
         "marbles_count": {
@@ -476,12 +476,12 @@ sanity_threshold = {
 
 sanity_ach_ids = {
     sanity_threshold["a_waffle"]: {
-        "id":175235,
+        "id":344298,
         "name": "A Waffle",
         "points": 0
     },
     sanity_threshold["most_accountants"]: {
-        "id":0,
+        "id":344170,
         "name": "Most Accountants",
         "points": 0
     },
@@ -547,14 +547,24 @@ sanity_ach_ids = {
     }
 }
 
-pause_menu = {
-    "EUR": word(0x084e5e),
-    "USA": word(0x084dc2),
-} 
-
 // ----------------------------------------------------------------------------
 // -- Global Variables
 // ----------------------------------------------------------------------------
+
+game_paused = {
+    "USA": byte(0x0d9c7f),
+    "EUR": byte(0x0dbadf)
+}
+
+pause_menu_type = {
+    "USA": word(0x084dc2),
+    "EUR": word(0x084e5e)
+} 
+
+always_running = {
+    "USA": dword(0x0d8f7c),
+    "EUR": dword(0x0daddc)
+}
 
 current_stage_id = {
     "USA":  dword(0x0a93c4),
@@ -568,19 +578,34 @@ current_saveslot    = {
     "USA": word(0x0c6182),
     "EUR": word(0x0c6182 + eur_offset)
 }
+
 earthworm_kim_model = {
     "USA": byte(0x0c6dc3),
     "EUR": byte(0x0c6dc3 + eur_offset)
 }
 
-boss_psycrow_marbles = {
-    "USA": byte(0x218afb)
+hp = {
+    "USA": dword(0x0c690c),
+    "EUR": dword(0x0c876c)
+}
+
+boss_pointer = {
+    "USA": tbyte(0x0ca6a0),
+    "EUR": tbyte(0x0cc500)
+}
+
+boss_marbles_offset = 0x7f
+jim_marbles_offset  = 0x33
+
+boss_ready = {
+    "USA": byte(0x0a9cbd),
+    "EUR": byte(0x0a9d5d)
 }
 
 function titlescreen(ver)       => current_saveslot[ver] == 0xFFFF
-function in_game(ver)           => !titlescreen(ver)
+function in_game(ver)           => !titlescreen(ver) && prev(current_saveslot[ver]) == current_saveslot[ver] // Save Menu Switching Protection
 function is_earthworm_kim(ver)  => earthworm_kim_model[ver] == 0x01
-function cheats_off(ver)        => pause_menu[ver] != 0x1440
+function cheats_off(ver)        => pause_menu_type[ver] != 0x1440
 
 
 function total_udders(ver){
@@ -625,7 +650,7 @@ for stage in stages {
         }
         achievement(
             title = "Golden Udders: " + stages[stage]["name"],
-            points = stages[stage]["udders_ach_points"],
+            points = 0,
             description = "Collect All of the Golden Udders in the Stage '" + stages[stage]["name"] + "'",
             id = stages[stage]["udders_ach_id"],
             trigger = any_of(triggers, t => t)
@@ -675,29 +700,74 @@ for weapon in weapons {
     }
 }
 
+triggers_jim = []
+for ver in versions {    
+    array_push(triggers_jim,
+        version == versions[ver] &&
+        cheats_off(ver) &&
+        in_game(ver) &&
+        current_stage_id[ver] == stages["boss_final"]["id"] &&
+        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
+        byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+        earthworm_kim_model[ver] == 0
+    )
+}
+achievement(
+    title = "More than a Worm",
+    points = 0,
+    description = "Beat the Final Boss. Well Done Jim",
+    id = 0,
+    trigger = any_of(triggers_jim, t => t)
+)
+
+triggers_kim = []
+for ver in versions {    
+    array_push(triggers_kim,
+        version == versions[ver] &&
+        cheats_off(ver) &&
+        in_game(ver) &&
+        current_stage_id[ver] == stages["boss_final"]["id"] &&
+        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
+        byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+        earthworm_kim_model[ver] == 01
+    )
+}
+achievement(
+    title = "More than a Worman",
+    points = 0,
+    description = "Beat the Final Boss As Your Alter-Ego. Well Done ...",
+    id = 0,
+    trigger = any_of(triggers_kim, t => t)
+)
+
+triggers_collect = []
+for ver in versions {    
+    array_push(triggers_collect,
+        version == versions[ver] &&
+        cheats_off(ver) &&
+        in_game(ver) &&
+        ((prev(total_marbles(ver)) + prev(total_udders(ver))) > 1064 && (prev(total_marbles(ver)) + prev(total_udders(ver))) < 1074) && // Long check as bosses can give multiple udders
+        (total_marbles(ver) + total_udders(ver)) == 1074    
+    )
+}
+achievement(
+    title = "Udderly Marbleous",
+    points = 0,
+    description = "Collect Every Golden Udder and Every Marble",
+    id = 0,
+    trigger = any_of(triggers_collect, t => t)
+)
+
 // ----------------------------------------------------------------------------
 // -- Boss Domination
 // ----------------------------------------------------------------------------
-
-boss_pointer = {
-    "USA": tbyte(0x0ca6a0),
-    "EUR": tbyte(0x0cc500)
-}
-
-boss_marbles_offset = 0x7f
-jim_marbles_offset  = 0x33
-
-boss_ready = {
-    "USA": byte(0x0a9cbd),
-    "EUR": byte(0x0a9d5d)
-}
 
 bosses = []
 for stage in stages {
     if( stages[stage]["stage_type"] == const_type_boss ) array_push(bosses,stage)
 }
 
-for boss in bosses {
+for boss in bosses { // Halfwit
     triggers = []
     for ver in versions {
         array_push(triggers,
@@ -726,6 +796,80 @@ for boss in bosses {
     )
 }
 
+for boss in bosses { // Worminator
+    triggers = []
+    for ver in versions {
+        array_push(triggers,
+            version == versions[ver] &&
+            cheats_off(ver) &&
+            in_game(ver) &&
+            once(
+                version == versions[ver] &&
+                current_stage_id[ver] == stages[boss]["id"] &&
+                prev(boss_ready[ver]) == 0 &&
+                boss_ready[ver] == 1 
+            ) &&
+            never(
+                (version == versions[ver] && hp[ver] < prev(hp[ver])) ||
+                (version == versions[ver] && current_stage_id[ver] != stages[boss]["id"])
+            ) &&
+            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100)
+        )
+    }
+    achievement(
+        title = "Worminator: " + stages[boss]["name"],
+        points = 0,
+        description = "Defeat '"+stages[boss]["name"]+"' Without Taking Damage!",
+        id = 0,
+        trigger = any_of(triggers, t => t)
+    )
+}
+
+// ----------------------------------------------------------------------------
+// -- Leaderboards
+// ----------------------------------------------------------------------------
+
+for boss in bosses {
+    start_triggers = []
+    cancel_triggers = []
+    submit_triggers = []
+    for ver in versions {
+        array_push(start_triggers,
+            version == versions[ver] &&
+            cheats_off(ver) &&
+            in_game(ver) &&
+            current_stage_id[ver] == stages[boss]["id"] &&
+            prev(boss_ready[ver]) == 0 &&
+            boss_ready[ver] == 1 
+        )
+        
+        array_push(cancel_triggers,
+            version == versions[ver] &&
+            (hp[ver] == 0 || current_stage_id[ver] != stages[boss]["id"])
+        )
+        
+        array_push(submit_triggers,
+            version == versions[ver] &&
+            byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
+            byte(boss_pointer[ver] + jim_marbles_offset) == 100 
+        ) 
+    }
+    leaderboard(
+        title = "Beat the Boss - " + stages[boss]["name"],
+        description = "Beat '" + stages[boss]["name"] + "' as fast as you can",
+        start  =    any_of(start_triggers, t=>t),
+        cancel =    any_of(cancel_triggers, t=>t),
+        submit =    any_of(submit_triggers, t=>t),
+        value =     max_of(
+                        tally(0,prev(always_running["USA"]) != always_running["USA"] && version == versions["USA"] && game_paused["USA"] == 0),
+                        tally(0,prev(always_running["EUR"]) != always_running["EUR"] && version == versions["EUR"] && game_paused["EUR"] == 0)
+                    ),
+        format = "FRAMES",
+        lower_is_better = true,
+        id = 0
+    )
+}
+
 // ----------------------------------------------------------------------------
 // -- Rich Presence
 // ----------------------------------------------------------------------------
@@ -740,7 +884,7 @@ weapon_lookup = {
     weapons["apollo_13"]["id"]: "🚀",
     weapons["bananamite"]["id"]: "🍌",
     weapons["laser"]["id"]: "⚡",
-    weapons["peashooter"]["id"]: "🫛",
+    weapons["peashooter"]["id"]: "🟢",
     weapons["egg_chucker"]["id"]: "🥚",
     weapons["magnum"]["id"]: "🕵️",
     weapons["gun_funky"]["id"]: "🪩",
