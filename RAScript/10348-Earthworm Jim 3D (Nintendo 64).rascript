@@ -692,6 +692,11 @@ earthworm_kim_model = {
     "EUR": byte(0x0c6dc3 + eur_offset)
 }
 
+earthworm_kim_bodyswap = {
+    "USA": byte(0x0c6dde),
+    "EUR": byte(0x0c6dde + eur_offset)
+}
+
 hp = {
     "USA": dword(0x0c690c),
     "EUR": dword(0x0c876c)
@@ -702,8 +707,11 @@ boss_pointer = {
     "EUR": tbyte(0x0cc500)
 }
 
-boss_marbles_offset = 0x7f
+
+jim_boost_offset   = 0x32
 jim_marbles_offset  = 0x33
+boss_boost_offset = 0x7e
+boss_marbles_offset = 0x7f
 
 boss_ready = {
     "USA": byte(0x0a9cbd),
@@ -837,6 +845,7 @@ for ver in versions {
         current_stage_id[ver] == stages["boss_final"]["id"] &&
         byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
         byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+        earthworm_kim_bodyswap[ver] == 0 &&
         earthworm_kim_model[ver] == 0
     )
 }
@@ -855,9 +864,10 @@ for ver in versions {
         cheats_off(ver) &&
         in_game(ver) &&
         current_stage_id[ver] == stages["boss_final"]["id"] &&
-        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
         byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
-        earthworm_kim_model[ver] == 01
+        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
+        earthworm_kim_bodyswap[ver] == 0 &&
+        earthworm_kim_model[ver] == 01 
     )
 }
 achievement(
@@ -941,7 +951,7 @@ for boss in bosses { // Worminator
                 (version == versions[ver] && hp[ver] < prev(hp[ver])) ||
                 (version == versions[ver] && current_stage_id[ver] != stages[boss]["id"])
             ) &&
-            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100)
+            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100 && earthworm_kim_bodyswap[ver] == 0)
         )
     }
     achievement(
