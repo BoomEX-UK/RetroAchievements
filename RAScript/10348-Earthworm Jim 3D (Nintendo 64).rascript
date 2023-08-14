@@ -843,8 +843,9 @@ for ver in versions {
         cheats_off(ver) &&
         in_game(ver) &&
         current_stage_id[ver] == stages["boss_final"]["id"] &&
-        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
+        prev(byte(boss_pointer[ver] + jim_marbles_offset)) < 100 &&
         byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+        byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
         earthworm_kim_bodyswap[ver] == 0 &&
         earthworm_kim_model[ver] == 0
     )
@@ -864,6 +865,7 @@ for ver in versions {
         cheats_off(ver) &&
         in_game(ver) &&
         current_stage_id[ver] == stages["boss_final"]["id"] &&
+        prev(byte(boss_pointer[ver] + jim_marbles_offset)) < 100 &&
         byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
         byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
         earthworm_kim_bodyswap[ver] == 0 &&
@@ -873,7 +875,7 @@ for ver in versions {
 achievement(
     title = "More than a Worman",
     points = 50,
-    description = "Beat the Final Boss As Your Alter-Ego. Well Done ...",
+    description = "Beat the final boss as your alter ego. Well done ...",
     id = 0,
     trigger = any_of(triggers_kim, t => t)
 )
@@ -922,7 +924,12 @@ for boss in bosses { // Halfwit
                 (version == versions[ver] && byte(boss_pointer[ver] + boss_marbles_offset) >= 50) ||
                 (version == versions[ver] && current_stage_id[ver] != stages[boss]["id"])
             ) &&
-            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100)
+            trigger_when(
+                prev(byte(boss_pointer[ver] + jim_marbles_offset)) < 100 &&
+                byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+                byte(boss_pointer[ver] + boss_marbles_offset) == 0 && 
+                earthworm_kim_model[ver] == 0
+            )
         )
     }
     achievement(
@@ -951,7 +958,12 @@ for boss in bosses { // Worminator
                 (version == versions[ver] && hp[ver] < prev(hp[ver])) ||
                 (version == versions[ver] && current_stage_id[ver] != stages[boss]["id"])
             ) &&
-            trigger_when(byte(boss_pointer[ver] + boss_marbles_offset) == 0 && byte(boss_pointer[ver] + jim_marbles_offset) == 100 && earthworm_kim_bodyswap[ver] == 0)
+            trigger_when(
+                prev(byte(boss_pointer[ver] + jim_marbles_offset)) < 100 &&
+                byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+                byte(boss_pointer[ver] + boss_marbles_offset) == 0 && 
+                earthworm_kim_model[ver] == 0
+            )
         )
     }
     achievement(
@@ -989,6 +1001,29 @@ for stage in stage_steps {
     )
 }
 
+for stage in stage_steps {
+    triggers = []
+    for ver in versions {
+        array_push(triggers,
+            version == versions[ver] &&
+            cheats_off(ver) &&
+            in_game(ver) &&
+            current_stage_id[ver] == stages[stage]["id"] &&
+            prev(byte(stages[stage]["udders_count"][ver])) + prev(byte(stages[stage]["marbles_count"][ver])) < stage_steps[stage]["target"] &&
+            byte(stages[stage]["udders_count"][ver]) + byte(stages[stage]["marbles_count"][ver]) == stage_steps[stage]["target"] &&
+            dword(stages[stage]["steps_count"][ver]) < 1000 &&
+            earthworm_kim_model[ver] == 1
+        )
+    }
+    achievement(
+        title = "Skinny Calves: " + stage_steps[stage]["name"] + " [m]",
+        points = 10,
+        description = "Collect all the " + stage_steps[stage]["tagline"] + " in '" + stage_steps[stage]["name"] + "' in less than 1,000 steps as your alter ego",
+        id = 0,
+        trigger = any_of(triggers, t => t)
+    )
+}
+
 // ----------------------------------------------------------------------------
 // -- Leaderboards
 // ----------------------------------------------------------------------------
@@ -1014,8 +1049,10 @@ for boss in bosses {
         
         array_push(submit_triggers,
             version == versions[ver] &&
-            byte(boss_pointer[ver] + boss_marbles_offset) == 0 &&
-            byte(boss_pointer[ver] + jim_marbles_offset) == 100 
+            prev(byte(boss_pointer[ver] + jim_marbles_offset)) < 100 &&
+            byte(boss_pointer[ver] + jim_marbles_offset) == 100 &&
+            byte(boss_pointer[ver] + boss_marbles_offset) == 0 && 
+            earthworm_kim_model[ver] == 0
         ) 
     }
     leaderboard(
