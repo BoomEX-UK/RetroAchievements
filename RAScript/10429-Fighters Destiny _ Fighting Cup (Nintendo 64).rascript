@@ -388,10 +388,10 @@ for ws in winstyles {
 for wins in [10,25,50,75,100] {
     points = {
         10: 1,
-        25: 3,
-        50: 5,
-        75: 10,
-        100: 25
+        25: 5,
+        50: 10,
+        75: 25,
+        100: 50
     }
     achievement(
         title = "Record Attack - Survive " + wins,
@@ -424,7 +424,7 @@ for chr in characters {
         achievement(
             title = diffdetail[diff]["title"] + ": " + characters[chr]["name"],
             points = diffdetail[diff]["points"],
-            description = "Complete Vs Com mode using " + characters[chr]["name"] + "on difficulty " + diffdetail[diff]["name"],
+            description = "Complete Vs Com mode using " + characters[chr]["name"] + " on difficulty " + diffdetail[diff]["name"],
             id = 0,
             trigger =   in_game() &&
                         fight_difficulty >= difficulty[diff] &&
@@ -497,7 +497,7 @@ for chr in unlock_characters {
         "boro": 5,
         "joker": 50,
         "master": 10,
-        "robert": 10,
+        "robert": 25,
         "ushi": 25
     }
     achievement(
@@ -564,7 +564,7 @@ achievement(
 
 achievement(
     title = "Record Attack - Fastest (1 Minute Challenge)",
-    points = 10,
+    points = 25,
     description = "Beat Record Attack - Fastest in 1 minute or less (Difficulty: Normal+)",
     id = 0,
     trigger =   in_game() &&
