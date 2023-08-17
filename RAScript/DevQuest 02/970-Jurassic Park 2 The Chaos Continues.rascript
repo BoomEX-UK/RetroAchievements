@@ -1,61 +1,127 @@
 // Jurassic Park 2: The Chaos Continues
 // #ID = 970
 
-const_mode_none = 0x00
-const_mode_raptor_attack = 0x01
+// ----------------------------------------------------------------------------
+// -- Global Lookups
+// ----------------------------------------------------------------------------
 
-stage_id_old = byte(0x000002)
-stage_id = byte(0x000003)
-stages = {
+stage_ranges = {
+    // Functions
     "titlescreen" : {
-        "id" : 0x00,
-        "mode": const_mode_none,
-        "stage": 0
+        "name": "Titlescreen",
+        "id_from": 0,
+        "id_to" : 0,
     },
-    "ra1" : {
-        "id" : 0x38,
-        "mode": const_mode_raptor_attack,
-        "stage": 1
+    "endscreen" : {
+        "name": "Stage End",
+        "id_from": 0x72,
+        "id_to" : 0x72,
     },
-    "ra2" : {
-        "id" : 0x39,
-        "mode": const_mode_raptor_attack,
-        "stage": 2
+    // Stages
+    "raptor_attack" : {
+        "name": "Raptor Attack",
+        "id_from": 0x38,
+        "id_to" : 0x3f,
     },
-    "ra3" : {
-        "id" : 0x3a,
-        "mode": const_mode_raptor_attack,
-        "stage": 3
+    "e_radio" : {
+        "name": "🚨 Scientist Radios For Help",
+        "id_from": 0x5e,
+        "id_to" : 0x63,
     },
-    "ra4" : {
-        "id" : 0x3b,
-        "mode": const_mode_raptor_attack,
-        "stage": 4
+    "trex_carnage" : {
+        "name": "T-Rex Carnage",
+        "id_from": 0x16,
+        "id_to" : 0x1b,
     },
-    "ra5" : {
-        "id" : 0x3c,
-        "mode": const_mode_raptor_attack,
-        "stage": 5
+    "e_incubators" : {
+        "name": "Get Power Supplies To Incubators",
+        "id_from": 0x48,
+        "id_to" : 0x4e,
     },
-    "ra6" : {
-        "id" : 0x3d,
-        "mode": const_mode_raptor_attack,
-        "stage": 6
+    "blockade" : {
+        "name": "Blockade",
+        "id_from": 0x0a,
+        "id_to" : 0x12,
     },
-    "ra7" : {
-        "id" : 0x3e,
-        "mode": const_mode_raptor_attack,
-        "stage": 7
+    "e_aux" : {
+        "name": "🚨 Auxiliary Power Switch",
+        "id_from": 0x66,
+        "id_to" : 0x6e,
     },
-    "ra8" : {
-        "id" : 0x3f,
-        "mode": const_mode_raptor_attack,
-        "stage": 8
-    }
+    "high_ptera" : {
+        "name": "High Ptera",
+        "id_from": 0x03,
+        "id_to" : 0x09,
+    },
+    "high_ptera_extra" : {
+        "name": "High Ptera",
+        "id_from": 0x13,
+        "id_to" : 0x13,
+    },
+    "e_dropship" : {
+        "name": "🚨 Drop Ship Supplies",
+        "id_from": 0x65,
+        "id_to" : 0x65,
+    },
+    "seek_destroy" : {
+        "name": "Seek and Destroy",
+        "id_from": 0x1c,
+        "id_to" : 0x2e,
+    },
+    "e_spy" : {
+        "name": "🚨 Track Down The Spy",
+        "id_from": 0x64,
+        "id_to" : 0x64,
+    },
+    "protect_g" : {
+        "name": "Protect Gallimimus",
+        "id_from": 0x02,
+        "id_to" :0x02,
+    },
+    "e_medication" : {
+        "name": "Protect Gallimimus",
+        "id_from": 0x2f,
+        "id_to" : 0x37,
+    },
+    // Endgame
+    "destroy_hq" : {
+        "name": "Destroy the Biosyn Headquarters",
+        "id_from": 0x40,
+        "id_to" : 0x47,
+    },
+    "disarm_bombs" : {
+        "name": "Disarm the Bombs",
+        "id_from": 0x4f,
+        "id_to" : 0x5c,
+    },
+    "kill_trex" : {
+        "name": "Destroy T-Rex",
+        "id_from": 0x70,
+        "id_to" : 0x70,
+    },
+    //- Hard difficulty only
+    "chopper_fight" : {
+        "name": "Destroy the Biosyn Helecopter",
+        "id_from": 0x6f,
+        "id_to" : 0x6f,
+    },
 }
-function on_titlescreen() => stage_id == stages["titlescreen"]
 
-mission_status = word(0x00a9eb)
+difficulty_levels = {
+    "easy": {
+        "id": 0x00,
+        "name": "Easy"
+    },
+    "normal": {
+        "id": 0x01,
+        "name": "Normal"
+    },
+    "hard": {
+        "id": 0x02,
+        "name": "Hard"
+    },
+}
+
 mission_states = {
     "loading"       : 0xFFFF,
     "playing"       : 0x0000,
@@ -65,12 +131,38 @@ mission_states = {
     "win"           : 0x0004
 }
 
+// ----------------------------------------------------------------------------
+// -- Global Variables
+// ----------------------------------------------------------------------------
+
+stage_id_old = byte(0x000002)
+
+stage_id = byte(0x000003)
+mission_status = word(0x00a9eb)
 difficulty = byte(0x00ffc2)
-difficulty_levels = {
-    "easy": 0x00,
-    "normal": 0x01,
-    "hard": 0x02
+health = byte(0x00b032)
+health_part = health/8
+continues = byte(0x00a9a6)
+dino_stock = byte(0x000008)
+time_remaining = word(0x00000a)
+
+stage_triggers = {}
+for stage in stage_ranges {
+    tmparr = []
+    for ra in range(stage_ranges[stage]["id_from"],stage_ranges[stage]["id_to"]) {
+        array_push(
+            tmparr,
+            stage_id == ra &&
+            prev(mission_status) == mission_states["playing"] &&
+            mission_status == mission_states["win"]
+        )
+    }
+    stage_triggers[stage] = tmparr
 }
+
+function not_cheating() => continues <= 5
+function stage_win() => prev(mission_status) == mission_states["playing"] && mission_status == mission_states["win"]
+function countdown_enabled() => byte(0x00a9e9) == 0x01
 
 // ----------------------------------------------------------------------------
 // -- Original
@@ -101,7 +193,7 @@ achievement(
     title = "Pinpoint and Obliterate", points = 10,
     description = "Complete the Seek and Destroy mission (hard)",
     id = 72678, badge = "77791", published = "26/02/2019 01:25:17", modified = "17/08/2020 02:57:07",
-    trigger = prev(stage_id_old_old_old_old) == 0x04 && stage_id > prev(stage_id) && stage_id != 0x05 && 
+    trigger = prev(stage_id_old) == 0x04 && stage_id > prev(stage_id) && stage_id != 0x05 && 
               byte(0x00FFC2) == 0x02 && byte(0x00A9A0) == 0x01 && byte(0x00A9A7) == 0x00
 )
 
@@ -184,7 +276,7 @@ achievement(
     trigger = stage_id_old == 0x05 && byte(0x00E15B) == 0x35 && byte(0x00FFC2) > 0x00 && byte(0x00A9A0) == 0x01 && 
               byte(0x00A9A7) == 0x00 &&
               ((unless(once(prev(byte(0x000008)) > byte(0x000008)))) ||
-               (always_false() && never(prev(stage_id_old_old) != stage_id)))
+               (always_false() && never(prev(stage_id_old) != stage_id)))
 )
 
 achievement(
@@ -194,7 +286,7 @@ achievement(
     trigger = stage_id_old == 0x00 && byte(0x00E15B) == 0x3A && byte(0x00FFC2) > 0x00 && byte(0x00A9A0) == 0x01 && 
               byte(0x00A9A7) == 0x00 &&
               ((unless(once(byte(0x00B033) > 0x00))) ||
-               (never(prev(stage_id_old_old) != stage_id) && never(byte(0x00E15B) == 0x36) && always_false()))
+               (never(prev(stage_id_old) != stage_id) && never(byte(0x00E15B) == 0x36) && always_false()))
 )
 
 achievement(
@@ -212,7 +304,7 @@ achievement(
     id = 72691, badge = "77804", published = "26/02/2019 01:26:03", modified = "28/03/2021 14:04:27",
     trigger = stage_id_old == 0x09 && byte(0x00E15B) == 0x3F && byte(0x00A9A0) == 0x01 && byte(0x00A9A7) == 0x00 &&
               ((unless(once(byte(0x00000A) < 0x4B))) ||
-               (never(prev(stage_id_old_old) != stage_id) && always_false()))
+               (never(prev(stage_id_old) != stage_id) && always_false()))
 )
 
 achievement(
@@ -247,12 +339,7 @@ achievement(
     trigger = stage_id_old == 0x08 && byte(0x00E15B) == 0x43 && byte(0x00A9A0) == 0x01 && byte(0x00A9A7) == 0x00
 )
 
-achievement(
-    title = "T-Rex Carnage", points = 5,
-    description = "Complete the T-Rex Carnage mission (any difficulty)",
-    id = 72659, badge = "77735", published = "26/02/2019 01:24:07", modified = "02/03/2019 04:52:06",
-    trigger = stage_id_old == 0x01 && byte(0x00E15B) == 0x41 && byte(0x00A9A0) == 0x01 && byte(0x00A9A7) == 0x00
-)
+
 
 achievement(
     title = "Blockade", points = 5,
@@ -273,7 +360,7 @@ achievement(
     title = "Seek and Destroy", points = 5,
     description = "Complete the Seek and Destroy mission (any difficulty)",
     id = 72662, badge = "77739", published = "26/02/2019 01:24:18", modified = "17/08/2020 02:53:32",
-    trigger = prev(stage_id_old_old_old_old) == 0x04 && stage_id > prev(stage_id) && stage_id != 0x05 && 
+    trigger = prev(stage_id_old) == 0x04 && stage_id > prev(stage_id) && stage_id != 0x05 && 
               byte(0x00A9A0) == 0x01 && byte(0x00A9A7) == 0x00
 )
 
@@ -352,16 +439,6 @@ achievement(
               byte(0x00A9A7) == 0x00
 )
 
-
-
-achievement(
-    title = "T-Rex Massacre", points = 10,
-    description = "Complete the T-Rex Carnage mission (hard)",
-    id = 72675, badge = "77788", published = "26/02/2019 01:25:07", modified = "02/03/2019 04:53:24",
-    trigger = stage_id_old == 0x01 && byte(0x00E15B) == 0x41 && byte(0x00FFC2) == 0x02 && byte(0x00A9A0) == 0x01 && 
-              byte(0x00A9A7) == 0x00
-)
-
 // ----------------------------------------------------------------------------
 // -- Revised
 // ----------------------------------------------------------------------------
@@ -370,10 +447,11 @@ achievement(
     title = "Raptor Attack", points = 5,
     description = "Complete the Raptor Attack mission (any difficulty)",
     id = 72658, badge = "77734", published = "26/02/2019 01:24:02", modified = "02/03/2019 04:52:01",
-    trigger =
-        stage_id == stages["ra8"]["id"] &&
-        prev(mission_status) == mission_states["playing"] &&
-        mission_status == mission_states["win"]
+    trigger = 
+        not_cheating() &&
+        stage_id >= stage_ranges["raptor_attack"]["id_from"] &&
+        stage_id <= stage_ranges["raptor_attack"]["id_to"] &&
+        stage_win()
 )
 
 achievement(
@@ -381,10 +459,97 @@ achievement(
     description = "Complete the Raptor Attack mission (hard)",
     id = 72674, badge = "77787", published = "26/02/2019 01:25:02", modified = "02/03/2019 04:53:20",
     trigger = 
-        stage_id == stages["ra8"]["id"] &&
-        prev(mission_status) == mission_states["playing"] &&
-        mission_status == mission_states["win"] &&
-        difficulty == difficulty_levels["hard"]
+        not_cheating() &&
+        stage_id >= stage_ranges["raptor_attack"]["id_from"] &&
+        stage_id <= stage_ranges["raptor_attack"]["id_to"] &&
+        stage_win() &&
+        difficulty == difficulty_levels["hard"]["id"]
+)
+
+achievement(
+    title = "T-Rex Carnage", points = 5,
+    description = "Complete the T-Rex Carnage mission (any difficulty)",
+    id = 72659, badge = "77735", published = "26/02/2019 01:24:07", modified = "02/03/2019 04:52:06",
+    trigger = 
+        not_cheating() &&
+        stage_id >= stage_ranges["trex_carnage"]["id_from"] &&
+        stage_id <= stage_ranges["trex_carnage"]["id_to"] &&
+        stage_win()
+)
+
+achievement(
+    title = "T-Rex Massacre", points = 10,
+    description = "Complete the T-Rex Carnage mission (hard)",
+    id = 72675, badge = "77788", published = "26/02/2019 01:25:07", modified = "02/03/2019 04:53:24",
+    trigger = 
+        not_cheating() &&
+        stage_id >= stage_ranges["trex_carnage"]["id_from"] &&
+        stage_id <= stage_ranges["trex_carnage"]["id_to"] &&
+        stage_win() &&
+        difficulty == difficulty_levels["hard"]["id"]
+)
+
+// ----------------------------------------------------------------------------
+// -- Rich Presence
+// ----------------------------------------------------------------------------
+
+rp_stages = {}
+for stage in stage_ranges {
+    for s in range(stage_ranges[stage]["id_from"],stage_ranges[stage]["id_to"]) {
+        rp_stages[s] = stage_ranges[stage]["name"]
+    }
+}
+
+rp_difficulty = {}
+for diff in difficulty_levels {
+    rp_difficulty[difficulty_levels[diff]["id"]] = difficulty_levels[diff]["name"]
+}
+
+rp_health = {
+    0 : "⣀⣀⣀⣀",
+    1 : "⣦⣀⣀⣀⣀",
+    2 : "⣿⣦⣀⣀⣀",
+    3 : "⣿⣿⣦⣀⣀",
+    4 : "⣿⣿⣿⣦⣀",
+    5 : "⣿⣿⣿⣿⣦"
+}
+
+emoji = "🦖"
+emoji_title = "🏃🦖"
+emoji_stock = "📈"
+emoji_continue = "🧑"
+emoji_cheat =  "🏃🦆"
+emoji_clock = "🕒"
+
+rich_presence_conditional_display(!not_cheating(), "{0} Cheats enabled, achievements disabled!", emoji_cheat)
+rich_presence_conditional_display(mission_status == mission_states["dead_health"] , "{0} Mission Failed: You died", emoji_title)
+rich_presence_conditional_display(mission_status == mission_states["dead_time"], "{0} Mission Failed: You ran out of time", emoji_title)
+rich_presence_conditional_display(mission_status == mission_states["dead_stock"], "{0} Mission Failed: Stock level critical", emoji_title)
+rich_presence_conditional_display(stage_id == 0 , "{0} Titlescreen", emoji_title)
+rich_presence_conditional_display(stage_id == 0x72 , "{0} Loading..", emoji_title)
+
+rich_presence_conditional_display(countdown_enabled(), "{0} {1} {2} {3}{4} | {5} {6}{7} {8}{9}",
+    emoji,
+    rich_presence_lookup("difficulty",difficulty,rp_difficulty,fallback="?"),
+    rich_presence_lookup("hp",health_part,rp_health,fallback="-----"),
+    emoji_continue,
+    rich_presence_macro("Number",continues),
+    rich_presence_lookup("stages",stage_id,rp_stages,fallback="?"),
+    emoji_clock,
+    rich_presence_macro("Number",time_remaining),
+    emoji_stock,
+    rich_presence_macro("Number",dino_stock)
+)
+
+rich_presence_display("{0} {1} {2} {3}{4} | {5} {6}{7}",
+    emoji,
+    rich_presence_lookup("difficulty",difficulty,rp_difficulty,fallback="?"),
+    rich_presence_lookup("hp",health_part,rp_health,fallback="-----"),
+    emoji_continue,
+    rich_presence_macro("Number",continues),
+    rich_presence_lookup("stages",stage_id,rp_stages,fallback="?"),
+    emoji_stock,
+    rich_presence_macro("Number",dino_stock)
 )
 
 // ----------------------------------------------------------------------------
