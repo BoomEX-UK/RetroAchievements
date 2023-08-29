@@ -801,8 +801,9 @@ for achid in sanity_ach_ids {
             version == versions[ver] &&
             cheats_off(ver) &&
             in_game(ver) &&
-            prev(total_marbles(ver)) == achid-1 &&
-            total_marbles(ver) == achid
+            prev(total_marbles(ver)) > achid-5 &&
+            prev(total_marbles(ver)) < achid &&
+            total_marbles(ver) >= achid
         )
     }
     achievement(
