@@ -445,7 +445,7 @@ for diff in difficulties {
         achievement(
             title = "Spirit Master: " + progression_ach[ach]["title"] + " ("+dtext+")",
             points = dpoints,
-            description = "Defeat " + progression_ach[ach]["description"] + " (Difficulty: "+dtext+")",
+            description = progression_ach[ach]["description"] + " (Difficulty: "+dtext+")",
             id = 0,
             trigger =
                 area_id != areas["town_map"]["id"] &&
