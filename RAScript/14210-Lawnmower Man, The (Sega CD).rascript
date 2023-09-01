@@ -408,11 +408,24 @@ stages = {
         "ach_fc_point" : 0,
         "ach_desc" : ""
     },
-    "cutscene_04" : {
-        "id" : 0x02a0,
-        "name": "Memory Bank scene 4",
+  //  "cutscene_04" : {
+  //      "id" : 0x02b4,
+  //      "name": "Memory Bank scene 4",
+  //      "orbcount" : 0,
+  //      "type" : stage_types["cutscene"],
+  //      "achievement" : true,
+  //      "ach_name" : "Flight Path Corrected",
+  //      "ach_point" : 2,
+  //      "ach_hard_point" : 3,
+  //      "ach_orb_point" : 0,
+  //      "ach_fc_point" : 10,
+  //      "ach_desc" : "beat Cyber Boogie 2"
+  //  },
+    "into_void_01" : {
+        "id" : 0x02B4,
+        "name": "Into the Void",
         "orbcount" : 0,
-        "type" : stage_types["cutscene"],
+        "type" : stage_types["stage"],
         "achievement" : true,
         "ach_name" : "Flight Path Corrected",
         "ach_point" : 2,
@@ -420,19 +433,6 @@ stages = {
         "ach_orb_point" : 0,
         "ach_fc_point" : 10,
         "ach_desc" : "beat Cyber Boogie 2"
-    },
-    "into_void_01" : {
-        "id" : 0x02B4,
-        "name": "Into the Void",
-        "orbcount" : 0,
-        "type" : stage_types["stage"],
-        "achievement" : false,
-        "ach_name" : "",
-        "ach_point" : 0,
-        "ach_hard_point" : 0,
-        "ach_orb_point" : 0,
-        "ach_fc_point" : 0,
-        "ach_desc" : ""
     },
     "reveal_carla" : {
         "id" : 0x0144,
