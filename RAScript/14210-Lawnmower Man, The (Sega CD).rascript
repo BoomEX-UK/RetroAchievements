@@ -439,19 +439,6 @@ stages = {
         "name": "Carla Parkette reveal",
         "orbcount" : 0,
         "type" : stage_types["cutscene"],
-        "achievement" : true,
-        "ach_name" : "Into the Void",
-        "ach_point" : 3,
-        "ach_hard_point" : 4,
-        "ach_orb_point" : 0,
-        "ach_fc_point" : 10,
-        "ach_desc" : "beat Into the Void"
-    },
-    "cutscene_05" : {
-        "id" : 0x05dd,
-        "name": "Memory Bank scene 5",
-        "orbcount" : 0,
-        "type" : stage_types["cutscene"],
         "achievement" : false,
         "ach_name" : "",
         "ach_point" : 0,
@@ -459,6 +446,19 @@ stages = {
         "ach_orb_point" : 0,
         "ach_fc_point" : 0,
         "ach_desc" : ""
+    },
+    "cutscene_05" : {
+        "id" : 0x05dd,
+        "name": "Memory Bank scene 5",
+        "orbcount" : 0,
+        "type" : stage_types["cutscene"],
+        "achievement" : true,
+        "ach_name" : "Into the Void",
+        "ach_point" : 3,
+        "ach_hard_point" : 4,
+        "ach_orb_point" : 0,
+        "ach_fc_point" : 10,
+        "ach_desc" : "beat Into the Void"
     },
     "cyber_boogie_3_a" : {
         "id" : 0x23c0,
