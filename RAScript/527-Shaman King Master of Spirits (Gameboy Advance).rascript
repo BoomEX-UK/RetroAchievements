@@ -362,7 +362,7 @@ spirit_combo = {
     },
     "totem" : {
         "title" : "Totem Attack",
-        "desc" : "Silva's secret move will help you pass large obsticals",
+        "desc" : "Silva's secret move will help you pass large obstacles",
         "points" : 5,
         "value" : 0x1d
     },
