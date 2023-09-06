@@ -581,7 +581,7 @@ achievement(
     trigger =
         area_id != areas["town_map"]["id"] &&
         play_state == play_states["stage"] &&
-        prev(completion_perc()) > 48 &&
+        prev(completion_perc()) >= 48 &&
         prev(completion_perc()) < 50 &&
         completion_perc() >= 50
 )
