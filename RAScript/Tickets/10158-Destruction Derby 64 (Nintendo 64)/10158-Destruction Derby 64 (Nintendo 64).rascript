@@ -208,6 +208,26 @@ achievement(
         race_total_score >= 500
 )
 
+
+// Ticket 63143: The achievement triggered at wrong tume.
+//               I've selected Arcade->Novice->The Junkyard and selected Woody Wagon, and after pressing start after
+//               the rumble pack warning, the achievement triggered.
+//               RetroAchievements Hash: 7FCCB47498EEC06E96AE9372247D1E90
+//               Emulator: RAP64
+//               Emulator Version: 1.0
+achievement(
+    title = "Hitting Hard With My Woody", points = 25,
+    description = "Get a score of at least 400 in a race or arena Woody Wagon",
+    id = 48446, badge = "49278", published = "23/05/2017 07:15:41", modified = "22/10/2019 16:39:01",
+    trigger = 
+        in_game == 0x01 && 
+        cheatprotection()  &&
+        car_selected == cars["woody_wagon"] &&
+        prev(race_total_score) < 400 &&
+        race_total_score >= 400
+)
+
+
 // -------------------------------------
 // - Closed
 // -------------------------------------
