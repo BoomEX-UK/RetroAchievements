@@ -82,14 +82,14 @@ int_cup_ach_list = {
     },
     4 : {
         "title" : "Finalist",
-        "description" : "Win the Quarter Final of the International Cup Tournament",
+        "description" : "Win the Semi-Final of the International Cup Tournament",
         "p_normal" : 5,
         "p_hard" : 10,
         "trigger" : (screen_id == screens["int_qualified"] && prev(int_round) == 1 && int_round == 0)
     },
     5 : {
         "title" : "Champion",
-        "description" : "Win the Quarter Final of the International Cup Tournament",
+        "description" : "Become the Champion of the International Cup Tournament",
         "p_normal" : 10,
         "p_hard" : 25,
         "trigger" : (prev(screen_id) == screens["int_final"] && screen_id == screens["int_won"])
