@@ -404,9 +404,12 @@ spirit_combo = {
 
 area_id     = byte(0x001e41)
 stage_id    = byte(0x001e42)
+stage_section = byte(0x001e43)
 play_state  = byte(0x001ddd)
 stage_timer = dword(0x001dd8)
 difficulty  = byte(0x001ddc)
+
+stage_credits_spirit = 0x48
 
 //- Character
 attack      = word(0x0022c2)
@@ -424,6 +427,7 @@ function prev_magatama_count() => sum_of(magatama_beads, a => prev(a))
 function tome_pieces() => bit2(0x002366) + (bit3(0x002366)*2)
 
 function completion_perc() => (spirit_count() + stage_complete_count()) / 1.21 // 121 to collect, 122 in total
+function completion_count() => (spirit_count() + stage_complete_count())
 
 // ----------------------------------------------------------------------------
 // -- Progression
@@ -522,7 +526,7 @@ for spirit in spirit_ach {
         description = spirit_ach[spirit]["desc"],
         id = 0,
         trigger =
-            area_id != areas["town_map"]["id"] &&
+            __ornext(area_id != areas["town_map"]["id"] || stage_section == stage_credits_spirit) &&
             play_state == play_states["stage"] &&
             prev(spirit_count()) == spirit_ach[spirit]["count"]-1 &&
             spirit_count() == spirit_ach[spirit]["count"]
@@ -579,10 +583,10 @@ achievement(
     description = "You have completed 50% of the game, now keep going!",
     id = 0,
     trigger =
-        area_id != areas["town_map"]["id"] &&
+        __ornext(area_id != areas["town_map"]["id"]) &&
         play_state == play_states["stage"] &&
-        prev(completion_perc()) >= completion_perc() &&
-        completion_perc() >= 50
+        prev(completion_count()) >= completion_count() &&
+        completion_count() >= 61
 )
 
 achievement(
@@ -591,11 +595,11 @@ achievement(
     description = "You have completed 100% of the game, amazing!",
     id = 0,
     trigger =
-        area_id != areas["town_map"]["id"] &&
+        __ornext(area_id != areas["town_map"]["id"] || stage_section == stage_credits_spirit) &&
         play_state == play_states["stage"] &&
-        prev(completion_perc()) > 98 &&
-        prev(completion_perc()) < 100 &&
-        completion_perc() == 100
+        prev(completion_count()) > 118 &&
+        prev(completion_count()) < 122 &&
+        completion_count() == 122
 )
 
 // ----------------------------------------------------------------------------
