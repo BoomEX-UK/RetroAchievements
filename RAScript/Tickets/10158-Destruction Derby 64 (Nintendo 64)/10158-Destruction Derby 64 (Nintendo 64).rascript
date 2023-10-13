@@ -1,6 +1,9 @@
 // Destruction Derby 64
 // #ID = 10158
 
+const_wreck = 0
+const_race  = 1
+
 car_selected = byte(0x0958C0)
 cars = {
     "car_2": 0x00,
@@ -29,22 +32,104 @@ cars = {
     "police_car": 0x17
 }
 
+car_names = {
+    0x00 : "Car 2",
+    0x01 : "Car 1",
+    0x02 : "Car 9",
+    0x03 : "Car 3",
+    0x04 : "Car 222",
+    0x05 : "Car 6",
+    0x06 : "Car 7",
+    0x07 : "Car 18",
+    0x08 : "Car 49",
+    0x09 : "Car 89",
+    0x0a : "Car 31",
+    0x0b : "Car 50",
+    0x0c : "Baja Buggy",
+    0x0d : "Low Rider",
+    0x0e : "Woody Wagon",
+    0x0f : "Pickup",
+    0x10 : "Taxi Cab",
+    0x11 : "Blue Deamon",
+    0x12 : "Rag Top",
+    0x13 : "Hot Rod",
+    0x14 : "Ambulance",
+    0x15 : "Hatchback",
+    0x16 : "Street Rocket",
+    0x17 : "Police Car"
+}
+
 current_track = byte(0x0958B4)
 tracks = {
     // Wreck
-    "junkyard"      : 0x00,
-    "aztec_ruins"   : 0x01,
-    "urban_mayhem"  : 0x02,
-    "ground_zero"   : 0x03,
+    "junkyard" : {
+        "id" : 0x00,
+        "name" : "The Junkyard",
+        "type" : const_wreck
+    },
+    "aztec" : {
+        "id" : 0x01,
+        "name" : "Aztec Ruins",
+        "type" : const_wreck
+    },
+    "urban" : {
+        "id" : 0x02,
+        "name" : "Urban Mayhem",
+        "type" : const_wreck
+    },
+    "zero" : {
+        "id" : 0x03,
+        "name" : "Ground Zero",
+        "type" : const_wreck
+    },
     // Race
-    "metro_challenge"       : 0x04,
-    "seascape_sprint"       : 0x05,
-    "unkown0x06"            : 0x06,
-    "terminal_impact"       : 0x07,
-    "destruction_junction"  : 0x08,
-    "bayou_run"             : 0x09,
-    "alpine_ridge"          : 0x0a,
-    "midnyte_rumble"        : 0x0b
+    "metro" : {
+        "id" : 0x04,
+        "name" : "Metro Challenge",
+        "type" : const_race
+    },
+    "seascape" : {
+        "id" : 0x05,
+        "name" : "Seascape Sprint",
+        "type" : const_race
+    },
+    "bayou" : {
+        "id" : 0x06,
+        "name" : "Bayou Run",
+        "type" : const_race
+    },
+    "terminal" : {
+        "id" : 0x07,
+        "name" : "Terminal Impact",
+        "type" : const_race
+    },
+    "destruction" : {
+        "id" : 0x08,
+        "name" : "Destruction Junction",
+        "type" : const_race
+    },
+    "sunset" : {
+        "id" : 0x09,
+        "name" : "Sunset Canyon",
+        "type" : const_race
+    },
+    "alpine" : {
+        "id" : 0x0a,
+        "name" : "Alpine Ridge",
+        "type" : const_race
+    },
+    "midnyte" : {
+        "id" : 0x0b,
+        "name" : "Midnyte Rumble",
+        "type" : const_race
+    },
+}
+
+screens = {
+    "race_over"             : 0x1d,
+    "derby_results"         : 0x22,
+    "race_results"          : 0x23,
+    "current_standings"     : 0x24
 }
 
 race_total_score            = dword(0x11EF48)
@@ -52,6 +137,7 @@ race_results_total_score    = dword(0x095CD4)
 in_game                     = byte(0x083AEB)
 cars_remaining              = byte(0x1DCCA8)
 exp_level                   = word(0x0958B0)
+cinematic_camera            = byte(0x09562b)
 
 // Cheats
 cheat_all_leagues   = byte(0x1253fa)
@@ -60,8 +146,11 @@ cheat_damage_boost  = byte(0x12540d)
 cheat_overtime      = byte(0x12540e)
 cheat_invincible    = byte(0x12540f)
 
+screen_id = byte(0x11eee8)
+
 function cheatprotection() => cheat_all_leagues + cheat_all_cars +
     cheat_damage_boost + cheat_overtime + cheat_invincible == 0
+function demo_mode() => prev(cinematic_camera) == 1
 
 // -------------------------------------
 // - Unresolved
@@ -243,8 +332,51 @@ achievement(
     trigger =
         cheatprotection()  &&
         exp_level == 0x02 &&
-        current_track == tracks["alpine_ridge"] &&
+        current_track == tracks["alpine"]["id"] &&
         word(0x126188) == 0x0F && 
         prev(race_results_total_score) == 0x87 &&
         race_results_total_score == 0x00
 )
+
+
+
+// -------------------------------------
+// - Leaderboards
+// -------------------------------------
+
+for car in cars {
+    leaderboard(
+        title = "High Score - " + car_names[cars[car]],
+        description = "Smash your way to the top with " + car_names[cars[car]],
+        start  =    cheatprotection() &&
+                    prev(screen_id) == screens["race_over"] &&
+                    __ornext(screen_id == screens["derby_results"] || screen_id == screens["race_results"]) &&
+                    car_selected == cars[car] &&
+                    race_total_score > 0,
+        cancel =    always_false(),
+        submit =    always_true(),
+        value =     measured(race_total_score),
+        format = "SCORE",
+        lower_is_better = false,
+        id = 0
+    )
+}
+
+for track in tracks {
+    leaderboard(
+        title = "Course Record - " + tracks[track]["name"],
+        description = "Get the highest score on " + tracks[track]["name"],
+        start  =    cheatprotection() &&
+                    prev(screen_id) == screens["race_over"] &&
+                    __ornext(screen_id == screens["derby_results"] || screen_id == screens["race_results"]) &&
+                    current_track == tracks[track]["id"] &&
+                    race_total_score > 0,
+        cancel =    always_false(),
+        submit =    always_true(),
+        value =     measured(race_total_score),
+        format = "SCORE",
+        lower_is_better = false,
+        id = 0
+    )
+}
+
