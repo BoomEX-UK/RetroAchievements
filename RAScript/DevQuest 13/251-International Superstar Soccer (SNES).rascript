@@ -106,7 +106,7 @@ for diff in ["normal","hard"] {
             description=stub["description"]+" on difficulty "+diffname[diff],
             points = stub["p_"+diff],
             trigger =
-                game_mode == game_modes["int_cup"] &&
+                __ornext(game_mode == game_modes["int_cup"] || game_mode == game_modes["password"]) &&
                 stub["trigger"] &&
                 difftrig
         )
