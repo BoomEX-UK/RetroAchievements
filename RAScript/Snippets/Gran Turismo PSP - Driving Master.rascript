@@ -41,21 +41,27 @@ speed_1 = float(0x01d26fe0)
 function is_kmph_2() => byte(0x01d26d4d)
 speed_2 = float(0x01d26d48)
 
+function unpause() => byte(0x01d73894) == 0
+function ontrack() => tbyte(0x00ce2e0d) > 0
+
 achievement(
-    "speed-check",
-    top_speed_kmph+" kmph / " + top_speed_mph + " mph (" +mph_diff+ " diff)",
-    1,
-    (
+    id=354576,
+    title="[VOID] You Are a Speed Racer",
+    description=top_speed_kmph+" kmph / " + top_speed_mph + " mph (" +mph_diff+ " diff)",
+    points=1,
+    trigger=(
         is_slot1() &&
         measured(tally(600,
+            unpause() && ontrack()&&
             speed_1 - (is_kmph_1()*mph_diff) >= top_speed_mph
         ), format="percent") &&
         never(is_slot1() && speed_1 - (is_kmph_1()*mph_diff) < top_speed_mph)
     ) || (
         is_slot2() && 
         measured(tally(600,
+            unpause() && ontrack() &&
             speed_2 - (is_kmph_2()*mph_diff) >= top_speed_mph
         ), format="percent") &&
-        never(!is_slot1() && speed_2 - (is_kmph_2()*mph_diff) < top_speed_mph)
+        never(is_slot2() && speed_2 - (is_kmph_2()*mph_diff) < top_speed_mph)
     )
 )
