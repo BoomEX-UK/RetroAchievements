@@ -66,12 +66,12 @@ loop_count = byte(0x005f)
 function group_a_score_best() => byte(0x0720) +
     byte(0x0721)*10+
     byte(0x0722)*100+
-    byte(0x0717)*1000
+    byte(0x0723)*1000
     
 function group_a_cpu_best() => byte(0x0730) +
     byte(0x0731)*10+
     byte(0x0732)*100+
-    byte(0x0737)*1000
+    byte(0x0733)*1000
     
     
 // Group B Scoring
@@ -165,9 +165,9 @@ legacy_progression = {
         "description" : "Beat the 100-Meter Dash",
         "points_a" : 1,
         "points_b" : 3,
-        "id_a" : 23498,
+        "id_a" : 371669,
         "id_b" : 0,
-        "badge_a" : "24588",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["dash"]
     },
@@ -177,9 +177,9 @@ legacy_progression = {
         "description" : "Beat the Long Jump",
         "points_a" : 1,
         "points_b" : 3,
-        "id_a" : 23499,
+        "id_a" : 371670,
         "id_b" : 0,
-        "badge_a" : "24589",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["long_jump"]
     },
@@ -189,9 +189,9 @@ legacy_progression = {
         "description" : "Beat the 110-Meter Hurdles",
         "points_a" : 1,
         "points_b" : 3,
-        "id_a" : 23500,
+        "id_a" : 371671,
         "id_b" : 0,
-        "badge_a" : "24590",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["hurdles"]
     },
@@ -201,9 +201,9 @@ legacy_progression = {
         "description" : "Beat the Javelin Event",
         "points_a" : 2,
         "points_b" : 5,
-        "id_a" : 23501,
+        "id_a" : 371672,
         "id_b" : 0,
-        "badge_a" : "24591",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["javelin"]
     },
@@ -213,9 +213,9 @@ legacy_progression = {
         "description" : "Beat the Skeet Shooting Event",
         "points_a" : 3,
         "points_b" : 5,
-        "id_a" : 23502,
+        "id_a" : 371673,
         "id_b" : 0,
-        "badge_a" : "24592",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["skeet"]
     },
@@ -225,9 +225,9 @@ legacy_progression = {
         "description" : "Beat the Triple Jump Event",
         "points_a" : 2,
         "points_b" : 5,
-        "id_a" : 23503,
+        "id_a" : 371674,
         "id_b" : 0,
-        "badge_a" : "24593",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["triple_jump"]
     },
@@ -237,9 +237,9 @@ legacy_progression = {
         "description" : "Beat the Archery Event",
         "points_a" : 2,
         "points_b" : 5,
-        "id_a" : 23504,
+        "id_a" : 371675,
         "id_b" : 0,
-        "badge_a" : "24594",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["archery"]
     },
@@ -249,9 +249,9 @@ legacy_progression = {
         "description" : "Beat the High Jump Event",
         "points_a" : 2,
         "points_b" : 5,
-        "id_a" : 23505,
+        "id_a" : 371676,
         "id_b" : 0,
-        "badge_a" : "24595",
+        "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["high_jump"]
     }    
@@ -321,7 +321,7 @@ achievement(
 achievement(
     title = "World Champion",
     description = "Qualify for 8 events in a row (Mode B)",
-    points = 50,
+    points = 10,
     id = 0, 
     badge = "0",
     trigger = 
@@ -336,6 +336,16 @@ achievement(
 // -- Challenge Achievements
 // ----------------------------------------------------------------------------
 
+// Event           Mode A   Mode B   Round 5  R.Max 9  W.Rec    Best Is
+// 100m Dash       14.00s   12.00s   11.25s   09.50s   09.93s   Low
+// Long Jump       05.50m   07.50m   08.25m   10.00m   08.90m   High
+// Hurdles         15.50s   13.50s   12.93s   11.00s   12.93s   Low
+// Javelin         65.00m   80.00m   90.00m   110.00m  99.72m   High
+// Skeet Shooting  2,400p   3,200p   3,600p   4,400p   4,300p   High
+// Triple Jump     13.00m   16.00m   17.00m   19.00m   17.89m   High
+// Archery         2,500p   2,900p   3,100p   3,500p   3,500p   High
+// High Jump       02.26m   02.32m   02.36m   02.44m   02.36m   High
+
 wr_achievements = {
     "A":{
         1 : {
@@ -344,7 +354,7 @@ wr_achievements = {
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 0993),
             "points" : 5,
             "badge" : "0",
-            "id" : 23506
+            "id" : 371677
         },
         2 : {
             "event" : events["A"]["long_jump"],
@@ -352,7 +362,7 @@ wr_achievements = {
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() > 0890),
             "points" : 5,
             "badge" : "0",
-            "id" : 23508
+            "id" : 371678
         },
         3 : {
             "event" : events["A"]["hurdles"],
@@ -360,7 +370,7 @@ wr_achievements = {
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 1293),
             "points" : 5,
             "badge" : "0",
-            "id" : 24134
+            "id" : 371679
         },
         4 : {
             "event" : events["A"]["javelin"],
@@ -368,7 +378,7 @@ wr_achievements = {
             "trigger" : (prev(group_a_score_best()) != group_a_score_best() && group_a_score_best() > 9972),
             "points" : 10,
             "badge" : "0",
-            "id" : 24135
+            "id" : 371680
         }
     },
     "B": {
@@ -378,7 +388,7 @@ wr_achievements = {
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 4300),
             "points" : 10,
             "badge" : "0",
-            "id" : 24136
+            "id" : 371681
         },
         2 : {
             "event" : events["B"]["triple_jump"],
@@ -386,7 +396,7 @@ wr_achievements = {
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 1789),
             "points" : 5,
             "badge" : "0",
-            "id" : 24137
+            "id" : 371682
         },
         3 : {
             "event" : events["B"]["archery"],
@@ -394,7 +404,7 @@ wr_achievements = {
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 3500),
             "points" : 10,
             "badge" : "0",
-            "id" : 24138
+            "id" : 371683
         },
         4 : {
             "event" : events["B"]["high_jump"],
@@ -402,7 +412,7 @@ wr_achievements = {
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 0236),
             "points" : 50,
             "badge" : "0",
-            "id" : 24139
+            "id" : 371684
         }
     }
 }
@@ -424,14 +434,86 @@ for group in ["A","B"]{
     }
 }
 
+ud_achievements = {
+    "A":{
+        1 : {
+            "event" : events["A"]["dash"],
+            "target" : "9sec 50",
+            "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 0950),
+            "points" : 5,
+            "badge" : "417898",
+            "id" : 371687
+        },
+        2 : {
+            "event" : events["A"]["long_jump"],
+            "target" : "10m 00",
+            "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() > 1000),
+            "points" : 5,
+            "badge" : "417899",
+            "id" : 371688
+        },
+        3 : {
+            "event" : events["A"]["hurdles"],
+            "target" : "11sec 00",
+            "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 1100),
+            "points" : 5,
+            "badge" : "417900",
+            "id" : 371689
+        },
+        4 : {
+            "event" : events["A"]["javelin"],
+            "target" : "110m 00",
+            "trigger" : (prev(group_a_score_best()) != group_a_score_best() && group_a_score_best() > 11000),
+            "points" : 10,
+            "badge" : "417901",
+            "id" : 371690
+        }
+    },
+    "B": {
+        1 : {
+            "event" : events["B"]["skeet"],
+            "target" : "4400p",
+            "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 4400),
+            "points" : 10,
+            "badge" : "417902",
+            "id" : 371691
+        },
+        2 : {
+            "event" : events["B"]["triple_jump"],
+            "target" : "19m 00",
+            "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 1900),
+            "points" : 5,
+            "badge" : "417903",
+            "id" : 371692
+        }
+    }
+}
+
+for group in ["A","B"]{
+    for ach in ud_achievements[group] {
+        stub = ud_achievements[group][ach]
+        achievement(
+            title = "Undeniable: " + event_names[group][stub["event"]],
+            description = "Smash all records for the " + event_names[group][stub["event"]] + " event by beating " + stub["target"] + " (Any Mode)",
+            points = stub["points"],
+            id = stub["id"], 
+            badge = stub["badge"],
+            trigger = 
+                state_id == states["playing"] &&
+                events[group]["id"] == stub["event"] &&
+                stub["trigger"]
+        )
+    }
+}
+
 // ----------------------------------------------------------------------------
 // -- Bonus Achievements
 // ----------------------------------------------------------------------------
 
 achievement(
-    title = "Over 1000", points = 2,
+    title = "Bonus: Over 1000", points = 2,
     description = "Reach speed of 1000 in the 100m Dash (Any Mode)",
-    id = 24152, badge = "24632", published = "25/06/2015 02:28:43", modified = "26/06/2015 05:47:22",
+    id = 371685, badge = "417886", published = "25/06/2015 02:28:43", modified = "26/06/2015 05:47:22",
     trigger = 
         state_id == states["playing"] &&
         events["A"]["id"] == events["A"]["dash"] &&
@@ -440,9 +522,9 @@ achievement(
 )
 
 achievement(
-    title = "Top Speed", points = 4,
+    title = "Bonus: Top Speed", points = 4,
     description = "Reach speed of 1500 in the 100m Dash (Any Mode)",
-    id = 24153, badge = "24633", published = "25/06/2015 02:28:46", modified = "17/06/2020 19:18:27",
+    id = 371686, badge = "417887", published = "25/06/2015 02:28:46", modified = "17/06/2020 19:18:27",
     trigger =
     state_id == states["playing"] &&
         events["A"]["id"] == events["A"]["dash"] &&
