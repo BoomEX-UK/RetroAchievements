@@ -164,9 +164,9 @@ legacy_progression = {
         "title_b" : "Roadrunner",
         "description" : "Beat the 100-Meter Dash",
         "points_a" : 1,
-        "points_b" : 3,
+        "points_b" : 2,
         "id_a" : 371669,
-        "id_b" : 0,
+        "id_b" : 357611,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["dash"]
@@ -176,9 +176,9 @@ legacy_progression = {
         "title_b" : "Soaring",
         "description" : "Beat the Long Jump",
         "points_a" : 1,
-        "points_b" : 3,
+        "points_b" : 2,
         "id_a" : 371670,
-        "id_b" : 0,
+        "id_b" : 357612,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["long_jump"]
@@ -188,9 +188,9 @@ legacy_progression = {
         "title_b" : "Frogger",
         "description" : "Beat the 110-Meter Hurdles",
         "points_a" : 1,
-        "points_b" : 3,
+        "points_b" : 2,
         "id_a" : 371671,
-        "id_b" : 0,
+        "id_b" : 357613,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["hurdles"]
@@ -199,10 +199,10 @@ legacy_progression = {
         "title_a" : "Right Through the Chest...",
         "title_b" : "One in the Eye...",
         "description" : "Beat the Javelin Event",
-        "points_a" : 2,
-        "points_b" : 5,
+        "points_a" : 1,
+        "points_b" : 2,
         "id_a" : 371672,
-        "id_b" : 0,
+        "id_b" : 357614,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["javelin"]
@@ -211,10 +211,10 @@ legacy_progression = {
         "title_a" : "Holt!",
         "title_b" : "Who Goes There?",
         "description" : "Beat the Skeet Shooting Event",
-        "points_a" : 3,
-        "points_b" : 5,
+        "points_a" : 1,
+        "points_b" : 2,
         "id_a" : 371673,
-        "id_b" : 0,
+        "id_b" : 357615,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["skeet"]
@@ -223,10 +223,10 @@ legacy_progression = {
         "title_a" : "Jumpy, Jumpy, Jumpy!",
         "title_b" : "Up, Up and Away!",
         "description" : "Beat the Triple Jump Event",
-        "points_a" : 2,
-        "points_b" : 5,
+        "points_a" : 1,
+        "points_b" : 2,
         "id_a" : 371674,
-        "id_b" : 0,
+        "id_b" : 357616,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["triple_jump"]
@@ -235,10 +235,10 @@ legacy_progression = {
         "title_a" : "Bullseye!",
         "title_b" : "Shooting Barebow",
         "description" : "Beat the Archery Event",
-        "points_a" : 2,
-        "points_b" : 5,
+        "points_a" : 1,
+        "points_b" : 2,
         "id_a" : 371675,
-        "id_b" : 0,
+        "id_b" : 357617,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["archery"]
@@ -247,10 +247,10 @@ legacy_progression = {
         "title_a" : "Higher",
         "title_b" : "Fosbury Flop",
         "description" : "Beat the High Jump Event",
-        "points_a" : 2,
-        "points_b" : 5,
+        "points_a" : 1,
+        "points_b" : 2,
         "id_a" : 371676,
-        "id_b" : 0,
+        "id_b" : 357618,
         "badge_a" : "0",
         "badge_b" : "0",
         "trigger" : ach_cycle["high_jump"]
@@ -295,8 +295,8 @@ function cycle_trigger(num){
 achievement(
     title = "Victory Lap",
     description = "Qualify for 8 events in a row (Any Mode)",
-    points = 10,
-    id = 0, 
+    points = 3,
+    id = 357609, 
     badge = "0",
     trigger = 
         prev(state_id) != states["loading_event"] && 
@@ -306,23 +306,10 @@ achievement(
 )
 
 achievement(
-    title = "Showboating",
-    description = "Qualify for 16 events in a row (Any Mode)",
-    points = 25,
-    id = 0, 
-    badge = "0",
-    trigger = 
-        prev(state_id) != states["loading_event"] && 
-        state_id == states["playing"] &&
-        cycle_trigger(2) &&
-        never(state_id != states["playing"])
-)
-
-achievement(
     title = "World Champion",
     description = "Qualify for 8 events in a row (Mode B)",
-    points = 10,
-    id = 0, 
+    points = 5,
+    id = 357610, 
     badge = "0",
     trigger = 
         prev(state_id) != states["loading_event"] && 
@@ -331,6 +318,21 @@ achievement(
         never(state_id != states["playing"]) &&
         loop_count >= 3
 )
+
+achievement(
+    title = "Showboating",
+    description = "Qualify for 16 events in a row (Any Mode)",
+    points = 10,
+    id = 357608, 
+    badge = "0",
+    trigger = 
+        prev(state_id) != states["loading_event"] && 
+        state_id == states["playing"] &&
+        cycle_trigger(2) &&
+        never(state_id != states["playing"])
+)
+
+
 
 // ----------------------------------------------------------------------------
 // -- Challenge Achievements
@@ -352,7 +354,7 @@ wr_achievements = {
             "event" : events["A"]["dash"],
             "target" : "9sec 93",
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 0993),
-            "points" : 5,
+            "points" : 2,
             "badge" : "0",
             "id" : 371677
         },
@@ -360,7 +362,7 @@ wr_achievements = {
             "event" : events["A"]["long_jump"],
             "target" : "8m 90",
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() > 0890),
-            "points" : 5,
+            "points" : 2,
             "badge" : "0",
             "id" : 371678
         },
@@ -368,7 +370,7 @@ wr_achievements = {
             "event" : events["A"]["hurdles"],
             "target" : "12sec 93",
             "trigger" : (prev(group_a_score_best()) < group_a_score_best() && group_a_score_best() < 1293),
-            "points" : 5,
+            "points" : 2,
             "badge" : "0",
             "id" : 371679
         },
@@ -376,7 +378,7 @@ wr_achievements = {
             "event" : events["A"]["javelin"],
             "target" : "99m 72",
             "trigger" : (prev(group_a_score_best()) != group_a_score_best() && group_a_score_best() > 9972),
-            "points" : 10,
+            "points" : 3,
             "badge" : "0",
             "id" : 371680
         }
@@ -386,7 +388,7 @@ wr_achievements = {
             "event" : events["B"]["skeet"],
             "target" : "4300p",
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 4300),
-            "points" : 10,
+            "points" : 3,
             "badge" : "0",
             "id" : 371681
         },
@@ -394,7 +396,7 @@ wr_achievements = {
             "event" : events["B"]["triple_jump"],
             "target" : "17m 89",
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 1789),
-            "points" : 5,
+            "points" : 2,
             "badge" : "0",
             "id" : 371682
         },
@@ -402,7 +404,7 @@ wr_achievements = {
             "event" : events["B"]["archery"],
             "target" : "3500p",
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 3500),
-            "points" : 10,
+            "points" : 5,
             "badge" : "0",
             "id" : 371683
         },
@@ -410,7 +412,7 @@ wr_achievements = {
             "event" : events["B"]["high_jump"],
             "target" : "2m 36",
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 0236),
-            "points" : 50,
+            "points" : 5,
             "badge" : "0",
             "id" : 371684
         }
@@ -464,7 +466,7 @@ ud_achievements = {
             "event" : events["A"]["javelin"],
             "target" : "110m 00",
             "trigger" : (prev(group_a_score_best()) != group_a_score_best() && group_a_score_best() > 11000),
-            "points" : 10,
+            "points" : 5,
             "badge" : "417901",
             "id" : 371690
         }
@@ -474,7 +476,7 @@ ud_achievements = {
             "event" : events["B"]["skeet"],
             "target" : "4400p",
             "trigger" : (prev(group_b_score_best()) < group_b_score_best() && group_b_score_best()> 4400),
-            "points" : 10,
+            "points" : 5,
             "badge" : "417902",
             "id" : 371691
         },
@@ -511,7 +513,7 @@ for group in ["A","B"]{
 // ----------------------------------------------------------------------------
 
 achievement(
-    title = "Bonus: Over 1000", points = 2,
+    title = "Bonus: Over 1000", points = 1,
     description = "Reach speed of 1000 in the 100m Dash (Any Mode)",
     id = 371685, badge = "417886", published = "25/06/2015 02:28:43", modified = "26/06/2015 05:47:22",
     trigger = 
@@ -522,7 +524,7 @@ achievement(
 )
 
 achievement(
-    title = "Bonus: Top Speed", points = 4,
+    title = "Bonus: Top Speed", points = 1,
     description = "Reach speed of 1500 in the 100m Dash (Any Mode)",
     id = 371686, badge = "417887", published = "25/06/2015 02:28:46", modified = "17/06/2020 19:18:27",
     trigger =
@@ -535,8 +537,8 @@ achievement(
 achievement(
     title = "Bonus: Piggy Bank",
     description = "Get a Surprise visit from the Pig on the 100m Dash (Any Mode)",
-    points = 10,
-    id = 0, 
+    points = 3,
+    id = 357603, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -548,8 +550,8 @@ achievement(
 achievement(
     title = "Bonus: Wake Up Mr Mole",
     description = "Get a Surprise visit from the Mole on the Long Jump (Any Mode)",
-    points = 10,
-    id = 0, 
+    points = 3,
+    id = 357606, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -561,8 +563,8 @@ achievement(
 achievement(
     title = "Bonus: Piggy Bank Returns",
     description = "Get a Surprise visit from the Pig on the 110m Hurdles (Any Mode)",
-    points = 10,
-    id = 0, 
+    points = 3,
+    id = 357604, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -574,8 +576,8 @@ achievement(
 achievement(
     title = "Bonus: U.F.Oh-no..",
     description = "Get a Surprise visit from the UFO on the Javelin (Any Mode)",
-    points = 2,
-    id = 0, 
+    points = 1,
+    id = 357605, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -587,8 +589,8 @@ achievement(
 achievement(
     title = "Bonus: Is It A Bird?",
     description = "Shoot The Blue Clay Disk in Skeet Shooting (Any Mode)",
-    points = 2,
-    id = 0, 
+    points = 1,
+    id = 357598, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -603,8 +605,8 @@ achievement(
 achievement(
     title = "Bonus: Is It A Plane?",
     description = "Shoot The Red Clay Disk in Skeet Shooting (Any Mode)",
-    points = 5,
-    id = 0, 
+    points = 2,
+    id = 357599, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -619,8 +621,8 @@ achievement(
 achievement(
     title = "Bonus: No .. It's That Damn U.F.O Again!",
     description = "Shoot the UFO in Skeet Shooting (Any Mode)",
-    points = 10,
-    id = 0, 
+    points = 5,
+    id = 357600, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -635,8 +637,8 @@ achievement(
 achievement(
     title = "Bonus: I Was Right The First Time .. It's A Bird!",
     description = "Shoot the Bird in Skeet Shooting (Any Mode)",
-    points = 25,
-    id = 0, 
+    points = 10,
+    id = 357597, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -651,8 +653,8 @@ achievement(
 achievement(
     title = "Bonus: One Small Step",
     description = "Get a Surprise visit from the Astronut on the Triple-Jump (Any Mode)",
-    points = 50,
-    id = 0, 
+    points = 25,
+    id = 357602, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -664,8 +666,8 @@ achievement(
 achievement(
     title = "Bonus: William's Cat",
     description = "Shoot the apple on the cat's head in Archery (Any Mode)",
-    points = 25,
-    id = 0, 
+    points = 10,
+    id = 357607, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
@@ -677,8 +679,8 @@ achievement(
 achievement(
     title = "Bonus: One Giant Leap",
     description = "Get a Surprise visit from the Astronut on the High-Jump (Any Mode)",
-    points = 5,
-    id = 0, 
+    points = 1,
+    id = 357601, 
     badge = "0",
     trigger = 
         state_id == states["playing"] &&
