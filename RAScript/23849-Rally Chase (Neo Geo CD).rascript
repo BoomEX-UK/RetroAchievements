@@ -280,7 +280,7 @@ rich_presence_conditional_display( race_status == race_status_ids["menu"],
 )
 
 rich_presence_conditional_display( race_status == race_status_ids["racing"],
-    "{0} [{1}{2}{3}] {4} | {5} SS:{6}/{7}| Rank:{8}",
+    "{0} [{1}{2}{3}] {4} ‣ {5} SS:{6}/{7} ‣ Rank:{8}",
     emoji,
     rich_presence_macro("ASCIIChar",ascii_1),
     rich_presence_macro("ASCIIChar",ascii_2),
@@ -294,7 +294,7 @@ rich_presence_conditional_display( race_status == race_status_ids["racing"],
 
 
 rich_presence_conditional_display( race_status == race_status_ids["win"],
-    "{0} [{1}{2}{3}] {4} | {5} Race Over | Rank:{6}",
+    "{0} [{1}{2}{3}] {4} ‣ {5} Race Over ‣ Rank:{6}",
     emoji,
     rich_presence_macro("ASCIIChar",ascii_1),
     rich_presence_macro("ASCIIChar",ascii_2),
@@ -305,7 +305,7 @@ rich_presence_conditional_display( race_status == race_status_ids["win"],
 )
 
 rich_presence_conditional_display( race_status == race_status_ids["lose"],
-    "{0} [{1}{2}{3}] {4} | {5} Retire",
+    "{0} [{1}{2}{3}] {4} ‣ {5} Retire",
     emoji,
     rich_presence_macro("ASCIIChar",ascii_1),
     rich_presence_macro("ASCIIChar",ascii_2),
