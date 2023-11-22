@@ -73,48 +73,38 @@ achievement(
 // Clean Lap Racer [Void]
 //--------------------------------------------------
 
-pointer_tt_drift = tbyte(0x01ccabf0)
-pointer_singlerace = tbyte(0x01cccce0)
-wheel_offset = 0x0100001F
+// Unused ------
+// pointer_singlerace = tbyte(0x01cccce0)
+// modes = {
+//     "mode_single": 0,
+//     "mode_tt": 1,
+//     "mode_drift": 2
+// }
 
+// Wheels ------
+wheel_pointers = {
+    "front-left" : tbyte(0x01cca528),
+    "front-right" : tbyte(0x01cca718),
+    "back-left" : tbyte(0x01ccaa00),
+    "back-right" : tbyte(0x01ccabf0)
+}
+grounding_offset = 0x0100001F
+
+// Game Info ------
 game_mode = byte(0x01017e58)
-modes = {
-    "mode_single": 0,
-    "mode_tt": 1,
-    "mode_drift": 2
-}
-pointers = {
-    "mode_single": pointer_singlerace,
-    "mode_tt": pointer_tt_drift,
-    "mode_drift": pointer_tt_drift
-}
-
 lap_number = byte(0x01d0fe4c)
-
-triggers = []
-for mode in modes {
-    // pointer for Single Race is different to the other 2
-    gmcheck = game_mode == 0
-    if( mode != "mode_single" ) gmcheck = game_mode > 0
-    // Build the trigger
-    tmptrigger = 
-        // check null pointer
-        never(gmcheck && pointers[mode] == 0) && 
-        // enable trigger icon when passing the start line
-        once(gmcheck && prev(lap_number)<lap_number) && 
-        // lap count (1 to start, 1 to end)
-        trigger_when(tally(2,gmcheck && prev(lap_number)<lap_number)) && 
-        // Reset if off-road
-        never(gmcheck && byte(pointers[mode]+wheel_offset) == 0) 
-    // Add to stack of triggers
-    array_push(triggers,tmptrigger)
-}
+gmcheck = game_mode == 1
 
 achievement(
         id=0,
         title="[VOID] Clean Lap",
-        description="Drive a clean lap in a time trial, drift challenge or single race",
+        description="Drive a clean lap in a time trial",
         points=1,
-        trigger= any_of(triggers, s => s)
-
+        trigger=
+            never(gmcheck && wheel_pointers["front-left"] == 0) &&
+            once(gmcheck && prev(lap_number)<lap_number) && 
+            trigger_when(tally(2,gmcheck && prev(lap_number)<lap_number)) && 
+            never(gmcheck &&
+                all_of(wheel_pointers,s=>byte(wheel_pointers[s]+grounding_offset)==0)
+            )
 )
