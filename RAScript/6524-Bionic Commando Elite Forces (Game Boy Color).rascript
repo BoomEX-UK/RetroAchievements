@@ -33,22 +33,33 @@ screen_titles = {
     0x05 : "Nintendo Software",
     0x06 : "Capcom",
     0x07 : "Press Start",
+    0x67 : "Intro Cutscene",
+    0x68 : "New/Load Game",
+    0x69 : "Commando Select",
+    0x6a : "Credits",
+    0x6b : "Name Entry",
 }
 for screen in screen_titles screens[screen] = {
     "name" : screen_titles[screen],
     "type" : screen_types["title"]
 }
 
+menu_ids = {
+    "pause":0x66,
+    "fail":0x6c,
+    "m_complete":0x6d,
+    "g_complete":0x6e,
+    "save_load":0x6f,
+    "loading":0xff,
+}
+
 screen_menus = {
-    0x66 : "Paused",
-    0x67 : "Intro Cutscene",
-    0x68 : "New/Load Game",
-    0x69 : "Commando Select",
-    0x6b : "Name Entry",
-    0x6c : "Mission Failed",
-    0x6d : "Misson Complete",
-    0x6f : "Save/Load Game",
-    0xFF : "Loading"
+    menu_ids["pause"]: "Paused",
+    menu_ids["fail"]: "Mission Failed",
+    menu_ids["m_complete"]: "Misson Complete",
+    menu_ids["g_complete"]: "Game Complete",
+    menu_ids["save_load"]: "Save/Load Game",
+    menu_ids["loading"]: "Loading"
 }
 for screen in screen_menus screens[screen] = {
     "name" : screen_menus[screen],
@@ -70,11 +81,11 @@ for screen in screen_maps screens[screen] = {
 
 screen_stages = {
     0x0a: "1",
-    0x0b: "1: Comms Room",
+    0x0b: "1: Red Comms Room",
     0x0d: "2",
-    0x0e: "2: Comms Room",
+    0x0e: "2: Red Comms Room",
     0x0f: "2: Bunker",
-    0x10: "2: Bunker Comms Room",
+    0x10: "2: Bunker, Red Comms Room",
     0x12: "3",
     0x13: "3: Comms Room",
     0x15: "4",
@@ -108,11 +119,34 @@ screen_stages = {
     0x38: "10: Blue Comms Room",
     0x39: "10: Upper Level",
     0x3b: "11",
-    0x3c: "11: Avars HQ Entrance",
-    0x3d: "11: Avars HQ",
+    0x3c: "11: Avars Base Entrance",
+    0x3d: "11: Avars Base",
     0x3e: "11: Blue Comms Room",
+    0x7c: "11: Yellow Comms Room",
     0x41: "12",
+    0x42: "12: Sewer",
+    0x43: "12: Blue Comms Room",
+    0x44: "12: Avars Base",
+    0x4a: "13: Desert Entrance",
+    0x4b: "13: Upper Tunnels",
+    0x4c: "13: Mid Tunnels",
+    0x4e: "13: Hidden Passageway",
+    0x4f: "13: Yellow Comms Room",
+    0x4d: "13: Super Joe",
+    0x46: "14: Tower",
+    0x47: "14",
+    0x35: "14: Pit",
+    0x48: "14: Yellow Comms Room",
+    0x51: "15",
+    0x52: "15: Tunnels",
+    0x53: "15: Yellow Comms Room",
     0x5e: "16",
+    0x7b: "17: Sewer Entrance",
+    0x5f: "17",
+    0x55: "18: Runway",
+    0x56: "18: Albatross Tail",
+    0x57: "18: Albatross Engine Room",
+    0x58: "18: Albatross Undercarriage",
 }
 for screen in screen_stages screens[screen] = {
     "name" : screen_stages[screen],
@@ -143,6 +177,11 @@ screen_bosses = {
     0x36: "9: Main Security Officer",
     0x3a: "10: Laser Security System",
     0x40: "11: Rocket General",
+    0x45: "12: Helicopter",
+    0x50: "13: Executioner",
+    0x49: "14: Fuel Room",
+    0x54: "15: Omega Platoon",
+    0x59: "18: Arturus"
 }
 for screen in screen_bosses screens[screen] = {
     "name" : screen_bosses[screen],
@@ -150,9 +189,10 @@ for screen in screen_bosses screens[screen] = {
 }
 
 screen_topdown = {
-    0x5b: "Desert Mobile Troops",
+    0x5b: "Jungle Mobile Troops",
     0x5a: "City Mobile Troops",
     0x5d: "Secret Base",
+    0x5c: "Desert Mobile Troops"
 }
 for screen in screen_topdown screens[screen] = {
     "name" : screen_topdown[screen],
@@ -170,6 +210,244 @@ screen_id = screen_id_persistent
 gender_selected = byte(0x00c6a8)
 function is_male() => gender_selected == 1
 
+lives = byte(0x00c2ca)
+
+collectibles_a = 0x00c5ec
+collectibles_b = 0x00c5ed
+
+promotion_level = byte(0x00c2d1)
+
+// ----------------------------------------------------------------------------
+// -- Progression Achievements
+// ----------------------------------------------------------------------------
+
+progression_achievements = {
+    1 : {
+        "id" : 0,
+        "title": "Energy Recovery Pills",
+        "desc" : screen_bosses[0x7e],
+        "stage" : 0x7e,
+        "points" : 1
+    },
+    2 : {
+        "id" : 0,
+        "title": "Key Card",
+        "desc" : screen_bosses[0x11],
+        "stage" : 0x11,
+        "points" : 1
+    },
+    3 : {
+        "id" : 0,
+        "title": "Helmet",
+        "desc" : screen_bosses[0x14],
+        "stage" : 0x14,
+        "points" : 1
+    },
+    4 : {
+        "id" : 0,
+        "title": "Green Decoder",
+        "desc" : screen_bosses[0x17],
+        "stage" : 0x17,
+        "points" : 1
+    },
+    5 : {
+        "id" : 0,
+        "title": "Quick Charge",
+        "desc" : screen_bosses[0x1b],
+        "stage" : 0x1b,
+        "points" : 1
+    },
+    6 : {
+        "id" : 0,
+        "title": "Wide Gun",
+        "desc" : screen_bosses[0x27],
+        "stage" : 0x27,
+        "points" : 1
+    },
+    7 : {
+        "id" : 0,
+        "title": "Steel Boots",
+        "desc" : screen_bosses[0x23],
+        "stage" : 0x23,
+        "points" : 1
+    },
+    8 : {
+        "id" : 0,
+        "title": "Protection Vest",
+        "desc" : screen_bosses[0x2b],
+        "stage" : 0x2b,
+        "points" : 1
+    },
+    91 : {
+        "id" : 0,
+        "title": "Her Blue Decoder",
+        "desc" : (screen_bosses[0x2f] + " as the Female Commando"),
+        "stage" : 0x2f,
+        "points" : 1
+    },
+    92 : {
+        "id" : 0,
+        "title": "His Blue Decoder",
+        "desc" : (screen_bosses[0x36] + " as the Male Commando"),
+        "stage" : 0x36,
+        "points" : 1
+    },
+    10 : {
+        "id" : 0,
+        "title": "Laser Gun",
+        "desc" : screen_bosses[0x3a],
+        "stage" : 0x3a,
+        "points" : 1
+    },
+    12 : {
+        "id" : 0,
+        "title": "Yellow Decoder",
+        "desc" : screen_bosses[0x45],
+        "stage" : 0x45,
+        "points" : 1
+    },
+    13 : {
+        "id" : 0,
+        "title": "Rapid Fire",
+        "desc" : screen_bosses[0x50],
+        "stage" : 0x50,
+        "points" : 1
+    },
+    14 : {
+        "id" : 0,
+        "title": "Flamethrower",
+        "desc" : screen_bosses[0x49],
+        "stage" : 0x49,
+        "points" : 1
+    },
+    15 : {
+        "id" : 0,
+        "title": "Body Armour",
+        "desc" : screen_bosses[0x54],
+        "stage" : 0x54,
+        "points" : 1
+    },
+}
+
+for ach in progression_achievements {
+    base = progression_achievements[ach]
+    achievement(
+        id=base["id"],
+        title=base["title"],
+        description="Defeat Boss " + base["desc"],
+        points=base["points"],
+        trigger=
+            prev(screen_id_volatile) == base["stage"] &&
+            screen_id_volatile == menu_ids["m_complete"]
+    )
+}
+
+// ----------------------------------------------------------------------------
+// -- Extra Achievements
+// ----------------------------------------------------------------------------
+
+achievement(
+    id=0,
+    title="Pulse Cannon",
+    description="Defeat Boss " + screen_bosses[0x40] + " as the Female Commando",
+    points=1,
+    trigger=
+        prev(screen_id_volatile) == 0x40 &&
+        screen_id_volatile == menu_ids["m_complete"] &&
+        !is_male()
+)
+
+achievement(
+    id=0,
+    title="Rocket Launcher",
+    description="Defeat Boss " + screen_bosses[0x40] + " as the Male Commando",
+    points=1,
+    trigger=
+        prev(screen_id_volatile) == 0x40 &&
+        screen_id_volatile == menu_ids["m_complete"] &&
+        is_male()
+)
+
+achievement(
+    id=0,
+    title="Bionic Corporal",
+    description="Receive your first promotion",
+    points=1,
+    trigger=
+        __ornext(prev(screen_id_volatile) == 0x5e || prev(screen_id_volatile) == 0x5f) &&
+        screen_id_volatile == menu_ids["m_complete"] &&
+        promotion_level == 1
+)
+
+achievement(
+    id=0,
+    title="Bionic Lance Corporal",
+    description="Receive your second promotion",
+    points=1,
+    trigger=
+        __ornext(prev(screen_id_volatile) == 0x5e || prev(screen_id_volatile) == 0x5f) &&
+        screen_id_volatile == menu_ids["m_complete"] &&
+        promotion_level == 2
+)
+
+achievement(
+    id=0,
+    title="Annihilation of the Albatross",
+    description="Defeat Arturus as the Female Commando",
+    points=1,
+    trigger=
+        prev(screen_id_volatile) == 0x40 &&
+        screen_id_volatile == menu_ids["g_complete"] &&
+        !is_male()
+)
+
+achievement(
+    id=0,
+    title="Assault on the Albatross",
+    description="Defeat Arturus as the Male Commando",
+    points=1,
+    trigger=
+        prev(screen_id_volatile) == 0x40 &&
+        screen_id_volatile == menu_ids["g_complete"] &&
+        is_male()
+)
+
+// ----------------------------------------------------------------------------
+// -- Collectible Achievements
+// ----------------------------------------------------------------------------
+
+collectibles = {
+    1: {
+        "id" : 0,
+        "title": "Area 1 - 1-Up",
+        "desc" : "1-Up in Area 1",
+        "flag": bit0(collectibles_a),
+        "stage": 0x0a,
+        "points": 1
+    },
+    2: {
+        "id" : 0,
+        "title": "Area 2 - Super Capsule",
+        "desc" : "Super Capsule in Area 2",
+        "flag": bit1(collectibles_a),
+        "stage": 0x0d,
+        "points": 1
+    },
+}
+
+for col in collectibles {
+    base = collectibles[col]
+    achievement(
+        id=base["id"],
+        title=base["title"],
+        description="Collect the hidden " + base["desc"],
+        points=base["points"],
+        trigger=
+            screen_id_volatile==base["stage"] &&
+            prev(base["flag"]) < base["flag"]
+    )
+}
+
 // ----------------------------------------------------------------------------
 // -- Rich Presence
 // ----------------------------------------------------------------------------
@@ -186,9 +464,10 @@ for screen in screens {
    if (screens[screen]["type"] == screen_types["sniper"]) rp_screen[screen] = "Sniper: Tower " + screens[screen]["name"]
 }
 
-
 emoji_male = "👨"
 emoji_female = "👩"
+emoji_map = "🗺️"
+emoji_tick = "✔️"
 
 rp_gender = {
     0x01: emoji_male
@@ -196,9 +475,29 @@ rp_gender = {
 
 emoji = "🦾"
 
-rich_presence_display("{0}{1} Screen {2} ‣ {3}",
+rich_presence_conditional_display(any_of(screen_titles,s=>screen_id_volatile==s),
+    "{0} Titlescreen",
+    emoji
+)
+
+rich_presence_conditional_display(any_of(screen_demos,s=>screen_id_volatile==s),
+    "{0} Watching a Demo",
+    emoji
+)
+
+rich_presence_conditional_display(any_of(screen_maps,s=>screen_id==s),
+    "{0}{1} Exploring the Map ‣ {2}{3}/18 {4}{5}/{3}",
     emoji,
     rich_presence_lookup("rp_gender",gender_selected,rp_gender,fallback=emoji_female),
-    rich_presence_macro("Number",screen_id),
+    emoji_map,
+    rich_presence_macro("Number",bitcount(0x00c2ce)+bitcount(0x00c2cf)+bitcount(0x00c2d0)),
+    emoji_tick,
+    rich_presence_macro("Number",bitcount(0x00c2cb)+bitcount(0x00c2cc)+bitcount(0x00c2cd))
+)
+
+rich_presence_display("{0}{1}x{2} ‣ {3}",
+    emoji,
+    rich_presence_lookup("rp_gender",gender_selected,rp_gender,fallback=emoji_female),
+    rich_presence_macro("Number",lives),
     rich_presence_lookup("rp_screen",screen_id,rp_screen,fallback="?")
 )
