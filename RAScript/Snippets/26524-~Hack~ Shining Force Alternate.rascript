@@ -14,7 +14,7 @@ ap_erikin = byte(0x009ed8)
 ap_alef = byte(0x009fc8)
 
 achievement(
-    "Warriros Code I [m]",
+    "(BoomEX) Warriros Code I [m]",
     "Win battle 1: Ancient Ruins without using AP",
     0,
     once( prev(ancient_ruins_start) < ancient_ruins_start ) &&
