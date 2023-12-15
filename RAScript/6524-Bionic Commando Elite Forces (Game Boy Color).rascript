@@ -433,6 +433,14 @@ collectibles = {
         "stage": 0x0d,
         "points": 1
     },
+    3: {
+        "id" : 0,
+        "title": "Area 3 - 1-Up",
+        "desc" : "1-Up in Area 3",
+        "flag": bit2(collectibles_a),
+        "stage": 0x12,
+        "points": 1
+    },
 }
 
 for col in collectibles {
