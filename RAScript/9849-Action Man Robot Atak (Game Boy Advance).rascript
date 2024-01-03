@@ -542,11 +542,11 @@ legacy_challenge_ach = {
     13 : { // Done
         "id" : 354603,
         "title" : "White Flag",
-        "description" : "Complete 'Tunnel of the Secret Base' without pressing A or dying",
+        "description" : "Complete 'Tunnel of the Secret Base' without pressing B or dying",
         "points" : 10,
         "badge" : "73970",
         "win_stage" : 0x19,
-        "trigger" : never(health_platform == 0 || bit0(0x0000d0) == 1)
+        "trigger" : never(health_platform == 0 || bit1(0x0000d0) == 1)
     },
     14 : { // Done
         "id" : 354604,
