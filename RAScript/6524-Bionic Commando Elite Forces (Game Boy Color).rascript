@@ -216,6 +216,8 @@ collectibles_a = 0x00c5ec
 collectibles_b = 0x00c5ed
 
 promotion_level = byte(0x00c2d1)
+capsule_points = byte(0x00c2c8)
+capsule_upgrade_level = byte(0x00c2c7)
 
 // ----------------------------------------------------------------------------
 // -- Progression Achievements
@@ -412,12 +414,71 @@ achievement(
         is_male()
 )
 
+achievement(
+    id=0,
+    title="Bionic Feline",
+    description="Reach the maximum of 9 Lives",
+    points=5,
+    trigger=
+        none_of(screen_demos,s=>screen_id_volatile==s) &&
+        prev(lives) == 8 &&
+        lives == 9
+)
+
+// ----------------------------------------------------------------------------
+// -- Super Capsule Achievements
+// ----------------------------------------------------------------------------
+  
+// 15,31,63,127,255  
+cap_info = {
+    15: {
+        "title":"Lv1",
+        "points": 1,
+        "uglevel": 4
+    },
+    31: {
+        "title":"Lv2",
+        "points": 2,
+        "uglevel": 5
+    },
+    63: {
+        "title":"Lv3",
+        "points": 3,
+        "uglevel": 6
+    },
+    127: {
+        "title":"Lv4",
+        "points": 5,
+        "uglevel": 7
+    },
+    255: {
+        "title":"Max",
+        "points": 10,
+        "uglevel": 8
+    },
+}
+
+for caps in cap_info {
+    cap_count = caps
+    base = cap_info[caps]
+    achievement(
+        id=0,
+        title="Bionic Boost: " + base["title"],
+        description="Upgrade your command by collecting " + caps + " capsule points",
+        points=base["points"],
+        trigger=
+            none_of(screen_demos,s=>screen_id_volatile==s) &&
+            prev(capsule_upgrade_level) == base["uglevel"] -1 &&
+            capsule_upgrade_level == base["uglevel"]
+    )
+}
+
 // ----------------------------------------------------------------------------
 // -- Collectible Achievements
 // ----------------------------------------------------------------------------
 
 collectibles = {
-    1: {
+    1.1: {
         "id" : 0,
         "title": "Area 1 - 1-Up",
         "desc" : "1-Up in Area 1",
@@ -425,7 +486,7 @@ collectibles = {
         "stage": 0x0a,
         "points": 1
     },
-    2: {
+    2.1: {
         "id" : 0,
         "title": "Area 2 - Super Capsule",
         "desc" : "Super Capsule in Area 2",
@@ -433,12 +494,36 @@ collectibles = {
         "stage": 0x0d,
         "points": 1
     },
-    3: {
+    3.1: {
         "id" : 0,
         "title": "Area 3 - 1-Up",
         "desc" : "1-Up in Area 3",
         "flag": bit2(collectibles_a),
         "stage": 0x12,
+        "points": 1
+    },
+    6.1: {
+        "id" : 0,
+        "title": "Area 6 - Medkit",
+        "desc" : "Medkit in Area 6",
+        "flag": bit6(collectibles_a),
+        "stage": 0x24,
+        "points": 1
+    },
+    6.2: {
+        "id" : 0,
+        "title": "Area 6 - 1-Up",
+        "desc" : "1-Up in Area 6",
+        "flag": bit7(collectibles_a),
+        "stage": 0x25,
+        "points": 1
+    },
+    7.1: {
+        "id" : 0,
+        "title": "Area 7 - Super Capsule",
+        "desc" : "Super Capsule in Area 7",
+        "flag": bit5(collectibles_a),
+        "stage": 0x22,
         "points": 1
     },
 }
