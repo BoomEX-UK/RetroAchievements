@@ -71,7 +71,7 @@ screen_maps = {
     0x61 : "Comms Screen",
     0x62 : "Selecting Weapon",
     0x63 : "Selecting Tool",
-    0x64 : "Selecting Armour",
+    0x64 : "Selecting Armor",
     0x65 : "Selecting Decoder",
 }
 for screen in screen_maps screens[screen] = {
@@ -122,6 +122,7 @@ screen_stages = {
     0x3c: "11: Avars Base Entrance",
     0x3d: "11: Avars Base",
     0x3e: "11: Blue Comms Room",
+    0x3f: "11: Sniper",
     0x7c: "11: Yellow Comms Room",
     0x41: "12",
     0x42: "12: Sewer",
@@ -211,13 +212,18 @@ gender_selected = byte(0x00c6a8)
 function is_male() => gender_selected == 1
 
 lives = byte(0x00c2ca)
+hp = byte(0x00c2b8)
 
 collectibles_a = 0x00c5ec
 collectibles_b = 0x00c5ed
+collectibles_c = 0x00c5ee
 
 promotion_level = byte(0x00c2d1)
 capsule_points = byte(0x00c2c8)
 capsule_upgrade_level = byte(0x00c2c7)
+
+sniper_shot_cooldown = byte(0x00c5eb)
+sniper_enemy_remain = byte(0x00c345)
 
 // ----------------------------------------------------------------------------
 // -- Progression Achievements
@@ -243,91 +249,91 @@ progression_achievements = {
         "title": "Helmet",
         "desc" : screen_bosses[0x14],
         "stage" : 0x14,
-        "points" : 1
+        "points" : 2
     },
     4 : {
         "id" : 0,
         "title": "Green Decoder",
         "desc" : screen_bosses[0x17],
         "stage" : 0x17,
-        "points" : 1
+        "points" : 2
     },
     5 : {
-        "id" : 0,
-        "title": "Quick Charge",
+        "id" : 387066,
+        "title": "Fast Charge",
         "desc" : screen_bosses[0x1b],
         "stage" : 0x1b,
-        "points" : 1
+        "points" : 3
     },
     6 : {
         "id" : 0,
         "title": "Wide Gun",
         "desc" : screen_bosses[0x27],
         "stage" : 0x27,
-        "points" : 1
+        "points" : 3
     },
     7 : {
         "id" : 0,
         "title": "Steel Boots",
         "desc" : screen_bosses[0x23],
         "stage" : 0x23,
-        "points" : 1
+        "points" : 4
     },
     8 : {
         "id" : 0,
         "title": "Protection Vest",
         "desc" : screen_bosses[0x2b],
         "stage" : 0x2b,
-        "points" : 1
+        "points" : 4
     },
     91 : {
         "id" : 0,
         "title": "Her Blue Decoder",
         "desc" : (screen_bosses[0x2f] + " as the Female Commando"),
         "stage" : 0x2f,
-        "points" : 1
+        "points" : 5
     },
     92 : {
         "id" : 0,
         "title": "His Blue Decoder",
         "desc" : (screen_bosses[0x36] + " as the Male Commando"),
         "stage" : 0x36,
-        "points" : 1
+        "points" : 5
     },
     10 : {
         "id" : 0,
         "title": "Laser Gun",
         "desc" : screen_bosses[0x3a],
         "stage" : 0x3a,
-        "points" : 1
+        "points" : 5
     },
     12 : {
         "id" : 0,
         "title": "Yellow Decoder",
         "desc" : screen_bosses[0x45],
         "stage" : 0x45,
-        "points" : 1
+        "points" : 10
     },
     13 : {
         "id" : 0,
         "title": "Rapid Fire",
         "desc" : screen_bosses[0x50],
         "stage" : 0x50,
-        "points" : 1
+        "points" : 10
     },
     14 : {
         "id" : 0,
         "title": "Flamethrower",
         "desc" : screen_bosses[0x49],
         "stage" : 0x49,
-        "points" : 1
+        "points" : 10
     },
     15 : {
         "id" : 0,
-        "title": "Body Armour",
+        "title": "Body Armor",
         "desc" : screen_bosses[0x54],
         "stage" : 0x54,
-        "points" : 1
+        "points" : 10
     },
 }
 
@@ -352,7 +358,7 @@ achievement(
     id=0,
     title="Pulse Cannon",
     description="Defeat Boss " + screen_bosses[0x40] + " as the Female Commando",
-    points=1,
+    points=5,
     trigger=
         prev(screen_id_volatile) == 0x40 &&
         screen_id_volatile == menu_ids["m_complete"] &&
@@ -363,7 +369,7 @@ achievement(
     id=0,
     title="Rocket Launcher",
     description="Defeat Boss " + screen_bosses[0x40] + " as the Male Commando",
-    points=1,
+    points=5,
     trigger=
         prev(screen_id_volatile) == 0x40 &&
         screen_id_volatile == menu_ids["m_complete"] &&
@@ -374,7 +380,7 @@ achievement(
     id=0,
     title="Bionic Corporal",
     description="Receive your first promotion",
-    points=1,
+    points=5,
     trigger=
         __ornext(prev(screen_id_volatile) == 0x5e || prev(screen_id_volatile) == 0x5f) &&
         screen_id_volatile == menu_ids["m_complete"] &&
@@ -385,7 +391,7 @@ achievement(
     id=0,
     title="Bionic Lance Corporal",
     description="Receive your second promotion",
-    points=1,
+    points=5,
     trigger=
         __ornext(prev(screen_id_volatile) == 0x5e || prev(screen_id_volatile) == 0x5f) &&
         screen_id_volatile == menu_ids["m_complete"] &&
@@ -396,7 +402,7 @@ achievement(
     id=0,
     title="Annihilation of the Albatross",
     description="Defeat Arturus as the Female Commando",
-    points=1,
+    points=25,
     trigger=
         prev(screen_id_volatile) == 0x40 &&
         screen_id_volatile == menu_ids["g_complete"] &&
@@ -407,7 +413,7 @@ achievement(
     id=0,
     title="Assault on the Albatross",
     description="Defeat Arturus as the Male Commando",
-    points=1,
+    points=25,
     trigger=
         prev(screen_id_volatile) == 0x40 &&
         screen_id_volatile == menu_ids["g_complete"] &&
@@ -474,57 +480,193 @@ for caps in cap_info {
 }
 
 // ----------------------------------------------------------------------------
+// -- Secret Comms Rooms
+// ----------------------------------------------------------------------------
+
+rooms = {
+    1 : {
+        "roomID" : 0x77,
+        "areaUnlock" : bit0(0x00c2d0),
+        "title" : "Obstical Course"
+    },
+    2 : {
+        "roomID" : 0x7c,
+        "areaUnlock" : bit1(0x00c2d0),
+        "title" : "Dingy Sewer"
+    }
+}
+
+for room in rooms {
+    base = rooms[room]
+    achievement(
+        id=0,
+        title="The Key to the " + base["title"],
+        description="Unlock the " + base["title"] + " by finding the hidden Comms room",
+        points=5,
+        trigger=
+            screen_id_persistent == base["roomID"] &&
+            base["areaUnlock"] > prev(base["areaUnlock"])
+    )
+}
+
+// ----------------------------------------------------------------------------
+// -- Sniper Achievements
+// ----------------------------------------------------------------------------
+
+sniper_opps = {
+    1: {
+        "areaID" : 0x0a,
+        "sniperID" : 0x0c,
+        "areaNum" : 1
+    },
+    2: {
+        "areaID" : 0x18,
+        "sniperID" : 0x1a,
+        "areaNum" : 5
+    },
+    3: {
+        "areaID" : 0x3b,
+        "sniperID" : 0x3f,
+        "areaNum" : 11
+    }
+}
+
+for snip in sniper_opps {
+    base = sniper_opps[snip]
+    achievement(
+        id=0,
+        title="Crackshot: Area " + base["areaNum"],
+        description="3 targets, 3 bullets - Don't miss Commando!",
+        points=3,
+        trigger=
+            once(
+                prev(screen_id_persistent) == base["areaID"] &&
+                screen_id_persistent == base["sniperID"]
+            ) &&
+            never(
+                screen_id_persistent != base["sniperID"] ||
+                (tally(3,
+                    prev(sniper_shot_cooldown) == 0 &&
+                    sniper_shot_cooldown > 0
+                ) && sniper_enemy_remain > 0 )
+            ) &&
+            prev(sniper_enemy_remain) == 1 &&
+            sniper_enemy_remain == 0
+    )
+}
+
+// ----------------------------------------------------------------------------
+// -- Mobile Troops
+// ----------------------------------------------------------------------------
+
+for mobile in screen_topdown {
+    base = screen_topdown[mobile]
+    achievement(
+        id=0,
+        title="Tactical Ops: " + base,
+        description="Complete the " + base + " mission without taking damage",
+        points=2,
+        trigger=
+            once(
+                prev(screen_id_persistent) == 0x60 &&
+                screen_id_persistent == mobile
+            ) &&
+            never(
+                (prev(screen_id_persistent) != mobile &&
+                screen_id_persistent != mobile) ||
+                prev(hp) > hp
+            ) &&
+            trigger_when(
+                prev(screen_id_persistent) == mobile &&
+                screen_id_persistent == 0x60
+            )
+    )
+}
+
+// ----------------------------------------------------------------------------
 // -- Collectible Achievements
 // ----------------------------------------------------------------------------
 
 collectibles = {
     1.1: {
         "id" : 0,
-        "title": "Area 1 - 1-Up",
-        "desc" : "1-Up in Area 1",
         "flag": bit0(collectibles_a),
         "stage": 0x0a,
-        "points": 1
+        "points": 1,
+        "areaNo" : 1,
+        "itemName" : "1-Up"
     },
     2.1: {
         "id" : 0,
-        "title": "Area 2 - Super Capsule",
-        "desc" : "Super Capsule in Area 2",
         "flag": bit1(collectibles_a),
         "stage": 0x0d,
-        "points": 1
+        "points": 1,
+        "areaNo" : 2,
+        "itemName" : "Super Capsule"
     },
     3.1: {
         "id" : 0,
-        "title": "Area 3 - 1-Up",
-        "desc" : "1-Up in Area 3",
         "flag": bit2(collectibles_a),
         "stage": 0x12,
-        "points": 1
+        "points": 1,
+        "areaNo" : 3,
+        "itemName" : "1-Up"
     },
     6.1: {
         "id" : 0,
-        "title": "Area 6 - Medkit",
-        "desc" : "Medkit in Area 6",
         "flag": bit6(collectibles_a),
         "stage": 0x24,
-        "points": 1
+        "points": 1,
+        "areaNo" : 6,
+        "itemName" : "Medkit"
     },
     6.2: {
         "id" : 0,
-        "title": "Area 6 - 1-Up",
-        "desc" : "1-Up in Area 6",
         "flag": bit7(collectibles_a),
         "stage": 0x25,
-        "points": 1
+        "points": 1,
+        "areaNo" : 6,
+        "itemName" : "1-Up"
     },
     7.1: {
         "id" : 0,
-        "title": "Area 7 - Super Capsule",
-        "desc" : "Super Capsule in Area 7",
         "flag": bit5(collectibles_a),
         "stage": 0x22,
-        "points": 1
+        "points": 1,
+        "areaNo" : 7,
+        "itemName" : "Super Capsule"
+    },
+    9.1: {
+        "id" : 0,
+        "flag": bit0(collectibles_b),
+        "stage": 0x2d,
+        "points": 1,
+        "areaNo" : 9,
+        "itemName" : "Medkit"
+    },
+    10.1: {
+        "id" : 0,
+        "flag": bit1(collectibles_b),
+        "stage": 0x39,
+        "points": 1,
+        "areaNo" : 10,
+        "itemName" : "Super Capsule"
+    },
+    12.1: {
+        "id" : 0,
+        "flag": bit2(collectibles_b),
+        "stage": 0x44,
+        "points": 1,
+        "areaNo" : 12,
+        "itemName" : "1-Up"
+    },
+    15.1: {
+        "id" : 0,
+        "flag": bit4(collectibles_b),
+        "stage": 0x51,
+        "points": 1,
+        "areaNo" : 15,
+        "itemName" : "Medkit"
     },
 }
 
@@ -532,8 +674,8 @@ for col in collectibles {
     base = collectibles[col]
     achievement(
         id=base["id"],
-        title=base["title"],
-        description="Collect the hidden " + base["desc"],
+        title="Area " + base["areaNo"] + " - " + base["itemName"],
+        description="Collect the hidden " + base["itemName"] + " in Area " + base["areaNo"],
         points=base["points"],
         trigger=
             screen_id_volatile==base["stage"] &&
@@ -562,11 +704,16 @@ emoji_female = "👩"
 emoji_map = "🗺️"
 emoji_tick = "✔️"
 
+emoji = "🦾"
+
 rp_gender = {
     0x01: emoji_male
 }
 
-emoji = "🦾"
+rp_promotion = {
+    0x01: "🥈",
+    0x02: "🥇"
+}
 
 rich_presence_conditional_display(any_of(screen_titles,s=>screen_id_volatile==s),
     "{0} Titlescreen",
@@ -580,7 +727,7 @@ rich_presence_conditional_display(any_of(screen_demos,s=>screen_id_volatile==s),
 
 rich_presence_conditional_display(any_of(screen_maps,s=>screen_id==s),
     "{0}{1} Exploring the Map ‣ {2}{3}/18 {4}{5}/{3}",
-    emoji,
+    rich_presence_lookup("rp_promo",promotion_level,rp_promotion,fallback=emoji),
     rich_presence_lookup("rp_gender",gender_selected,rp_gender,fallback=emoji_female),
     emoji_map,
     rich_presence_macro("Number",bitcount(0x00c2ce)+bitcount(0x00c2cf)+bitcount(0x00c2d0)),
@@ -589,7 +736,7 @@ rich_presence_conditional_display(any_of(screen_maps,s=>screen_id==s),
 )
 
 rich_presence_display("{0}{1}x{2} ‣ {3}",
-    emoji,
+    rich_presence_lookup("rp_promo",promotion_level,rp_promotion,fallback=emoji),
     rich_presence_lookup("rp_gender",gender_selected,rp_gender,fallback=emoji_female),
     rich_presence_macro("Number",lives),
     rich_presence_lookup("rp_screen",screen_id,rp_screen,fallback="?")
