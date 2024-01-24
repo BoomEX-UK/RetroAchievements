@@ -94,6 +94,12 @@ screen_stages = {
     0x16: "4: Red Comms Room",
     0x18: "5",
     0x19: "5: Comms Room",
+    0x0100: "-- Female Area 6",
+    0x78: "6: Cave Entrance",
+    0x1c: "6",
+    0x1d: "6: Cave Waterfalls",
+    0x1e: "6: Green Comms Room",
+    0x0101: "-- Male Area 6",
     0x24: "6",
     0x25: "6: Bunker",
     0x26: "6: Green Comms Room",
@@ -105,11 +111,11 @@ screen_stages = {
     0x28: "8: Base Entrance",
     0x29: "8",
     0x2a: "8: Green Comms Room",
-    0x0100: "-- Male Area 9",
+    0x0102: "-- Male Area 9",
     0x2c: "9: Sewer Entrance", 
     0x2d: "9: Sewer", 
     0x2e: "9: Green Comms Room",
-    0x0101: "-- Female Area 9",
+    0x0103: "-- Female Area 9",
     0x30: "9: City Entrance", 
     0x31: "9: West Sewer", 
     0x32: "9: City", 
@@ -169,12 +175,15 @@ screen_bosses = {
     0x14: "3: Phalanx",
     0x17: "4: Beta Platoon",
     0x1b: "5: Sprinter",
+    0x0100: "-- Female Area 6 Boss",
+    0x1f: "6: Wide Gunner",
+    0x0101: "-- Male Area 6 Boss",
     0x27: "6: Wide Gunner",
     0x23: "7: Artillery Cannons",
     0x2b: "8: Delta Platoon",
-    0x0100: "-- Male Area 9 Boss",
+    0x0102: "-- Male Area 9 Boss",
     0x2f: "9: Main Security Officer",
-    0x0101: "-- Female Area 9 Boss",
+    0x0103: "-- Female Area 9 Boss",
     0x36: "9: Main Security Officer",
     0x3a: "10: Laser Security System",
     0x40: "11: Rocket General",
@@ -265,13 +274,21 @@ progression_achievements = {
         "stage" : 0x1b,
         "points" : 3
     },
-    6 : {
+    61 : { 
+        "id" : 387067,
+        "title": "Her Wide Gun",
+        "desc" : (screen_bosses[0x1f] + " as the Female Commando"),
+        "stage" : 0x1f,
+        "points" : 3
+    },
+    62 : { 
         "id" : 0,
-        "title": "Wide Gun",
-        "desc" : screen_bosses[0x27],
+        "title": "His Wide Gun",
+        "desc" : (screen_bosses[0x27] + " as the Male Commando"),
         "stage" : 0x27,
         "points" : 3
     },
+
     7 : {
         "id" : 0,
         "title": "Steel Boots",
@@ -287,17 +304,17 @@ progression_achievements = {
         "points" : 4
     },
     91 : {
-        "id" : 0,
+        "id" : 387079,
         "title": "Her Blue Decoder",
-        "desc" : (screen_bosses[0x2f] + " as the Female Commando"),
-        "stage" : 0x2f,
+        "desc" : (screen_bosses[0x36] + " as the Female Commando"),
+        "stage" : 0x36,
         "points" : 5
     },
     92 : {
-        "id" : 0,
+        "id" : 387078,
         "title": "His Blue Decoder",
-        "desc" : (screen_bosses[0x36] + " as the Male Commando"),
-        "stage" : 0x36,
+        "desc" : (screen_bosses[0x2f] + " as the Male Commando"),
+        "stage" : 0x2f,
         "points" : 5
     },
     10 : {
@@ -318,7 +335,7 @@ progression_achievements = {
         "id" : 0,
         "title": "Rapid Fire",
         "desc" : screen_bosses[0x50],
-        "stage" : 0x50,
+        "stage" : 0x4d, // 0x50, // 0x4d used for "Super Joe" cutscene
         "points" : 10
     },
     14 : {
@@ -349,6 +366,20 @@ for ach in progression_achievements {
             screen_id_volatile == menu_ids["m_complete"]
     )
 }
+
+// Male / Female Split for Area 6
+//achievement(
+//    id=387067,
+//    title="Wide Gun",
+//    description="Defeat Boss " + screen_bosses[0x27],
+//    points=3,
+//    trigger=
+//        __ornext(
+//            prev(screen_id_volatile) == 0x27 ||
+//            prev(screen_id_volatile) == 0x1f
+//        ) &&
+//        screen_id_volatile == menu_ids["m_complete"]
+//)
 
 // ----------------------------------------------------------------------------
 // -- Extra Achievements
@@ -404,7 +435,7 @@ achievement(
     description="Defeat Arturus as the Female Commando",
     points=25,
     trigger=
-        prev(screen_id_volatile) == 0x40 &&
+        prev(screen_id_volatile) == 0x59 &&
         screen_id_volatile == menu_ids["g_complete"] &&
         !is_male()
 )
@@ -415,7 +446,7 @@ achievement(
     description="Defeat Arturus as the Male Commando",
     points=25,
     trigger=
-        prev(screen_id_volatile) == 0x40 &&
+        prev(screen_id_volatile) == 0x59 &&
         screen_id_volatile == menu_ids["g_complete"] &&
         is_male()
 )
