@@ -551,11 +551,11 @@ legacy_challenge_ach = {
     14 : { // Done
         "id" : 354604,
         "title" : "Quick atak!",
-        "description" : "Complete 'Professor Moran' with all Bonuses in less than 115 seconds",
+        "description" : "Complete 'Professor Moran' with all Bonuses in less than 2min 35sec seconds",
         "points" : 25,
         "badge" : "72744",
         "win_stage" : 0x1d,
-        "trigger" : (bonus_collected == bonus_total_adventure && prev(stage_time_frames) < stage_time_frames && stage_time_seconds < 115)
+        "trigger" : (bonus_collected == bonus_total_adventure && prev(stage_time_frames) < stage_time_frames && stage_time_seconds < 155)
     },
     15 : { // Done
         "id" : 354605,
@@ -627,6 +627,49 @@ lbids = {
     0x1e : 4516,
     0x0d : 4522,
     0x22 : 4545
+}
+
+token_lbids = {
+    //- Adventure
+    0x01 : 89323,
+    0x1f : 89348,
+    0x81 : 0,
+    0x0e : 89341,
+    0x08 : 89330,
+    0x09 : 89331,
+    0x17 : 89334,
+    0x11 : 89344,
+    0x12 : 89333,
+    0x13 : 89345,
+    0x04 : 89326,
+    0x0f : 89342,
+    0x06 : 89328,
+    0x83 : 0,
+    0x1b : 89352,
+    0x19 : 89347,
+    0x1d : 89354,
+    0x0c : 89332,
+    0x21 : 89356,
+    0x10 : 89343,
+    // Additional Advanced, Time Attack and Free Play
+    0x02 : 89324,
+    0x03 : 89325,
+    0x20 : 89355,
+    0x82 : 0,
+    0x0a : 89338,
+    0x0b : 89339,
+    0x14 : 89346,
+    0x15 : 89349,
+    0x16 : 89350,
+    0x18 : 89351,
+    0x05 : 89327,
+    0x07 : 89329,
+    0x84 : 0,
+    0x1c : 89353,
+    0x1a : 89335,
+    0x1e : 89336,
+    0x0d : 89340,
+    0x22 : 89337
 }
 
 // ----------------------------------------------------------------------------
@@ -732,6 +775,15 @@ for stage in stages {
     }
 }
 
+token_lb_stages = {}
+for stage in stages {
+    if( token_lbids[stage] > 0 ) token_lb_stages[stage] = {
+        "id" : stage,
+        "name" : stages[stage],
+        "lb_id" : token_lbids[stage]
+    }
+}
+
 for stage in lb_stages {
     stub = lb_stages[stage]
     leaderboard(
@@ -739,6 +791,20 @@ for stage in lb_stages {
         title = "Time: " + stub["name"],
         description = "Complete '" + stub["name"] + "' in the fastest time",
         start  = not_cheating() && stage_id == stub["id"] && stage_passed(),
+        cancel = always_false(),
+        submit = always_true(),
+        value = measured(stage_time_frames),
+        format = "FRAMES", lower_is_better = true
+    )
+}
+
+for stage in token_lb_stages {
+    stub = token_lb_stages[stage]
+    leaderboard(
+        id = stub["lb_id"],
+        title = "All Bonus Collected Time: " + stub["name"],
+        description = "Complete '" + stub["name"] + "' in the fastest time",
+        start  = not_cheating() && stage_id == stub["id"] && stage_passed() && (bonus_collected == bonus_total_adventure),
         cancel = always_false(),
         submit = always_true(),
         value = measured(stage_time_frames),
