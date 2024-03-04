@@ -7,79 +7,154 @@
 
 episodes = {
     0x00 : {
-        0 :"Joe The Hero",
-        1 :"Some Like It Red Hot",
-        2 :"2,000,000 Leagues Under The Sea",
-        3 :"The Viewtiful Escape",
-        4 :"The Midnight Thunderboy",
-        5 :"The Magnificent 5",
-        6 :"Joe & Silvia"
+        0 : {
+          "name" : "Joe The Hero",
+          "id" : 402834
+        },
+        1 : {
+          "name" : "Some Like It Red Hot",
+          "id" : 402855
+        },
+        2 : {
+          "name" : "2,000,000 Leagues Under The Sea",
+          "id" : 402868
+        },
+        3 : {
+          "name" : "The Viewtiful Escape",
+          "id" : 402849
+        },
+        4 : {
+          "name" : "The Midnight Thunderboy",
+          "id" : 402856
+        },
+        5 : {
+          "name" : "The Magnificent 5",
+          "id" : 402869
+        },
+        6 : {
+          "name" : "Joe & Silvia",
+          "id" : 402837
+        }
+    },
+    0x01 : {
+        0 : {
+          "name" : "Dark Fiend",
+          "id" : 403022
+        },
+        1 : {
+          "name" : "The Iron Ogre",
+          "id" : 403023
+        },
+        2 : {
+          "name" : "The Aquatic Terror",
+          "id" : 403024
+        },
+        3 : {
+          "name" : "The Imposter",
+          "id" : 403025
+        },
+        4 : {
+          "name" : "The Blade Master",
+          "id" : 403026
+        },
+        5 : {
+          "name" : "Inferno Lord",
+          "id" : 403027
+        },
+        6 : {
+          "name" : "Viewtiful Victory",
+          "id" : 403028
+        }
     },
     0x06 : {
-        0 :"Silvia The Main Squeeze",
-        1 :"Some Like It Sexy",
-        2 :"2,000,000 Pom-Poms Under The Sea",
-        3 :"The Sexy Escape",
-        4 :"The Midnight Redevous",
-        5 :"The Fabulous 5",
-        6 :"Silvia & Joe"
+        0 : {
+          "name" : "Silvia The Main Squeeze",
+          "id" : 402832
+        },
+        1 : {
+          "name" : "Some Like It Sexy",
+          "id" : 402864
+        },
+        2 : {
+          "name" : "2,000,000 Pom-Poms Under The Sea",
+          "id" : 402850
+        },
+        3 : {
+          "name" : "The Sexy Escape",
+          "id" : 402851
+        },
+        4 : {
+          "name" : "The Midnight Redevous",
+          "id" : 402852
+        },
+        5 : {
+          "name" : "The Fabulous 5",
+          "id" : 402833
+        },
+        6 : {
+          "name" : "Silvia & Joe",
+          "id" : 402865
+        }
     },
     0x07 : {
-        0 :"Blue the Justice",
-        1 :"Some Like It Aged",
-        2 :"2,000,000 Years at Sea",
-        3 :"The Great Escape",
-        4 :"The Midnight Bathroom Trip",
-        5 :"The Youthful 5",
-        6 :"Father & Daughter"
+        0 : {
+          "name" : "Blue the Justice",
+          "id" : 402843
+        },
+        1 : {
+          "name" : "Some Like It Aged",
+          "id" : 402844
+        },
+        2 : {
+          "name" : "2,000,000 Years at Sea",
+          "id" : 402845
+        },
+        3 : {
+          "name" : "The Great Escape",
+          "id" : 402846
+        },
+        4 : {
+          "name" : "The Midnight Bathroom Trip",
+          "id" : 402831
+        },
+        5 : {
+          "name" : "The Youthful 5",
+          "id" : 402863
+        },
+        6 : {
+          "name" : "Father & Daughter",
+          "id" : 402847
+        }
     },
     0x08 : {
-        0 :"Alastor the Devil",
-        1 :"Some Like It Gothic",
-        2 :"2,000,000 Years Alive",
-        3 :"The Spirits Escape",
-        4 :"Midnight is My Time",
-        5 :"The Malevolent 5",
-        6 :"Alastor & Silvia"
-    }
-}
-
-episode_ids = {
-    0x00 : {
-        0 :402834,
-        1 :402855,
-        2 :402868,
-        3 :402849,
-        4 :402856,
-        5 :402869,
-        6 :402837
-    },
-    0x06 : {
-        0 :402832,
-        1 :402864,
-        2 :402850,
-        3 :402851,
-        4 :402852,
-        5 :402833,
-        6 :402865
-    },
-    0x07 : {
-        0 :402843,
-        1 :402844,
-        2 :402845,
-        3 :402846,
-        4 :402831,
-        5 :402863,
-        6 :402847
-    },
-    0x08 : {
-        0 :402816,
-        1 :402825,
-        2 :402838,
-        3 :402828,
-        4 :402841,
-        5 :402842,
-        6 :402829
+        0 : {
+          "name" : "Alastor the Devil",
+          "id" : 402816
+        },
+        1 : {
+          "name" : "Some Like It Gothic",
+          "id" : 402825
+        },
+        2 : {
+          "name" : "2,000,000 Years Alive",
+          "id" : 402838
+        },
+        3 : {
+          "name" : "The Spirits Escape",
+          "id" : 402828
+        },
+        4 : {
+          "name" : "Midnight is My Time",
+          "id" : 402841
+        },
+        5 : {
+          "name" : "The Malevolent 5",
+          "id" : 402842
+        },
+        6 : {
+          "name" : "Alastor & Silvia",
+          "id" : 402829
+        }
     }
 }
 
@@ -87,7 +162,7 @@ difficulties = {
     "kids"      : 0x00,
     "adult"     : 0x01,
     "v"         : 0x02,
-    "super_v"   : 0x03
+    "ultra_v"   : 0x03
 }
 
 character_names = {
@@ -110,6 +185,7 @@ voomerang_count = word_be(0x0026ee1c)
 spink_count = word_be(0x0026ee1e)
 vfx_max = word_be(0x0026ee02)
 character = byte(0x0026ee7d)
+unlimited_vfx = bit7(0x0026ee14)
 
 current_episode_persistent = byte(0x0026ee7a)
 current_episode_volatile = byte(0x0026ee78)
@@ -133,6 +209,13 @@ mach_speed_level = byte(0x0026ee10)
 event_type_sub  = 0
 event_type_main = 1
 
+episode_result_animation = byte(0x0026f4a4)
+episode_RV_fail_count = byte(0x0026f4b7)
+episode_result_grade = byte(0x0026f51f)
+
+section_result_animation = byte(0x0026f8b1)
+section_rainbow_v = byte(0x0026f954)
+
 // ----------------------------------------------------------------------------
 // -- Progression Achievements
 // ----------------------------------------------------------------------------
@@ -152,7 +235,7 @@ key_events = {
     1: {
         "id" : 402866,
         "title" : "Rolling Thunder",
-        "desc" : "defeat Black Thunder to complete Episode 1 Stage 1",
+        "desc" : "defeat Black Thunder to complete Episode 1, stage 1",
         "episode" : 0,
         "stage" : 0,
         "flag" : bit0(key_events_1),
@@ -196,7 +279,7 @@ key_events = {
     6: {
         "id" : 402854,
         "title" : "Raining Thunder",
-        "desc" : "defeat the twin Black Thunder choppers in Episode 2 Stage 1",
+        "desc" : "defeat the twin Black Thunder choppers in Episode 2, stage 1",
         "episode" : 1,
         "stage" : 0,
         "flag" : bit7(key_events_2),
@@ -218,7 +301,7 @@ key_events = {
     8: {
         "id" : 402835,
         "title" : "Dogfight",
-        "desc" : "defeat Harrier in Episode 3 Stage 1",
+        "desc" : "defeat Harrier in Episode 3, stage 1",
         "episode" : 2,
         "stage" : 0,
         "flag" : bit7(key_events_1),
@@ -251,7 +334,7 @@ key_events = {
     11: {
         "id" : 402870,
         "title" : "Dog with a Bone",
-        "desc" : "defeat Harrier once and for all in Episode 5, Stage 1",
+        "desc" : "defeat Harrier once and for all in Episode 5, stage 1",
         "episode" : 4,
         "stage" : 0,
         "flag" : bit1(key_events_1),
@@ -295,7 +378,7 @@ key_events = {
     15: {
         "id" : 402857,
         "title" : "Heavy Metal",
-        "desc" : "defeat both Metal Leo in Episode 7, Stage 1",
+        "desc" : "defeat both Metal Leo in Episode 7, stage 1",
         "episode" : 6,
         "stage" : 0,
         "flag" : bit5(key_events_1),
@@ -317,7 +400,7 @@ key_events = {
     17: {
         "id" : 0,
         "title" : "Viewtiful Victory",
-        "desc" : "beat the game",
+        "desc" : "defeat Captain Blue to finish Episode 7",
         "episode" : 6,
         "stage" : 5,
         "flag" : bit7(key_events_1),
@@ -339,19 +422,20 @@ for char in [0x00,0x06,0x07,0x08] {
     for ke in key_events {
         if (key_events[ke]["et"] == event_type_main) {
             list_events[ke] = key_events[ke]
-            list_events[ke]["title"] = episodes[char][list_events[ke]["episode"]]
-            list_events[ke]["id"] = episode_ids[char][list_events[ke]["episode"]]
+            list_events[ke]["title"] = episodes[char][list_events[ke]["episode"]]["name"]
+            list_events[ke]["id"] = episodes[char][list_events[ke]["episode"]]["id"]
         } else if(key_events[ke]["et"] == event_type_sub && char == 0x00) {
             list_events[ke] = key_events[ke]
         }
     }
     for event in list_events {
-        base = key_events[event]
+        base = list_events[event]
         charcon = always_true()
         if( char != 0x00 ){
             charcon = (character == char)
             base["type"] = ""
         }
+        if( base["id"] == 402837 ) base["type"] = "win_condition"
         achievement(
             id=base["id"],
             title=base["title"],
@@ -375,14 +459,14 @@ for char in [0x00,0x06,0x07,0x08] {
 diffs = {
     0x02: {
         "id" : 402830,
-        "title" : "V-Rated Victoriy",
+        "title" : "V-Rated Victory",
         "desc" : "V-Rated",
         "points" : 25
     },
     0x03: {
         "id" : 402862,
-        "title" : "Super-V Rated Victoriy",
-        "desc" : "Super V-Rated",
+        "title" : "Ultra-V Rated Victory",
+        "desc" : "Ultra V-Rated",
         "points" : 50
     }
 }
@@ -451,7 +535,7 @@ for episode in episode_meta {
     achievement(
         id=base["id"],
         title="Henshin-A-Go-Go, Baby! " + base["numeral"],
-        description="Max out your VFX bar on episode "+(episode+1)+" on Adult difficulty or higher",
+        description="Max out your VFX bar on Episode "+(episode+1)+" on Adult difficulty or higher",
         points=base["points"],
         trigger=
             episode_stage_combo != 0xFFFF &&
@@ -522,28 +606,28 @@ one_ups = {
         "id": 402817,
         "stage" : 0x0100,
         "title" : "High-Up",
-        "desc" : "Episode 2, Stage 1",
+        "desc" : "Episode 2, stage 1",
         "points" : 1
     },
     1: {
         "id": 402826,
         "stage" : 0x0200,
         "title" : "Fly-Up",
-        "desc" : "Episode 3, Stage 1",
+        "desc" : "Episode 3, stage 1",
         "points" : 1
     },
     2: {
         "id": 402859,
         "stage" : 0x0201,
         "title" : "Swim-Up",
-        "desc" : "Episode 3, Stage 2",
+        "desc" : "Episode 3, stage 2",
         "points" : 1
     },
     3: {
         "id": 402861,
         "stage" : 0x0400,
         "title" : "Heat-Up",
-        "desc" : "Episode 5, Stage 1",
+        "desc" : "Episode 5, stage 1",
         "points" : 1
     }
 }
@@ -563,13 +647,79 @@ for up in one_ups {
 }
 
 // ----------------------------------------------------------------------------
+// -- V-Rated Achievements
+// ----------------------------------------------------------------------------
+
+rv_episodes = {}
+for ke in key_events {
+    if (key_events[ke]["et"] == event_type_main) {
+        rv_episodes[ke] = key_events[ke]
+        rv_episodes[ke]["title"] = episodes[0x01][rv_episodes[ke]["episode"]]["name"]
+        rv_episodes[ke]["id"] = episodes[0x01][rv_episodes[ke]["episode"]]["id"]
+    }
+}
+for rv in rv_episodes {
+    base = rv_episodes[rv]
+    achievement( 
+    id=base["id"],
+    title="V's Up: " + base["title"],
+    description="With a V rating or better, " + base["desc"],
+    points=10,
+    trigger=
+        current_stage == base["stage"] &&
+        current_episode == base["episode"] &&
+        prev(episode_result_animation) == 0x03 &&
+        episode_result_animation == 0x04 &&
+        episode_result_grade == 0
+    )
+}
+
+// -- Rainbow V ------------------------------------
+// trigger=
+//     current_stage == base["stage"] &&
+//     current_episode == base["episode"] &&
+//     prev(episode_result_animation) == 0x03 &&
+//     episode_result_animation == 0x04 &&
+//     episode_result_grade == 0 &&
+//     episode_RV_fail_count == 0
+// -------------------------------------------------
+
+// ----------------------------------------------------------------------------
 // -- Other Achievements
 // ----------------------------------------------------------------------------
 
+achievement( 
+    id=403029,
+    title="Juiced Up",
+    description="Collect your first red bottle for unlimited Viewtiful Effects",
+    points=1,
+    trigger=
+        episode_stage_combo != 0xFFFF &&
+        prev(unlimited_vfx) < unlimited_vfx
+)
 
-// get first rainbow v
-// get first infinite VFX juice
-// v rank all epsiodes
+achievement( 
+    id=403030,
+    title="Viewtiful Combo",
+    description="Get your combo meter up to 5x",
+    points=5,
+    trigger=
+        episode_stage_combo != 0xFFFF &&
+        prev(byte(0x002c8b6e)) == 0x04 &&
+        byte(0x002c8b6e) == 0x05
+)
+
+achievement( 
+    id=403747,
+    title="Rainbow Reign",
+    description="Get your first Rainbow V rating",
+    points=3,
+    trigger=
+        episode_stage_combo != 0xFFFF &&
+        prev(section_result_animation) == 0x03&&
+        section_result_animation == 0x04 &&
+        section_rainbow_v == 1
+)
 
 // ----------------------------------------------------------------------------
 // -- Rich Presence
@@ -608,7 +758,7 @@ rich_presence_conditional_display(episode_stage_combo == 0xFFFF,
 )
 
 rich_presence_conditional_display(episode_stage_combo >= 0x0800,
-    "{0}x{3} {4} ‣ Episode {1} Stage {2} ‣ Taking a well earned break",
+    "{0}x{3} {4} ‣ Episode {1}, stage {2} ‣ Taking a well earned break",
     rich_presence_lookup("character",character,emoji_character,fallback="?"),
     rich_presence_macro("Number",current_episode+1),
     rich_presence_macro("Number",current_stage+1),
@@ -616,7 +766,7 @@ rich_presence_conditional_display(episode_stage_combo >= 0x0800,
     rich_presence_lookup("difficulty",difficulty,rp_difficulty,fallback="?")
 )
 
-rich_presence_display("{0}x{3} {6} ‣ Episode {1} Stage {2} ‣ VFX {4} {7}{8} {9}{10} ‣ V{5}",
+rich_presence_display("{0}x{3} {6} ‣ Episode {1}, stage {2} ‣ VFX {4} {7}{8} {9}{10} ‣ V{5}",
     rich_presence_lookup("character",character,emoji_character,fallback="?"),
     rich_presence_macro("Number",current_episode+1),
     rich_presence_macro("Number",current_stage+1),
