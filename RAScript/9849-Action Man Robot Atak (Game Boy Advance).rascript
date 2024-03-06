@@ -152,9 +152,9 @@ adventure_ach = {
         "description" : "Queen Spider Battle",
         "points" : 3
     },
-    "motorcross" : {
+    "motocross" : {
         "win_stage" : 0x09,
-        "title" : "Mad Motorcross",
+        "title" : "Mad Motocross",
         "description" : "MTX challenge",
         "points" : 2
     },
@@ -293,7 +293,7 @@ time_ach = {
     "j_volcano" : {
         "win_stage" : 0x16,
         "title" : "Dinosaurs & Lava",
-        "description" : "Jurrasic Volcano area",
+        "description" : "Jurassic Volcano area",
         "points" : 5
     },
     "shells" : {
@@ -304,7 +304,7 @@ time_ach = {
     },
     "surf_x" : {
         "win_stage" : 0x84,
-        "title" : "Crusing the Coastline",
+        "title" : "Cruising the Coastline",
         "description" : "Surfin' Island X",
         "points" : 5
     },

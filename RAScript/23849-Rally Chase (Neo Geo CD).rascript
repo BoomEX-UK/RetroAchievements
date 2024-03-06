@@ -34,7 +34,7 @@ tracks = {
 }
 
 vehicles = {
-    0x00 : "Lancia Deleta",     // Automatic
+    0x00 : "Lancia Delta",     // Automatic
     0x01 : "Toyota GT-Four",    // Automatic
     0x02 : "Nissan GTI-R",      // Automatic
     0x03 : "Citroën ZX",        // Manual

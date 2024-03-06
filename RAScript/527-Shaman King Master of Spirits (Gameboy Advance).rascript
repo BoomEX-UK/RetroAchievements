@@ -16,7 +16,7 @@ areas = {
     },
     "nf" : {
         "id" : 0x01,
-        "name": "Nothern Fields",
+        "name": "Northern Fields",
     },
     "wc" : {
         "id" : 0x02,

@@ -165,7 +165,7 @@ obj_area_mg_house_bathroom = {
     "desc": "Minigame - Bathroom",
     "areaID": tmparea,
     "mgType": mg_levelAndBonus,
-    "mgTitle": "Personal Hygene",
+    "mgTitle": "Personal Hygiene",
     "mgPoints": 1,
     "winCon": (prev(vStage) == tmpid && vStage == overworld_house),
     "mgBonusTitle"  : "Undead Plumber",
