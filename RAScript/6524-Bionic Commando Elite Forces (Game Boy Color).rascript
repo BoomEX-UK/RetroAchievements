@@ -518,7 +518,7 @@ rooms = {
     1 : {
         "roomID" : 0x77,
         "areaUnlock" : bit0(0x00c2d0),
-        "title" : "Obstical Course"
+        "title" : "Obstacle Course"
     },
     2 : {
         "roomID" : 0x7c,
