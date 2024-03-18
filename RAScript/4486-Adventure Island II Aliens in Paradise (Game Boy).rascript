@@ -122,7 +122,8 @@ current_stage = bit0(0xd1ed) +
     (bit6(0xd1ed) * 7) +
     (bit7(0xd1ed) * 8) 
 
-lives = bcd(byte(0xd529))
+//lives = bcd(byte(0xd529))
+lives = high4(0xd529)*10 + low4(0xd529)
 score = bcd(tbyte(0xd526))
 fruit = bcd(byte(0xd52a))
 current_transformation = byte(0xd4a8)
@@ -149,36 +150,42 @@ progression_ach = {
         "desc" : "giant beetle",
         "points" : 1,
         "ie_points" : 2,
+        "type" : "progression"
     },
     1 : {
         "name" : "Nightshade",
         "desc" : "poisonous flower",
         "points" : 2,
         "ie_points" : 3,
+        "type" : "progression"
     },
     2 : {
         "name" : "Salamander",
         "desc" : "fiery lizard",
         "points" : 3,
         "ie_points" : 4,
+        "type" : "progression"
     },
     3 : {
         "name" : "Xenacanthus",
         "desc" : "sea monster",
         "points" : 4,
         "ie_points" : 5,
+        "type" : "progression"
     },
     4 : {
         "name" : "Fossilis",
         "desc" : "fossilised beast",
         "points" : 5,
         "ie_points" : 5,
+        "type" : "progression"
     },
     5 : {
         "name" : "Scylla Serrata",
         "desc" : "mud crab",
         "points" : 5,
         "ie_points" : 10,
+        "type" : "progression"
         
     },
     6 : {
@@ -186,12 +193,14 @@ progression_ach = {
         "desc" : "giant moth",
         "points" : 10,
         "ie_points" : 25,
+        "type" : "progression"
     },
     7 : {
         "name" : "Invasion",
         "desc" : "mothership and alien",
         "points" : 10,
         "ie_points" : 25,
+        "type" : "win_condition"
     }
 }
 
@@ -203,6 +212,7 @@ for ach in progression_ach {
         title=stub["name"],
         description="Defeat the " + stub["desc"] + " boss of Island " + ach+1,
         points=stub["points"],
+        type=stub["type"],
         trigger=
             current_island == ach &&
             prev(play_phase) == play_phases["boss"] &&
