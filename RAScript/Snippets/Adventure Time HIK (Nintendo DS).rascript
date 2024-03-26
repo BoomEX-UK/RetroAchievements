@@ -18,5 +18,8 @@ achievement(
     title="[boom] We're Dustomancy!",
     description="demo",
     points=0,
-    trigger=sum_of(stats,s=>stats[s]) > sum_of(stats,s=>delta(stats[s]))
+    trigger=
+        dword(0x0deba4) != 0 &&
+        tbyte(0x0f40cd) != 0 &&
+        sum_of(stats,s=>stats[s]) > sum_of(stats,s=>prev(stats[s]))
 )
