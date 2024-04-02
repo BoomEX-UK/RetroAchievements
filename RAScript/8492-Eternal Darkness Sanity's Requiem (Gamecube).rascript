@@ -280,11 +280,6 @@ areas = {
         "name" : "Cathedral",
         "location" : "europe"
     },
-    0x0451 : {
-        "name" : "ʎpnʇS",
-        "location" : "europe"
-        // Sanity - Chapter 7: cathedral  "Study Upsidedown"
-    },
     0x00dc : {
         "name" : "Vestry",
         "location" : "europe"
@@ -313,10 +308,33 @@ areas = {
         "name" : "Big Rock",
         "location" : "mantorok"
     },
+    0x0451 : {
+        "name" : "ʎpnʇS",
+        "location" : "europe"
+        // Sanity - Chapter 7: cathedral  "Study Upsidedown"
+    },
+    0x04e7 : {
+        "name" : "llɐH uᴉɐW",
+        "location" : "r_manor"
+        // Sanity - Chapter 7: cathedral  "Study Upsidedown"
+    },
 }
 
 offsets = {
     "event_flags" : 0x21240
+}
+
+event_flags = {
+    "se_phone_intermission" : {
+        "EU" : 0x00704c51
+    },
+    "se_hanging_guy" : {
+        "EU" : 0x00704c38
+    }
+}
+
+for ef in event_flags {
+    event_flags[ef]["US"] = event_flags[ef]["EU"] + offsets["event_flags"]
 }
 
 // ----------------------------------------------------------------------------
@@ -430,13 +448,63 @@ cheat = {
 // ----------------------------------------------------------------------------
 
 progression_ach = {
-    0x00 : {
+    1 : {
         "id" : 409870,
         "title" : "The Chosen One",
         "desc" : "Complete Chapter 1",
         "character" : 0x01,
         "sub_character" : 0x00,
         "points" : 5,
+        "type" : "progression",
+        "author" : true,
+    },
+    3 : {
+        "id" : 411989,
+        "title" : "Suspicions of Conspiracy",
+        "desc" : "Complete Chapter 3",
+        "character" : 0x03,
+        "sub_character" : 0x00,
+        "points" : 5,
+        "type" : "progression",
+        "author" : true,
+    },
+    5 : {
+        "id" : 411990,
+        "title" : "The Lurking Horror",
+        "desc" : "Complete Chapter 5",
+        "character" : 0x05,
+        "sub_character" : 0x00,
+        "points" : 5,
+        "type" : "progression",
+        "author" : true,
+    },
+    7 : {
+        "id" : 411991,
+        "title" : "Heresy!",
+        "desc" : "Complete Chapter 7",
+        "character" : 0x07,
+        "sub_character" : 0x00,
+        "points" : 10,
+        "type" : "progression",
+        "author" : true,
+    },
+    9 : {
+        "id" : 411992,
+        "title" : "A War to End All Wars",
+        "desc" : "Complete Chapter 9",
+        "character" : 0x0a, // Chapter 9=0x0a, Chapter 10=0x09 ??
+        "sub_character" : 0x00,
+        "points" : 10,
+        "type" : "progression",
+        "author" : true,
+    },
+    11 : {
+        "id" : 411993,
+        "title" : "Ashes to Ashes",
+        "desc" : "Complete Chapter 11",
+        "character" : 0x0b,
+        "sub_character" : 0x00,
+        "points" : 10,
         "type" : "progression",
         "author" : true,
     }
@@ -467,6 +535,86 @@ for prog in progression_ach {
         )
     }
 }
+
+// ----------------------------------------------------------------------------
+// -- Game Win
+// ----------------------------------------------------------------------------
+
+win_ach = {
+    1 : {
+        "id" : 0,
+        "title" : "The Mighty Chattur'gha",
+        "desc" : "Complete the game under the Chattur'gha alignment",
+        "artifact_id" : 0x01,
+        "points" : 25,
+        "type" : "win_condition",
+        "author" : false, // Wil
+    },
+    2 : {
+        "id" : 411994,
+        "title" : "The Boundless Ulyaoth",
+        "desc" : "Complete the game under the Ulyaoth alignment",
+        "artifact_id" : 0x02,
+        "points" : 25,
+        "type" : "win_condition",
+        "author" : true,
+    },
+    3 : {
+        "id" : 0,
+        "title" : "The Madness of Xel'lotath",
+        "desc" : "Complete the game under the Xel'lotath alignment",
+        "artifact_id" : 0x03,
+        "points" : 25,
+        "type" : "win_condition",
+        "author" : false, // Wil
+    }
+}
+
+for win in win_ach {
+    stub = win_ach[win]
+    if( stub["author"] ){
+        triggers = []
+        for ver_num in versions {
+            ver = versions[ver_num]
+            trig = version_id == ver_num && 
+                cheat["eternal"][ver] == 0  &&
+                prev(cheat["jump"][ver]) == const_jump_no &&
+                artifact_id[ver] == stub["artifact_id"] &&
+                prev(location_id[ver]) == 0x40 &&
+                prev(overlay_id[ver]) == 0x06 &&
+                overlay_id[ver] == 0x02 
+            array_push(triggers,trig)
+        }
+        achievement(
+            id=stub["id"],
+            title=stub["title"],
+            description=stub["desc"],
+            points=stub["points"],
+            type=stub["type"],
+            trigger=any_of(triggers,t=>t)
+        )
+    }
+}
+
+triggers_winall = []
+for ver_num in versions {
+    ver = versions[ver_num]
+    trig = version_id == ver_num && 
+        cheat["eternal"][ver] == 0  &&
+        prev(cheat["jump"][ver]) == const_jump_no &&
+        prev(location_id[ver]) == 0x40 &&
+        location_id[ver] == 0x0137
+    array_push(triggers_winall,trig)
+}
+achievement(
+    id=411995,
+    title="Hello, Darkness, My Old Friend",
+    description="Defeat Pious with each of the alignments on the same file and view the secret epilogue",
+    points=25,
+    type="",
+    trigger=any_of(triggers_winall,t=>t)
+)
+
 
 // ----------------------------------------------------------------------------
 // -- Overlay Sanity Effects A -- Uses Menu Overlay
@@ -584,6 +732,122 @@ for se in se_overlay_b {
                 location_id[ver] != const_location_none &&
                 prev(sanity_effect_overlay_id_b[ver]) == stub["effect_id"][ver] &&
                 sanity_effect_overlay_id_b[ver] == 0x00
+            array_push(triggers,trig)
+        }
+        achievement(
+            id=stub["id"],
+            title=stub["title"],
+            description=stub["desc"],
+            points=stub["points"],
+            type="",
+            trigger=any_of(triggers,t=>t)
+        )
+    }
+}
+
+// ----------------------------------------------------------------------------
+// -- Flag Sanity Effects
+// ----------------------------------------------------------------------------
+
+se_flags = {
+    0 : {
+        "id" : 415199,
+        "title" : "The Call is Coming From Inside the House!",
+        "desc" : "Playing as Alex, answer the phone",
+        "points" : 1,
+        "location" : 0x45,
+        "flag" : {
+            "EU" : bit7(event_flags["se_phone_intermission"]["EU"]),
+            "US" : bit7(event_flags["se_phone_intermission"]["US"])
+        },
+        "delta_high" : false,
+        "author" : true
+    },
+    2 : {
+        "id" : 415200,
+        "title" : "Don't Leave Me Hanging",
+        "desc" : "Playing as Alex, find a dude just hanging around",
+        "points" : 1,
+        "location" : 0x51,
+        "flag" : {
+            "EU" : bit1(event_flags["se_hanging_guy"]["EU"]),
+            "US" : bit1(event_flags["se_hanging_guy"]["US"])
+        },
+        "delta_high" : true,
+        "author" : true
+    },
+    99 : {
+        "id" : 0,
+        "title" : "",
+        "desc" : "",
+        "points" : 0,
+        "location" : 0,
+        "flag" : {
+            "EU" : bit0(0),
+            "US" : bit0(0)
+        },
+        "author" : false
+    }
+}
+
+for se in se_flags {
+    stub = se_flags[se]
+    if( stub["author"] ){
+        triggers = []
+        for ver_num in versions {
+            ver = versions[ver_num]
+            trig = version_id == ver_num && 
+                cheat["eternal"][ver] == 0  &&
+                location_id[ver] == stub["location"]
+            if(stub["delta_high"]) trig = trig && prev(stub["flag"][ver]) > stub["flag"][ver] 
+            else trig = trig && prev(stub["flag"][ver]) < stub["flag"][ver]
+            array_push(triggers,trig)
+        }
+        achievement(
+            id=stub["id"],
+            title=stub["title"],
+            description=stub["desc"],
+            points=stub["points"],
+            type="",
+            trigger=any_of(triggers,t=>t)
+        )
+    }
+}
+
+// ----------------------------------------------------------------------------
+// -- Special Locations
+// ----------------------------------------------------------------------------
+
+sl_flags = {
+    0 : {
+        "id" : 415201,
+        "title" : "Not the Greatest Roof, But It's Up There",
+        "desc" : "Playing as Maximilian, walk around on the ceiling",
+        "points" : 1,
+        "location" : 0x04e7,
+        "author" : true
+    },
+    99 : {
+        "id" : 0,
+        "title" : "",
+        "desc" : "",
+        "points" : 0,
+        "location" : 0,
+        "author" : false
+    }
+}
+
+for sl in sl_flags {
+    stub = sl_flags[sl]
+    if( stub["author"] ){
+        triggers = []
+        for ver_num in versions {
+            ver = versions[ver_num]
+            trig = version_id == ver_num && 
+                cheat["eternal"][ver] == 0  &&
+                prev(location_id[ver]) == stub["location"] &&
+                location_id[ver] != stub["location"] &&
+                location_id[ver] != const_location_none
             array_push(triggers,trig)
         }
         achievement(
