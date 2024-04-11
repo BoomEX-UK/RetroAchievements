@@ -244,49 +244,56 @@ progression_achievements = {
         "title": "Energy Recovery Pills",
         "desc" : screen_bosses[0x7e],
         "stage" : 0x7e,
-        "points" : 1
+        "points" : 1,
+        "type" : "progression"
     },
     2 : {
         "id" : 0,
         "title": "Key Card",
         "desc" : screen_bosses[0x11],
         "stage" : 0x11,
-        "points" : 1
+        "points" : 1,
+        "type" : "progression"
     },
     3 : {
         "id" : 0,
         "title": "Helmet",
         "desc" : screen_bosses[0x14],
         "stage" : 0x14,
-        "points" : 2
+        "points" : 2,
+        "type" : "progression"
     },
     4 : {
         "id" : 0,
         "title": "Green Decoder",
         "desc" : screen_bosses[0x17],
         "stage" : 0x17,
-        "points" : 2
+        "points" : 2,
+        "type" : "progression"
     },
     5 : {
         "id" : 387066,
         "title": "Fast Charge",
         "desc" : screen_bosses[0x1b],
         "stage" : 0x1b,
-        "points" : 3
+        "points" : 3,
+        "type" : "progression"
     },
     61 : { 
         "id" : 387067,
         "title": "Her Wide Gun",
         "desc" : (screen_bosses[0x1f] + " as the Female Commando"),
         "stage" : 0x1f,
-        "points" : 3
+        "points" : 3,
+        "type" : ""
     },
     62 : { 
         "id" : 0,
         "title": "His Wide Gun",
         "desc" : (screen_bosses[0x27] + " as the Male Commando"),
         "stage" : 0x27,
-        "points" : 3
+        "points" : 3,
+        "type" : ""
     },
 
     7 : {
@@ -294,63 +301,72 @@ progression_achievements = {
         "title": "Steel Boots",
         "desc" : screen_bosses[0x23],
         "stage" : 0x23,
-        "points" : 4
+        "points" : 4,
+        "type" : "progression"
     },
     8 : {
         "id" : 0,
         "title": "Protection Vest",
         "desc" : screen_bosses[0x2b],
         "stage" : 0x2b,
-        "points" : 4
+        "points" : 4,
+        "type" : "progression"
     },
     91 : {
         "id" : 387079,
         "title": "Her Blue Decoder",
         "desc" : (screen_bosses[0x36] + " as the Female Commando"),
         "stage" : 0x36,
-        "points" : 5
+        "points" : 5,
+        "type" : ""
     },
     92 : {
         "id" : 387078,
         "title": "His Blue Decoder",
         "desc" : (screen_bosses[0x2f] + " as the Male Commando"),
         "stage" : 0x2f,
-        "points" : 5
+        "points" : 5,
+        "type" : ""
     },
     10 : {
         "id" : 0,
         "title": "Laser Gun",
         "desc" : screen_bosses[0x3a],
         "stage" : 0x3a,
-        "points" : 5
+        "points" : 5,
+        "type" : "progression"
     },
     12 : {
         "id" : 0,
         "title": "Yellow Decoder",
         "desc" : screen_bosses[0x45],
         "stage" : 0x45,
-        "points" : 10
+        "points" : 10,
+        "type" : "progression"
     },
     13 : {
         "id" : 0,
         "title": "Rapid Fire",
         "desc" : screen_bosses[0x50],
         "stage" : 0x4d, // 0x50, // 0x4d used for "Super Joe" cutscene
-        "points" : 10
+        "points" : 10,
+        "type" : "progression"
     },
     14 : {
         "id" : 0,
         "title": "Flamethrower",
         "desc" : screen_bosses[0x49],
         "stage" : 0x49,
-        "points" : 10
+        "points" : 10,
+        "type" : "progression"
     },
     15 : {
         "id" : 0,
         "title": "Body Armor",
         "desc" : screen_bosses[0x54],
         "stage" : 0x54,
-        "points" : 10
+        "points" : 10,
+        "type" : "progression"
     },
 }
 
@@ -361,6 +377,7 @@ for ach in progression_achievements {
         title=base["title"],
         description="Defeat Boss " + base["desc"],
         points=base["points"],
+        type=base["type"],
         trigger=
             prev(screen_id_volatile) == base["stage"] &&
             screen_id_volatile == menu_ids["m_complete"]
@@ -644,20 +661,36 @@ collectibles = {
         "itemName" : "1-Up"
     },
     6.1: {
-        "id" : 0,
+        "id" : 387090,
         "flag": bit6(collectibles_a),
         "stage": 0x24,
         "points": 1,
         "areaNo" : 6,
-        "itemName" : "Medkit"
+        "itemName" : "Medkit (Male Commando)"
     },
     6.2: {
-        "id" : 0,
+        "id" : 387091,
         "flag": bit7(collectibles_a),
         "stage": 0x25,
         "points": 1,
         "areaNo" : 6,
-        "itemName" : "1-Up"
+        "itemName" : "1-Up (Male Commando)"
+    },
+    6.3: {
+        "id" : 417051,
+        "flag": bit3(collectibles_a),
+        "stage": 0x1c,
+        "points": 1,
+        "areaNo" : 6,
+        "itemName" : "Medkit (Female Commando)"
+    },
+    6.4: {
+        "id" : 417052,
+        "flag": bit4(collectibles_a),
+        "stage": 0x1d,
+        "points": 1,
+        "areaNo" : 6,
+        "itemName" : "1-Up (Female Commando)"
     },
     7.1: {
         "id" : 0,
