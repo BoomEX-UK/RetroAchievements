@@ -15,21 +15,12 @@ versions = {
 // ----------------------------------------------------------------------------
 
 locations = {
-    "r_manor" : {
-        "name" : "Roivas Manour",
-    },
-    "persia" : {
-        "name" : "Forgotten City",
-    },
-    "cambodia" : {
-        "name" : "Angkor Thom",
-    },
-    "mantorok" : {
-        "name" : "Mantorok",
-    },
-    "europe" : {
-        "name" : "Amiens"
-    }
+    "roivas"        : "Roivas Manour",
+    "forgotten"     : "Forgotten City",
+    "angkor"        : "Angkor Thom",
+    "amiens"        : "Amiens",
+    "forbidden"     : "Forbidden City",
+    "oil"           : "Oil Fields"
 }
 
 characters = {
@@ -37,287 +28,151 @@ characters = {
         "id" : 0x00,
         "short" : "Alex",
         "long" : "Alex Roivas",
-        "era" : "2000 AD"
+        "era" : "2000 AD",
+        "location" : locations["roivas"]
     },
     "pious" : {
         "id" : 0x01,
         "short" : "Pious",
         "long" : "Pious Augustus",
-        "era" : "26 BC"
+        "era" : "26 BC",
+        "location" : locations["forgotten"]
     },
     "ellia" : {
         "id" : 0x02,
         "short" : "Ellia",
         "long" : "Ellia",
-        "era" : "1150 AD"
+        "era" : "1150 AD",
+        "location" : locations["angkor"]
     },
     "anthony" : {
         "id" : 0x03,
         "short" : "Anthony",
         "long" : "Anthony",
-        "era" : "814 AD"
+        "era" : "814 AD",
+        "location" : locations["amiens"]
     },
     "karim" : {
         "id" : 0x04,
         "short" : "Karim",
         "long" : "Karim",
-        "era" : "565 AD"
+        "era" : "565 AD",
+        "location" : locations["forgotten"]
     },
     "max" : {
         "id" : 0x05,
         "short" : "Dr Max",
         "long" : "Dr Maximillian Roivas",
-        "era" : "1760 AD"
+        "era" : "1760 AD",
+        "location" : locations["roivas"]
     },
     "edwin" : {
         "id" : 0x06,
         "short" : "Dr Edwin",
         "long" : "Dr Edwin Lindsey",
-        "era" : "1983 AD"
+        "era" : "1983 AD",
+        "location" : locations["angkor"]
     },
     "paul" : {
         "id" : 0x07,
         "short" : "Paul",
         "long" : "Paul Luther",
-        "era" : "1485 AD"
+        "era" : "1485 AD",
+        "location" : locations["amiens"]
     },
     "roberto" : {
         "id" : 0x08,
         "short" : "Roberto",
         "long" : "Roberto Binchi",
-        "era" : "1460 AD"
+        "era" : "1460 AD",
+        "location" : locations["forbidden"]
     },
     "edward" : {
         "id" : 0x09,
         "short" : "Dr Edward",
         "long" : "Dr Edward M Roivas",
-        "era" : "1952 AD"
+        "era" : "1952 AD",
+        "location" : locations["roivas"]
     },
     "peter" : {
         "id" : 0x0a,
         "short" : "Peter",
         "long" : "Peter Jacob",
-        "era" : "1916 AD"
+        "era" : "1916 AD",
+        "location" : locations["amiens"]
     },
     "michael" : {
         "id" : 0x0b,
         "short" : "Michael",
         "long" : "Michael Edwards",
-        "era" : "1991 AD"
+        "era" : "1991 AD",
+        "location" : locations["oil"]
     }   
 }
 
 areas = {
-    0x43 : {
-        "name" : "Master Bedroom",
-        "location" : "r_manor"
-    },
-    0x44 : {
-        "name" : "2nd Floor Hallway",
-        "location" : "r_manor"
-    },
-    0x45 : {
-        "name" : "Main Hall",
-        "location" : "r_manor"
-    },
-    0x46 : {
-        "name" : "Dining Room",
-        "location" : "r_manor"
-    },
-    0x47 : {
-        "name" : "Hidden Study",
-        "location" : "r_manor"
-    },
-    0x48 : {
-        "name" : "2nd Floor Gun Room",
-        "location" : "r_manor"
-    },
-    0x4D : {
-        "name" : "Library",
-        "location" : "r_manor"
-    },
-    0x4E : {
-        "name" : "Library (Grandfather Clock Room)",
-        "location" : "r_manor"
-    },
-    0x51 : {
-        "name" : "Drawing Room",
-        "location" : "r_manor"
-    },
-    0x57 : {
-        "name" : "Main Bathroom",
-        "location" : "r_manor"
-    },
-    0x59 : {
-        "name" : "Observatory",
-        "location" : "r_manor"
-    },
-    0xae : {
-        "name" : "Desert",
-        "location" : "persia"
-    },
-    0x0155 : {
-        "name" : "Entrance",
-        "location" : "persia"
-    },
-    0x0156 : {
-        "name" : "Entrance Hallway",
-        "location" : "persia"
-    },
-    0x0157 : {
-        "name" : "Tomb",
-        "location" : "persia"
-    },
-    0x0158 : {
-        "name" : "Tomb",
-        "location" : "persia"
-    },
-    0x00b4 : {
-        "name" : "Hallway",
-        "location" : "persia"
-    },
-    0x00b7 : {
-        "name" : "Four Sigil Room",
-        "location" : "persia"
-    },
-    0x00b6 : {
-        "name" : "Sword Training Room",
-        "location" : "persia"
-    },
-    0x00b5 : {
-        "name" : "Teleportation Room",
-        "location" : "persia"
-    },
-    0x00b8 : {
-        "name" : "Artifact Room",
-        "location" : "persia"
-    },
-    0x00a6 : {
-        "name" : "Tomb Entrance",
-        "location" : "cambodia"
-    },
-    0x014e : {
-        "name" : "Lair",
-        "location" : "mantorok"
-    },
-    0x00d8 : {
-        "name" : "Eastern Path",
-        "location" : "cambodia"
-    },
-    0x008a : {
-        "name" : "Western Path",
-        "location" : "cambodia"
-    },
-    0x0127 : {
-        "name" : "Trap Hallway West",
-        "location" : "cambodia"
-    },
-    0x00d9 : {
-        "name" : "Sun Room",
-        "location" : "cambodia"
-    },
-    0x00ea : {
-        "name" : "Trap Hallway East",
-        "location" : "cambodia"
-    },
-    0x00da : {
-        "name" : "Night Room",
-        "location" : "cambodia"
-    },
-    0x00a5 : {
-        "name" : "Trap Hallway North",
-        "location" : "cambodia"
-    },
-    0x00a9 : {
-        "name" : "Pit",
-        "location" : "cambodia"
-    },
-    0x009f : {
-        "name" : "Chamber Entrance",
-        "location" : "cambodia"
-    },
-    0x0126 : {
-        "name" : "Chamber Trap Hallway",
-        "location" : "cambodia"
-    },
-    0x00a0 : {
-        "name" : "Burning Chamber",
-        "location" : "cambodia"
-    },
-    0x0091 : {
-        "name" : "Mantarok",
-        "location" : "cambodia"
-    },
-    0x0019 : {
-        "name" : "High Preist Chamber",
-        "location" : "cambodia"
-    },
-    0x0018 : {
-        "name" : "France",
-        "location" : "europe"
-    },
-    0x0096 : {
-        "name" : "Cathedral",
-        "location" : "europe"
-    },
-    0x0093 : {
-        "name" : "Cathedral (2nd Floor)",
-        "location" : "europe"
-    },
-    0x0015 : {
-        "name" : "Cathedral Passage",
-        "location" : "europe"
-    },
-    0x0069 : {
-        "name" : "Study",
-        "location" : "europe"
-    },
-    0x006d : {
-        "name" : "Basement",
-        "location" : "europe"
-    },
-    0x007b : {
-        "name" : "Cathedral",
-        "location" : "europe"
-    },
-    0x00dc : {
-        "name" : "Vestry",
-        "location" : "europe"
-    },
-    0x0005 : {
-        "name" : "Tome Room",
-        "location" : "europe"
-    },
-    0x006b : {
-        "name" : "Bell Tower",
-        "location" : "europe"
-    },
-    0x009e : {
-        "name" : "Stairwell",
-        "location" : "europe"
-    },
-    0x005d : {
-        "name" : "Stargate",
-        "location" : "r_manor"
-    },
-    0x0040 : {
-        "name" : "High Preist",
-        "location" : "mantorok"
-    },
-    0x010b : {
-        "name" : "Big Rock",
-        "location" : "mantorok"
-    },
-    0x0451 : {
-        "name" : "ʎpnʇS",
-        "location" : "europe"
-        // Sanity - Chapter 7: cathedral  "Study Upsidedown"
-    },
-    0x04e7 : {
-        "name" : "llɐH uᴉɐW",
-        "location" : "r_manor"
-        // Sanity - Chapter 7: cathedral  "Study Upsidedown"
-    },
+    0x0043 : "Master Bedroom",
+    0x0044 : "2nd Floor Hallway",
+    0x0045 : "Main Hall",
+    0x0046 : "Dining Room",
+    0x0047 : "Hidden Study",
+    0x0048 : "2nd Floor Gun Room",
+    0x004D : "Library",
+    0x004E : "Library (Grandfather Clock Room)",
+    0x0051 : "Drawing Room",
+    0x0057 : "Main Bathroom",
+    0x0059 : "Observatory",
+    0x00ae : "Desert",
+    0x0155 : "Entrance",
+    0x0156 : "Entrance Hallway",
+    0x0157 : "Tomb",
+    0x0158 : "Tomb",
+    0x00b4 : "Hallway",
+    0x00b7 : "Four Sigil Room",
+    0x00b6 : "Sword Training Room",
+    0x00b5 : "Teleportation Room",
+    0x00b8 : "Artifact Room",
+    0x00a6 : "Tomb Entrance",
+    0x014e : "Lair",
+    0x00d8 : "Eastern Path",
+    0x008a : "Western Path",
+    0x0127 : "Trap Hallway West",
+    0x00d9 : "Sun Room",
+    0x00ea : "Trap Hallway East",
+    0x00da : "Night Room",
+    0x00a5 : "Trap Hallway North",
+    0x00a9 : "Pit",
+    0x009f : "Chamber Entrance",
+    0x0126 : "Chamber Trap Hallway",
+    0x00a0 : "Burning Chamber",
+    0x0091 : "Mantarok",
+    0x0019 : "High Preist Chamber",
+    0x0018 : "France",
+    0x0096 : "Cathedral",
+    0x0093 : "Cathedral (2nd Floor)",
+    0x0015 : "Cathedral Passage",
+    0x0069 : "Study",
+    0x006d : "Basement",
+    0x007b : "Cathedral, 1485 AD",
+    0x00dc : "Vestry",
+    0x0005 : "Tome Room",
+    0x006b : "Bell Tower",
+    0x009e : "Stairwell",
+    0x005d : "Stargate",
+    0x0040 : "High Preist",
+    0x010b : "Big Rock",
+    0x0451 : "ʎpnʇS",       // Sanity - Chapter 7: cathedral  "Study"" upside down
+    0x04e7 : "llɐH uᴉɐW",   // Sanity - "Main Hall" upside down
+    0x00f9 : "Study",
+    0x00fc : "2nd Floor Hallway",
+    0x00fa : "Bathroom",
+    0x0100 : "Master Bedroom",
+    0x0095 : "Bishops Chamber",
+    0x0075 : "Cathedral", // Paul
+    0x0068 : "Bishops Chamber", // Paul > Anthony Fight
+    0x001b : "Cathedral, 1916 AD",
+    0x0067 : "Entrance",
+    0x0073 : "Resting Quarters"
 }
 
 offsets = {
@@ -330,6 +185,30 @@ event_flags = {
     },
     "se_hanging_guy" : {
         "EU" : 0x00704c38
+    },
+    "se_bathtub_girl" : {
+        "EU" : 0x00704c3a
+    },
+    "se_torso_explode" : {
+        "EU" : 0x00704c5a
+    },
+    "se_sounds_a" : {
+        "EU" : 0x00704c64
+    },
+    "se_sounds_b" : {
+        "EU" : 0x00704c65
+    },
+    "se_sounds_c" : {
+        "EU" : 0x00704c67
+    },
+    "se_sounds_d" : {
+        "EU" : 0x00704c6b
+    },
+    "anthony_zombie" : {
+        "EU" : 0x00704be8
+    },
+    "short_sword" : {
+        "EU" : 0x00704c3d
     }
 }
 
@@ -343,8 +222,17 @@ for ef in event_flags {
 
 const_pmask = 0x01FFFFFF
 const_location_none = 0xFFFFFFFF
-const_jump_no = 1
-const_jump_yes = 0
+// Jump to Chapter Flag (only wokrs when not playing as alex)
+// const_jump_no = 1
+// const_jump_yes = 0
+
+// Check initial nightmare sequence was played, mor reliable "Jump to Game" check
+stage_zero_played = {
+    "EU" : bit0(0x006d95b3),
+    "US" : bit0(0x006f7fd3)
+}
+function new_game_mode(ver) => stage_zero_played[ver] == 1
+
 
 version_id = byte(0x00000003)
 
@@ -376,6 +264,11 @@ pious_battle_spirit = {
 character_id = {
     "US" : dword_be(0x003003c8),
     "EU" : dword_be(0x00307170)
+}
+
+weapon_id = {
+    "US" : dword_be(0x005b4e14),
+    "EU" : dword_be(0x00588df4),
 }
 
 second_character_id = {
@@ -518,7 +411,7 @@ for prog in progression_ach {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                prev(cheat["jump"][ver]) == const_jump_no &&
+                new_game_mode(ver) &&
                 prev(character_id[ver]) == stub["character"] &&
                 character_id[ver] == 0 &&
                 prev(second_character_id[ver]) == stub["sub_character"] &&
@@ -578,7 +471,7 @@ for win in win_ach {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                prev(cheat["jump"][ver]) == const_jump_no &&
+                new_game_mode(ver) &&
                 artifact_id[ver] == stub["artifact_id"] &&
                 prev(location_id[ver]) == 0x40 &&
                 prev(overlay_id[ver]) == 0x06 &&
@@ -601,7 +494,7 @@ for ver_num in versions {
     ver = versions[ver_num]
     trig = version_id == ver_num && 
         cheat["eternal"][ver] == 0  &&
-        prev(cheat["jump"][ver]) == const_jump_no &&
+        new_game_mode(ver) &&
         prev(location_id[ver]) == 0x40 &&
         location_id[ver] == 0x0137
     array_push(triggers_winall,trig)
@@ -663,7 +556,7 @@ for se in se_overlay_a {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                cheat["jump"][ver] == const_jump_no &&
+                new_game_mode(ver) &&
                 location_id[ver] != const_location_none &&
                 prev(overlay_id[ver]) == stub["effect_id"] &&
                 overlay_id[ver] == 0x02
@@ -728,7 +621,7 @@ for se in se_overlay_b {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                cheat["jump"][ver] == const_jump_no &&
+                new_game_mode(ver) &&
                 location_id[ver] != const_location_none &&
                 prev(sanity_effect_overlay_id_b[ver]) == stub["effect_id"][ver] &&
                 sanity_effect_overlay_id_b[ver] == 0x00
@@ -745,6 +638,31 @@ for se in se_overlay_b {
     }
 }
 
+bug_image_use = {
+    "EU" : word_be(0x0125d070),
+    "US" : word_be(0x012403f0)
+}
+
+trigger_bugs = []
+for ver_num in versions {
+    ver = versions[ver_num]
+    trig = version_id == ver_num && 
+        cheat["eternal"][ver] == 0  &&
+        new_game_mode(ver) &&
+        location_id[ver] != const_location_none &&
+        prev(bug_image_use[ver]) == 0x02 &&
+        bug_image_use[ver] == 0x00
+    array_push(trigger_bugs,trig)
+}
+achievement(
+    id=426424,
+    title="Tech Support!",
+    description="Experience a game-breaking \"bug\"",
+    points=1,
+    type="",
+    trigger=any_of(trigger_bugs,t=>t)
+)
+
 // ----------------------------------------------------------------------------
 // -- Flag Sanity Effects
 // ----------------------------------------------------------------------------
@@ -753,7 +671,7 @@ se_flags = {
     0 : {
         "id" : 415199,
         "title" : "The Call is Coming From Inside the House!",
-        "desc" : "Playing as Alex, answer the phone",
+        "desc" : "Playing as Alex, answer the phone..",
         "points" : 1,
         "location" : 0x45,
         "flag" : {
@@ -774,6 +692,45 @@ se_flags = {
             "US" : bit1(event_flags["se_hanging_guy"]["US"])
         },
         "delta_high" : true,
+        "author" : true
+    },
+    3 : {
+        "id" : 426463,
+        "title" : "What Lies Beneath",
+        "desc" : "Playing as Alex, find a body in the bathtub",
+        "points" : 1,
+        "location" : 0x57,
+        "flag" : {
+            "EU" : bit7(event_flags["se_bathtub_girl"]["EU"]),
+            "US" : bit7(event_flags["se_bathtub_girl"]["US"])
+        },
+        "delta_high" : false,
+        "author" : true
+    },
+    4 : {
+        "id" : 426465,
+        "title" : "I'm Half the Person I Once Was",
+        "desc" : "Use the healing spell and suffer the consequences",
+        "points" : 1,
+        "location" : 0x00,
+        "flag" : {
+            "EU" : bit2(event_flags["se_torso_explode"]["EU"]),
+            "US" : bit2(event_flags["se_torso_explode"]["US"])
+        },
+        "delta_high" : true,
+        "author" : true
+    },
+    5 : {
+        "id" : 429852,
+        "title" : "Tomb Raider",
+        "desc" : "Playing as Ellia, repair your broken short sword",
+        "points" : 1,
+        "location" : 0xa9,
+        "flag" : {
+            "EU" : bit0(event_flags["short_sword"]["EU"]),
+            "US" : bit0(event_flags["short_sword"]["US"])
+        },
+        "delta_high" : false,
         "author" : true
     },
     99 : {
@@ -798,7 +755,8 @@ for se in se_flags {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                location_id[ver] == stub["location"]
+                new_game_mode(ver)
+            if(stub["location"] > 0) trig = trig && location_id[ver] == stub["location"]
             if(stub["delta_high"]) trig = trig && prev(stub["flag"][ver]) > stub["flag"][ver] 
             else trig = trig && prev(stub["flag"][ver]) < stub["flag"][ver]
             array_push(triggers,trig)
@@ -813,6 +771,36 @@ for se in se_flags {
         )
     }
 }
+
+// Adjusted timing for Event based achievements
+
+knock_triggers = []
+for ver_num in versions {
+    ver = versions[ver_num]
+    knock_flags = {
+        0 : bit1(event_flags["se_sounds_b"][ver]),
+        1 : bit7(event_flags["se_sounds_a"][ver]),
+        2 : bit7(event_flags["se_sounds_c"][ver]),
+        3 : bit0(event_flags["se_sounds_d"][ver]),
+        4 : bit2(event_flags["se_sounds_b"][ver])
+    }
+    trig =  version_id == ver_num &&
+        cheat["eternal"][ver] == 0  &&
+        new_game_mode(ver) &&
+        second_character_id[ver] == characters["anthony"]["id"] &&
+        sum_of(knock_flags, s => knock_flags[s]) == 5 &&
+        prev(location_id[ver]) == 0x4e &&
+        location_id[ver] == 0x47
+    array_push(knock_triggers,trig)
+}
+achievement(
+    id=428438,
+    title="Here I Opened Wide the Door. Darkness There and Nothing More",
+    description="Playing as Alex at the end of chapter 3, follow the sounds from the study to the observatory and back again",
+    points=1,
+    type="missable",
+    trigger=any_of(knock_triggers,t=>t)
+)
 
 // ----------------------------------------------------------------------------
 // -- Special Locations
@@ -845,6 +833,7 @@ for sl in sl_flags {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
+                new_game_mode(ver) &&
                 prev(location_id[ver]) == stub["location"] &&
                 location_id[ver] != stub["location"] &&
                 location_id[ver] != const_location_none
@@ -859,6 +848,264 @@ for sl in sl_flags {
             trigger=any_of(triggers,t=>t)
         )
     }
+}
+
+// ----------------------------------------------------------------------------
+// -- Idle Animation
+// ----------------------------------------------------------------------------
+
+idle_flag = {
+    "EU" : byte(0x0131d37e),
+    "US" : byte(0x01316e9e)
+}
+
+trig_idle = []
+for ver_num in versions {
+    ver = versions[ver_num]
+    trig = version_id == ver_num && 
+        cheat["eternal"][ver] == 0  &&
+        new_game_mode(ver) &&
+        character_id[ver] == characters["anthony"]["id"] &&
+        bit0(event_flags["anthony_zombie"][ver]) == 1 &&
+        weapon_id[ver] != 0x44 &&
+        weapon_id[ver] != 0x00 &&
+        prev(idle_flag[ver]) == 1 &&
+        idle_flag[ver] == 0
+    array_push(trig_idle,trig)
+}
+achievement(
+    id=429458,
+    title="A Slice of Life",
+    description="Witness Anthony practice self-mutilation",
+    points=1,
+    type="",
+    trigger=any_of(trig_idle,t=>t)
+)
+
+// ----------------------------------------------------------------------------
+// -- Collection Achievements
+// ----------------------------------------------------------------------------
+
+CONST_COL_EU_OFFSET = 0x13408
+
+function col_flag( addr ){
+    return bit6((dword_be(addr) & const_pmask)+2)
+}
+
+collection_achs = {
+    "max_letters" : {
+        "id" : 423060,
+        "title" : "Aaron On the Side of Caution",
+        "desc" : "As Maximillian Rovias, find and read all four letters from Aaron Roivas",
+        "points" : 5,
+        "character" : 0x05,
+        "type" : "missable",
+        "flags" : { 
+            "EU" : {
+                0: 0x0103c4f8,
+                1: 0x0103c510,
+                2: 0x0103c528,
+                3: 0x0103c7f0
+            },
+            "US" : {
+                0: 0x010290f0,
+                1: 0x01029108,
+                2: 0x01029120,
+                3: 0x010293e8
+            },
+         }
+    },
+    "soldier_letters" : {
+        "id" : 424993,
+        "title" : "Dear John..",
+        "desc" : "As Peter Jacob, find and read all three Soldier's letters",
+        "points" : 5,
+        "character" : 0x0a,
+        "type" : "missable",
+        "flags" : { 
+            "EU" : {
+                0: 0x0103c5b8,
+                1: 0x0103c5d0,
+                2: 0x0103c5e8
+            },
+            "US" : {
+                0: 0x010291b0,
+                1: 0x010291c8,
+                2: 0x010291e0
+            },
+         }
+    },
+    "elephant_gun" : {
+        "id" : 424994,
+        "title" : "Thought I Kept This in the Trunk",
+        "desc" : "As Edward Roivas, defeat the vampire and obtain the Elephant Gun",
+        "points" : 5,
+        "character" : 0x09,
+        "type" : "missable",
+        "flags" : { 
+            "EU" : {
+                0: 0x0103b830
+                },
+            "US" : {
+                0: 0x01028348
+            },
+         }
+    },
+    "max_journal" : {
+        "id" : 425074,
+        "title" : "Goodbye, Reality",
+        "desc" : "As Alex Rovias, find and read all three letters of Maximillian Rovias' journal",
+        "points" : 5,
+        "character" : 0x00,
+        "type" : "missable",
+        "flags" : { 
+            "EU" : {
+                0: 0x0103c6d8,
+                1: 0x0103c6f0,
+                2: 0x0103c7d8
+                },
+            "US" : {
+                0: 0x010292d0,
+                1: 0x010292e8,
+                2: 0x010293d0
+            },
+         }
+    }
+}
+
+for colach in collection_achs {
+    // Meta Data
+    base = collection_achs[colach]
+    // Triggers
+    triggers=[]
+    for ver_num in versions {
+        ver = versions[ver_num]
+        total_collect = length(base["flags"][ver])
+        closing_cond = always_false()
+        if (total_collect > 1){
+            closing_cond = measured(
+            sum_of(base["flags"][ver], addr => col_flag(base["flags"][ver][addr])) == total_collect,
+            when=version_id== ver_num && character_id[ver] == base["character"]
+        )
+        } else {
+            closing_cond = sum_of(base["flags"][ver], addr => col_flag(base["flags"][ver][addr])) == total_collect &&
+            version_id == ver_num &&
+            character_id[ver] == base["character"]
+        }
+        trig = // Measured If
+            cheat["eternal"][ver] == 0 &&
+            new_game_mode(ver) &&
+            sum_of(base["flags"][ver], addr => prev(col_flag(base["flags"][ver][addr]))) == total_collect-1 &&
+            closing_cond
+        array_push(triggers,trig)
+    }
+    // Achievement
+    achievement(
+        id=base["id"],
+        title=base["title"],
+        description=base["desc"],
+        points=base["points"],
+        type=base["type"],
+        trigger=any_of(triggers, t=>t)
+    )
+}
+
+// ----------------------------------------------------------------------------
+// -- Autopsy Achievements
+// ----------------------------------------------------------------------------
+
+autopsy_flag_base = {
+    "US" : 0x0061f496,
+    "EU" : 0x0064ccf6
+} 
+
+ach_autopsy = {
+    0 : {
+        "id" : 428444,
+       "title" : "You Red My Mind",
+       "desc" : "As Maximillian Roivas, perform autopies on the Chattur'gha Zombie, Bonethief, Horror, and Guardian",
+       "flags" : {
+           "EU" : {
+               0 : bit0(autopsy_flag_base["EU"]),
+               1 : bit3(autopsy_flag_base["EU"]),
+               2 : bit1(autopsy_flag_base["EU"]+1),
+               3 : bit5(autopsy_flag_base["EU"]+1)
+           },
+           "US" : {
+               0 : bit0(autopsy_flag_base["US"]),
+               1 : bit3(autopsy_flag_base["US"]),
+               2 : bit1(autopsy_flag_base["US"]+1),
+               3 : bit5(autopsy_flag_base["US"]+1)
+           }
+       },
+       "points" : 5,
+       "type" : "missable"
+    },
+    1 : {
+        "id" : 428445,
+       "title" : "Green Piece",
+       "desc" : "As Maximillian Roivas, perform autopies on the Xel'lotath Zombie, Bonethief, Horror, and Guardian",
+       "flags" : {
+           "EU" : {
+               0 : bit1(autopsy_flag_base["EU"]),
+               1 : bit4(autopsy_flag_base["EU"]),
+               2 : bit2(autopsy_flag_base["EU"]+1),
+               3 : bit6(autopsy_flag_base["EU"]+1)
+           },
+           "US" : {
+               0 : bit1(autopsy_flag_base["US"]),
+               1 : bit4(autopsy_flag_base["US"]),
+               2 : bit2(autopsy_flag_base["US"]+1),
+               3 : bit6(autopsy_flag_base["US"]+1)
+           }
+       },
+       "points" : 5,
+       "type" : "missable"
+    },
+    2 : {
+        "id" : 428446,
+       "title" : "I'm Blue, if I Was Green I Would Die",
+       "desc" : "As Maximillian Roivas, perform autopies on the Ulyaoth Zombie, Bonethief, Horror, and Guardian",
+       "flags" : {
+           "EU" : {
+               0 : bit2(autopsy_flag_base["EU"]),
+               1 : bit5(autopsy_flag_base["EU"]),
+               2 : bit3(autopsy_flag_base["EU"]+1),
+               3 : bit7(autopsy_flag_base["EU"]+1)
+           },
+           "US" : {
+               0 : bit2(autopsy_flag_base["US"]),
+               1 : bit5(autopsy_flag_base["US"]),
+               2 : bit3(autopsy_flag_base["US"]+1),
+               3 : bit7(autopsy_flag_base["US"]+1)
+           }
+       },
+       "points" : 5,
+       "type" : "missable"
+    }
+}
+
+for auto_ach in ach_autopsy {
+    base = ach_autopsy[auto_ach]
+    // Triggers
+    triggers=[]
+    for ver_num in versions {
+        ver = versions[ver_num]
+        trig = version_id == ver_num && 
+            cheat["eternal"][ver] == 0 &&
+            new_game_mode(ver) &&
+            sum_of(base["flags"][ver], s=> prev(base["flags"][ver][s])) == 3 &&
+            sum_of(base["flags"][ver], s=> base["flags"][ver][s]) == 4
+        array_push(triggers,trig)
+    }
+    achievement(
+        id=base["id"],
+        title=base["title"],
+        description=base["desc"],
+        points=base["points"],
+        type=base["type"],
+        trigger=any_of(triggers, t=>t)
+    )
 }
 
 // ----------------------------------------------------------------------------
@@ -882,7 +1129,7 @@ for dl in dl_room {
         ver = versions[ver_num]
         trig = version_id == ver_num && 
             cheat["eternal"][ver] == 0  &&
-            cheat["jump"][ver] == const_jump_no &&
+            new_game_mode(ver) &&
             once(
                 location_id[ver] == stub["room"] &&
                 prev(overlay_id[ver]) == 1 &&
@@ -913,13 +1160,71 @@ for dl in dl_room {
 }
 
 // ----------------------------------------------------------------------------
+// -- All I Wanna Do is Go the Distance
+// ----------------------------------------------------------------------------
+
+sword_flag = {
+    "EU" : bit5(0x00704c18),
+    "US" : bit5(0x00725e58)
+}
+
+stage_win = {
+    "EU" : bit3(0x00704c67),
+    "US" : bit3(0x00725ea7) 
+}
+
+trig_sword=[]
+for ver_num in versions {
+    ver = versions[ver_num]
+    trig =
+        cheat["eternal"][ver] == 0 &&
+        new_game_mode(ver) &&
+        sword_flag[ver] == 0 &&
+        // character_id[ver] == characters["anthony"]["id"] &&
+        once(
+            prev(location_id[ver]) == 0x75 &&
+            location_id[ver] == 0x68 &&
+            never(
+                version_id != ver_num ||
+                weapon_id[ver] != 0
+            )
+        ) &&
+        trigger_when(
+            stage_win[ver] > prev(stage_win[ver])
+        )
+    array_push(trig_sword,trig)
+}
+achievement(
+    id=429853,
+    title="All I Wanna Do is Go the Distance",
+    description="Do not collect the Two-Handed Sword in Anthony's chapter. In Paul's chapter, defeat the Monk using only your fists",
+    points=10,
+    type="missable",
+    trigger=any_of(trig_sword, t=>t)
+)
+
+// ----------------------------------------------------------------------------
 // -- Rich Presence
 // ----------------------------------------------------------------------------
 
 emoji = "🌑"
 emoji_heart = "❤️"
 emoji_wand = "🪄"
-emoji_sanity = "🫨"
+emoji_sanity_gone = "🫨"
+emoji_sanity_bad = "😵‍💫"
+emoji_sanity_ok = "😐"
+emoji_sane = "🙂"
+
+rp_sanity = {}
+for num in range(0,24) {
+    rp_sanity[num] = emoji_sanity_gone
+}
+for num in range(25,49) {
+    rp_sanity[num] = emoji_sanity_bad
+}
+for num in range(50,75) {
+    rp_sanity[num] = emoji_sanity_ok
+}
 
 emoji_artifact = {
     0x01 : "🔴",
@@ -927,29 +1232,31 @@ emoji_artifact = {
     0x03 : "🟢"
 }
 
-rp_areas = {}
-for a in areas {
-    rp_areas[a] = locations[areas[a]["location"]]["name"] + ": " + areas[a]["name"]
-} 
-
 rp_characters = {}
+rp_locations = {}
 for c in characters {
     rp_characters[characters[c]["id"]] = characters[c]["short"]
+    rp_locations[characters[c]["id"]] = characters[c]["location"]
+}
+
+rp_areas = {}
+for l in areas {
+    rp_areas[l] = " (" + areas[l] + ")"
 }
 
 for version_value in versions {
     version = versions[version_value]
-    rich_presence_conditional_display(version_id == version_value && location_id[version] != const_location_none && stat_pointer[version] != 0,"{0} {9} ‣ {1} ‣ {2}{3}/{4} {5}{6} {7}{8}",
+    rich_presence_conditional_display(version_id == version_value && location_id[version] != const_location_none && stat_pointer[version] != 0,"{0} {1} ‣ {2}{3} ‣ {4}{5}/{6} {7}{8} {9}",
         rich_presence_lookup("artifact",artifact_id[version],emoji_artifact,fallback=emoji),
-        rich_presence_lookup("area",location_id[version],rp_areas,fallback="Location Unknown"),
+        rich_presence_lookup("character",character_id[version],rp_characters,fallback="Nobody"),
+        rich_presence_lookup("location",character_id[version],rp_locations,fallback="Nowhere"),
+        rich_presence_lookup("area",location_id[version],rp_areas,fallback=""),
         emoji_heart,
         rich_presence_macro("Number",current_hp(version)),
         rich_presence_macro("Number",max_hp(version)),
         emoji_wand,
         rich_presence_macro("Number",current_magick(version)),
-        emoji_sanity,
-        rich_presence_macro("Number",current_sanity(version)),
-        rich_presence_lookup("character",character_id[version],rp_characters,fallback="Character Unknown")
+        rich_presence_lookup("sanity",current_sanity(version),rp_sanity,fallback=emoji_sane)
     )
 }
 
