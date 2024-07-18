@@ -118,7 +118,7 @@ areas = {
     0x0047 : "Hidden Study",
     0x0048 : "2nd Floor Gun Room",
     0x004D : "Library",
-    0x004E : "Library (Grandfather Clock Room)",
+    0x004E : "Library-Grandfather Clock Room",
     0x0051 : "Drawing Room",
     0x0057 : "Main Bathroom",
     0x0059 : "Observatory",
@@ -146,10 +146,10 @@ areas = {
     0x0126 : "Chamber Trap Hallway",
     0x00a0 : "Burning Chamber",
     0x0091 : "Mantarok",
-    0x0019 : "High Preist Chamber",
+    0x0019 : "High Priest Chamber",
     0x0018 : "France",
     0x0096 : "Cathedral",
-    0x0093 : "Cathedral (2nd Floor)",
+    0x0093 : "Cathedral-2nd Floor",
     0x0015 : "Cathedral Passage",
     0x0069 : "Study",
     0x006d : "Basement",
@@ -159,7 +159,7 @@ areas = {
     0x006b : "Bell Tower",
     0x009e : "Stairwell",
     0x005d : "Stargate",
-    0x0040 : "High Preist",
+    0x0040 : "High Priest",
     0x010b : "Big Rock",
     0x0451 : "ʎpnʇS",       // Sanity - Chapter 7: cathedral  "Study"" upside down
     0x04e7 : "llɐH uᴉɐW",   // Sanity - "Main Hall" upside down
@@ -199,9 +199,12 @@ event_flags = {
         "EU" : 0x00704c65
     },
     "se_sounds_c" : {
-        "EU" : 0x00704c67
+        "EU" : 0x00704c66
     },
     "se_sounds_d" : {
+        "EU" : 0x00704c67
+    },
+    "se_sounds_e" : {
         "EU" : 0x00704c6b
     },
     "anthony_zombie" : {
@@ -221,8 +224,11 @@ for ef in event_flags {
 // ----------------------------------------------------------------------------
 
 const_pmask = 0x01FFFFFF
-const_location_none = 0xFFFFFFFF
-// Jump to Chapter Flag (only wokrs when not playing as alex)
+function ptr(addr) => dword_be(addr) & const_pmask
+
+const_area_any = -1
+const_area_menu = 0xFFFFFFFF
+// Jump to Chapter Flag (only works when not playing as alex)
 // const_jump_no = 1
 // const_jump_yes = 0
 
@@ -236,9 +242,16 @@ function new_game_mode(ver) => stage_zero_played[ver] == 1
 
 version_id = byte(0x00000003)
 
-location_id = {
+area_id = {
     "US" : dword_be(0x0064d18c),
     "EU" : dword_be(0x0061f934)
+}
+function check_area(ver, id){
+    if( id == const_area_any ){
+        return area_id[ver] != const_area_menu
+    } else {
+        return area_id[ver] == id
+    }
 }
 
 scripted_play = {
@@ -473,7 +486,7 @@ for win in win_ach {
                 cheat["eternal"][ver] == 0  &&
                 new_game_mode(ver) &&
                 artifact_id[ver] == stub["artifact_id"] &&
-                prev(location_id[ver]) == 0x40 &&
+                prev(check_area(ver,040)) &&
                 prev(overlay_id[ver]) == 0x06 &&
                 overlay_id[ver] == 0x02 
             array_push(triggers,trig)
@@ -495,8 +508,8 @@ for ver_num in versions {
     trig = version_id == ver_num && 
         cheat["eternal"][ver] == 0  &&
         new_game_mode(ver) &&
-        prev(location_id[ver]) == 0x40 &&
-        location_id[ver] == 0x0137
+        prev(check_area(ver,0x40)) &&
+        check_area(ver,0x0137)
     array_push(triggers_winall,trig)
 }
 achievement(
@@ -545,6 +558,14 @@ se_overlay_a = {
         "effect_id" : 0x0c,
         "points" : 1,
         "author" : true
+    },
+    0x04 : {
+        "id" : 437074,
+        "title" : "A New Beginning",
+        "desc" : "At the start up screen peering, long I stood there. Wondering.. Fearing.. Doubting..",
+        "effect_id" : 0x07,
+        "points" : 1,
+        "author" : true
     }
 }
 
@@ -557,7 +578,7 @@ for se in se_overlay_a {
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
                 new_game_mode(ver) &&
-                location_id[ver] != const_location_none &&
+                check_area(ver,const_area_any) &&
                 prev(overlay_id[ver]) == stub["effect_id"] &&
                 overlay_id[ver] == 0x02
             array_push(triggers,trig)
@@ -622,7 +643,7 @@ for se in se_overlay_b {
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
                 new_game_mode(ver) &&
-                location_id[ver] != const_location_none &&
+                check_area(ver,const_area_any) &&
                 prev(sanity_effect_overlay_id_b[ver]) == stub["effect_id"][ver] &&
                 sanity_effect_overlay_id_b[ver] == 0x00
             array_push(triggers,trig)
@@ -649,7 +670,7 @@ for ver_num in versions {
     trig = version_id == ver_num && 
         cheat["eternal"][ver] == 0  &&
         new_game_mode(ver) &&
-        location_id[ver] != const_location_none &&
+        check_area(ver,const_area_any) &&
         prev(bug_image_use[ver]) == 0x02 &&
         bug_image_use[ver] == 0x00
     array_push(trigger_bugs,trig)
@@ -671,9 +692,9 @@ se_flags = {
     0 : {
         "id" : 415199,
         "title" : "The Call is Coming From Inside the House!",
-        "desc" : "Playing as Alex, answer the phone..",
+        "desc" : "Playing as Alex, answer the phone...",
         "points" : 1,
-        "location" : 0x45,
+        "area" : 0x45,
         "flag" : {
             "EU" : bit7(event_flags["se_phone_intermission"]["EU"]),
             "US" : bit7(event_flags["se_phone_intermission"]["US"])
@@ -686,7 +707,7 @@ se_flags = {
         "title" : "Don't Leave Me Hanging",
         "desc" : "Playing as Alex, find a dude just hanging around",
         "points" : 1,
-        "location" : 0x51,
+        "area" : 0x51,
         "flag" : {
             "EU" : bit1(event_flags["se_hanging_guy"]["EU"]),
             "US" : bit1(event_flags["se_hanging_guy"]["US"])
@@ -699,7 +720,7 @@ se_flags = {
         "title" : "What Lies Beneath",
         "desc" : "Playing as Alex, find a body in the bathtub",
         "points" : 1,
-        "location" : 0x57,
+        "area" : 0x57,
         "flag" : {
             "EU" : bit7(event_flags["se_bathtub_girl"]["EU"]),
             "US" : bit7(event_flags["se_bathtub_girl"]["US"])
@@ -712,7 +733,7 @@ se_flags = {
         "title" : "I'm Half the Person I Once Was",
         "desc" : "Use the healing spell and suffer the consequences",
         "points" : 1,
-        "location" : 0x00,
+        "area" : const_area_any,
         "flag" : {
             "EU" : bit2(event_flags["se_torso_explode"]["EU"]),
             "US" : bit2(event_flags["se_torso_explode"]["US"])
@@ -725,7 +746,7 @@ se_flags = {
         "title" : "Tomb Raider",
         "desc" : "Playing as Ellia, repair your broken short sword",
         "points" : 1,
-        "location" : 0xa9,
+        "area" : 0xa9,
         "flag" : {
             "EU" : bit0(event_flags["short_sword"]["EU"]),
             "US" : bit0(event_flags["short_sword"]["US"])
@@ -738,7 +759,7 @@ se_flags = {
         "title" : "",
         "desc" : "",
         "points" : 0,
-        "location" : 0,
+        "area" : const_area_any,
         "flag" : {
             "EU" : bit0(0),
             "US" : bit0(0)
@@ -755,8 +776,8 @@ for se in se_flags {
             ver = versions[ver_num]
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
-                new_game_mode(ver)
-            if(stub["location"] > 0) trig = trig && location_id[ver] == stub["location"]
+                new_game_mode(ver) &&
+                check_area(ver,stub["area"])
             if(stub["delta_high"]) trig = trig && prev(stub["flag"][ver]) > stub["flag"][ver] 
             else trig = trig && prev(stub["flag"][ver]) < stub["flag"][ver]
             array_push(triggers,trig)
@@ -778,27 +799,36 @@ knock_triggers = []
 for ver_num in versions {
     ver = versions[ver_num]
     knock_flags = {
-        0 : bit1(event_flags["se_sounds_b"][ver]),
+        0 : bit6(event_flags["se_sounds_a"][ver]),
         1 : bit7(event_flags["se_sounds_a"][ver]),
-        2 : bit7(event_flags["se_sounds_c"][ver]),
-        3 : bit0(event_flags["se_sounds_d"][ver]),
-        4 : bit2(event_flags["se_sounds_b"][ver])
+        2 : bit1(event_flags["se_sounds_b"][ver]),
+        3 : bit0(event_flags["se_sounds_c"][ver]),
+        4 : bit4(event_flags["se_sounds_d"][ver]),
+        5 : bit6(event_flags["se_sounds_d"][ver]),
+        6 : bit7(event_flags["se_sounds_d"][ver]),
+        7 : bit1(event_flags["se_sounds_e"][ver]),
+        8 : bit2(event_flags["se_sounds_e"][ver])
     }
-    trig =  version_id == ver_num &&
+    flag_count = length(knock_flags)
+    trig =
         cheat["eternal"][ver] == 0  &&
         new_game_mode(ver) &&
-        second_character_id[ver] == characters["anthony"]["id"] &&
-        sum_of(knock_flags, s => knock_flags[s]) == 5 &&
-        prev(location_id[ver]) == 0x4e &&
-        location_id[ver] == 0x47
+        character_id[ver] == 0x00 &&
+        prev(sum_of(knock_flags, s => knock_flags[s]))  == flag_count-1 &&
+        measured(
+            sum_of(knock_flags, s => knock_flags[s]) == flag_count, 
+            when=
+                version_id == ver_num && 
+                check_area(ver,const_area_any)
+        )
     array_push(knock_triggers,trig)
 }
 achievement(
     id=428438,
     title="Here I Opened Wide the Door. Darkness There and Nothing More",
-    description="Playing as Alex at the end of chapter 3, follow the sounds from the study to the observatory and back again",
+    description="Playing as Alex in Roivas Manor, find all 9 doors with a spirit knocking",
     points=1,
-    type="missable",
+    type="",
     trigger=any_of(knock_triggers,t=>t)
 )
 
@@ -812,7 +842,7 @@ sl_flags = {
         "title" : "Not the Greatest Roof, But It's Up There",
         "desc" : "Playing as Maximilian, walk around on the ceiling",
         "points" : 1,
-        "location" : 0x04e7,
+        "area" : 0x04e7,
         "author" : true
     },
     99 : {
@@ -820,7 +850,7 @@ sl_flags = {
         "title" : "",
         "desc" : "",
         "points" : 0,
-        "location" : 0,
+        "area" : 0,
         "author" : false
     }
 }
@@ -834,9 +864,9 @@ for sl in sl_flags {
             trig = version_id == ver_num && 
                 cheat["eternal"][ver] == 0  &&
                 new_game_mode(ver) &&
-                prev(location_id[ver]) == stub["location"] &&
-                location_id[ver] != stub["location"] &&
-                location_id[ver] != const_location_none
+                prev(check_area(ver,stub["area"])) &&
+                area_id[ver] != stub["area"] &&
+                check_area(ver,const_area_any)
             array_push(triggers,trig)
         }
         achievement(
@@ -865,6 +895,7 @@ for ver_num in versions {
     trig = version_id == ver_num && 
         cheat["eternal"][ver] == 0  &&
         new_game_mode(ver) &&
+        check_area(ver,const_area_any) &&
         character_id[ver] == characters["anthony"]["id"] &&
         bit0(event_flags["anthony_zombie"][ver]) == 1 &&
         weapon_id[ver] != 0x44 &&
@@ -886,33 +917,42 @@ achievement(
 // -- Collection Achievements
 // ----------------------------------------------------------------------------
 
-CONST_COL_EU_OFFSET = 0x13408
+DataTable_Addr = {
+    "US" : 0x0064c504,
+    "EU" : 0x0061eca4
+}
+
+dataType = {
+    "weapons" : 0x020,
+    "letters" : 0x068,
+    "chapter_pages" : 0x070 
+}
 
 function col_flag( addr ){
     return bit6((dword_be(addr) & const_pmask)+2)
+}
+
+function new_col_flag( ver, dtype, offset ){
+    root = DataTable_Addr[ver]
+    return bit6(
+        ptr(ptr(ptr(root) + dtype) + offset) +2
+    )
 }
 
 collection_achs = {
     "max_letters" : {
         "id" : 423060,
         "title" : "Aaron On the Side of Caution",
-        "desc" : "As Maximillian Rovias, find and read all four letters from Aaron Roivas",
+        "desc" : "As Max Roivas, find and read all four letters from Aaron Roivas",
         "points" : 5,
         "character" : 0x05,
+        "dataType" : dataType["letters"],
         "type" : "missable",
         "flags" : { 
-            "EU" : {
-                0: 0x0103c4f8,
-                1: 0x0103c510,
-                2: 0x0103c528,
-                3: 0x0103c7f0
-            },
-            "US" : {
-                0: 0x010290f0,
-                1: 0x01029108,
-                2: 0x01029120,
-                3: 0x010293e8
-            },
+            0: 0x008,
+            1: 0x020,
+            2: 0x038,
+            3: 0x300
          }
     },
     "soldier_letters" : {
@@ -921,18 +961,12 @@ collection_achs = {
         "desc" : "As Peter Jacob, find and read all three Soldier's letters",
         "points" : 5,
         "character" : 0x0a,
+        "dataType" : dataType["letters"],
         "type" : "missable",
         "flags" : { 
-            "EU" : {
-                0: 0x0103c5b8,
-                1: 0x0103c5d0,
-                2: 0x0103c5e8
-            },
-            "US" : {
-                0: 0x010291b0,
-                1: 0x010291c8,
-                2: 0x010291e0
-            },
+            0: 0x0c8,
+            1: 0x0e0,
+            2: 0x0f8
          }
     },
     "elephant_gun" : {
@@ -941,14 +975,10 @@ collection_achs = {
         "desc" : "As Edward Roivas, defeat the vampire and obtain the Elephant Gun",
         "points" : 5,
         "character" : 0x09,
+        "dataType" : dataType["weapons"], /// <<--- need to implement
         "type" : "missable",
         "flags" : { 
-            "EU" : {
-                0: 0x0103b830
-                },
-            "US" : {
-                0: 0x01028348
-            },
+            0: 0x1b8
          }
     },
     "max_journal" : {
@@ -957,18 +987,26 @@ collection_achs = {
         "desc" : "As Alex Rovias, find and read all three letters of Maximillian Rovias' journal",
         "points" : 5,
         "character" : 0x00,
+        "dataType" : dataType["letters"],
         "type" : "missable",
         "flags" : { 
-            "EU" : {
-                0: 0x0103c6d8,
-                1: 0x0103c6f0,
-                2: 0x0103c7d8
-                },
-            "US" : {
-                0: 0x010292d0,
-                1: 0x010292e8,
-                2: 0x010293d0
-            },
+            0: 0x1e8,
+            1: 0x200,
+            2: 0x218
+         }
+    },
+    "edward_letters" : {
+        "id" : 427575,
+        "title" : "Your Exploits Tell a Tale That's Sad and Boring",
+        "desc" : "Find and read all three notes and letters from Edward",
+        "points" : 5,
+        "character" : 0x00,
+        "dataType" : dataType["letters"],
+        "type" : "missable",
+        "flags" : { 
+            0: 0x158,
+            1: 0x248,
+            2: 0x2b8
          }
     }
 }
@@ -980,22 +1018,22 @@ for colach in collection_achs {
     triggers=[]
     for ver_num in versions {
         ver = versions[ver_num]
-        total_collect = length(base["flags"][ver])
+        total_collect = length(base["flags"])
         closing_cond = always_false()
         if (total_collect > 1){
             closing_cond = measured(
-            sum_of(base["flags"][ver], addr => col_flag(base["flags"][ver][addr])) == total_collect,
-            when=version_id== ver_num && character_id[ver] == base["character"]
+            sum_of(base["flags"], addr => new_col_flag(ver,base["dataType"],base["flags"][addr])) == total_collect,
+            when=version_id == ver_num && character_id[ver] == base["character"]
         )
         } else {
-            closing_cond = sum_of(base["flags"][ver], addr => col_flag(base["flags"][ver][addr])) == total_collect &&
+            closing_cond = sum_of(base["flags"], addr => new_col_flag(ver,base["dataType"],base["flags"][addr])) == total_collect &&
             version_id == ver_num &&
             character_id[ver] == base["character"]
         }
         trig = // Measured If
             cheat["eternal"][ver] == 0 &&
             new_game_mode(ver) &&
-            sum_of(base["flags"][ver], addr => prev(col_flag(base["flags"][ver][addr]))) == total_collect-1 &&
+            sum_of(base["flags"], addr => prev(new_col_flag(ver,base["dataType"],base["flags"][addr]))) == total_collect-1 &&
             closing_cond
         array_push(triggers,trig)
     }
@@ -1109,6 +1147,174 @@ for auto_ach in ach_autopsy {
 }
 
 // ----------------------------------------------------------------------------
+// -- Spell Unlocks
+// ----------------------------------------------------------------------------
+
+spell_flag_base = {
+    "EU" : 0x00334d58,
+    "US" : 0x00331750
+}
+spell_unlock_flags = {
+    "EU" : {},
+    "US" : {}
+}
+
+for i in range(0,11) {
+    for ver in spell_unlock_flags {
+        spell_unlock_flags[ver][i] = bit2(spell_flag_base[ver] + (i*4))
+    }
+}
+
+unlock_trig = []
+unlock_target = 10
+for ver_num in versions {
+    ver = versions[ver_num]
+    trig = cheat["eternal"][ver] == 0 &&
+        new_game_mode(ver) &&
+        character_id[ver] + second_character_id[ver] <= 6 &&
+        sum_of(spell_unlock_flags[ver], s=>prev(spell_unlock_flags[ver][s])) == unlock_target-1 &&
+        measured(
+            sum_of(spell_unlock_flags[ver], s=>spell_unlock_flags[ver][s]) == unlock_target,
+            when =
+                version_id == ver_num &&
+                check_area(ver,const_area_any)
+        )
+        array_push(unlock_trig,trig)
+}
+
+achievement(
+    id=437082,
+    title="Magic is Just Science We Don't Understand Yet",
+    description="Learn 10 spells before beginning Chapter 7",
+    points=10,
+    trigger=any_of(unlock_trig,t=>t),
+    type="missable"
+)
+
+// ----------------------------------------------------------------------------
+// -- All Unlocks
+// ----------------------------------------------------------------------------
+
+collect_offsets = {
+    "EU" : {
+        "circles" : 0x00334d55,
+        "runes_a" : 0x00334d52,
+        "runes_b" : 0x00334d53,
+        "codex_a" : 0x00334d50,
+        "codex_b" : 0x00334d51,
+        "sp_enchant"  : 0x00334d58,
+        "sp_recover"  : 0x00334d5c,
+        "sp_reveal"   : 0x00334d60,
+        "sp_damage"   : 0x00334d64,
+        "sp_dispel"   : 0x00334d68,
+        "sp_trapper"  : 0x00334d6c,
+        "sp_shield"   : 0x00334d70,
+        "sp_zombie"   : 0x00334d74,
+        "sp_magickal" : 0x00334d78,
+        "sp_horror"   : 0x00334d7c,
+        "sp_pool"     : 0x00334d80,
+        "sp_bind"     : 0x00334d84,
+    },
+    "US" : {
+        "circles" : 0x0033174d,
+        "runes_a" : 0x0033174a,
+        "runes_b" : 0x0033174b,
+        "codex_a" : 0x00331748,
+        "codex_b" : 0x00331749,
+        "sp_enchant"  : 0x00331750,
+        "sp_recover"  : 0x00331754,
+        "sp_reveal"   : 0x00331758,
+        "sp_damage"   : 0x0033175c,
+        "sp_dispel"   : 0x00331760,
+        "sp_trapper"  : 0x00331764,
+        "sp_shield"   : 0x00331768,
+        "sp_zombie"   : 0x0033176c,
+        "sp_magickal" : 0x00331770,
+        "sp_horror"   : 0x00331774,
+        "sp_pool"     : 0x00331778,
+        "sp_bind"     : 0x0033177c,
+    }
+}
+
+collectables = {}
+for ver_num in versions {
+    ver = versions[ver_num]
+    collectables[ver] = {
+        // Circle of Power
+        "circle_3" : bit0(collect_offsets[ver]["circles"]),
+        "circle_5" : bit1(collect_offsets[ver]["circles"]),
+        "circle_7" : bit2(collect_offsets[ver]["circles"]),
+        // Runes
+        "rune_ant" : bit0(collect_offsets[ver]["runes_a"]),
+        "rune_mag" : bit1(collect_offsets[ver]["runes_a"]),
+        "rune_red" : bit2(collect_offsets[ver]["runes_a"]),
+        "rune_are" : bit3(collect_offsets[ver]["runes_a"]),
+        "rune_san" : bit4(collect_offsets[ver]["runes_a"]),
+        "rune_pra" : bit5(collect_offsets[ver]["runes_a"]),
+        "rune_cha" : bit0(collect_offsets[ver]["runes_b"]),
+        "rune_uly" : bit1(collect_offsets[ver]["runes_b"]),
+        "rune_xel" : bit2(collect_offsets[ver]["runes_b"]),
+        "rune_man" : bit3(collect_offsets[ver]["runes_b"]),
+        "rune_ban" : bit4(collect_offsets[ver]["runes_b"]),
+        "rune_tie" : bit5(collect_offsets[ver]["runes_b"]),
+        "rune_nar" : bit6(collect_offsets[ver]["runes_b"]),
+        "rune_net" : bit7(collect_offsets[ver]["runes_b"]),
+        // Codex
+        "codex_ant" : bit0(collect_offsets[ver]["codex_a"]),
+        "codex_mag" : bit1(collect_offsets[ver]["codex_a"]),
+        "codex_red" : bit2(collect_offsets[ver]["codex_a"]),
+        "codex_are" : bit3(collect_offsets[ver]["codex_a"]),
+        "codex_san" : bit4(collect_offsets[ver]["codex_a"]),
+        "codex_pra" : bit5(collect_offsets[ver]["codex_a"]),
+        "codex_cha" : bit0(collect_offsets[ver]["codex_b"]),
+        "codex_uly" : bit1(collect_offsets[ver]["codex_b"]),
+        "codex_xel" : bit2(collect_offsets[ver]["codex_b"]),
+        "codex_man" : bit3(collect_offsets[ver]["codex_b"]),
+        "codex_ban" : bit4(collect_offsets[ver]["codex_b"]),
+        "codex_tie" : bit5(collect_offsets[ver]["codex_b"]),
+        "codex_nar" : bit6(collect_offsets[ver]["codex_b"]),
+        "codex_net" : bit7(collect_offsets[ver]["codex_b"]),
+        // Spell
+        "sp_enchant"  : bit3(collect_offsets[ver]["sp_enchant"]),
+        "sp_recover"  : bit3(collect_offsets[ver]["sp_recover"]),
+        "sp_reveal"   : bit3(collect_offsets[ver]["sp_reveal"]),
+        "sp_damage"   : bit3(collect_offsets[ver]["sp_damage"]),
+        "sp_dispel"   : bit3(collect_offsets[ver]["sp_dispel"]),
+        "sp_trapper"  : bit3(collect_offsets[ver]["sp_trapper"]),
+        "sp_shield"   : bit3(collect_offsets[ver]["sp_shield"]),
+        "sp_zombie"   : bit3(collect_offsets[ver]["sp_zombie"]),
+        "sp_magickal" : bit3(collect_offsets[ver]["sp_magickal"]),
+        "sp_horror"   : bit3(collect_offsets[ver]["sp_horror"]),
+        "sp_pool"     : bit3(collect_offsets[ver]["sp_pool"]),
+        "sp_bind"     : bit3(collect_offsets[ver]["sp_bind"])
+    }
+}
+
+trig_unlocks = []
+for ver_num in versions {
+    ver=versions[ver_num]
+    unlock_target = length(collectables[ver])
+    trig= cheat["eternal"][ver] == 0 &&
+        new_game_mode(ver) &&
+        sum_of(collectables[ver],s=>prev(collectables[ver][s]))==unlock_target-1 &&
+        measured(
+            sum_of(collectables[ver],s=>collectables[ver][s])==unlock_target,
+            when=
+                version_id == ver_num &&
+                check_area(ver,const_area_any)
+        )
+    array_push(trig_unlocks,trig)
+}
+
+achievement(
+    id=437285,
+    title="Yer a Wizard, Alex",
+    description="Collect every Circle of Power, Rune, Codex and Spell Scroll in the game",
+    points=10,
+    trigger=any_of(trig_unlocks,t=>t)
+)
+
+// ----------------------------------------------------------------------------
 // -- Damageless Room
 // ----------------------------------------------------------------------------
 
@@ -1131,11 +1337,11 @@ for dl in dl_room {
             cheat["eternal"][ver] == 0  &&
             new_game_mode(ver) &&
             once(
-                location_id[ver] == stub["room"] &&
+                check_area(ver,stub["room"]) &&
                 prev(overlay_id[ver]) == 1 &&
                 overlay_id[ver] == 2 &&
                 never(
-                    location_id[ver] == const_location_none ||
+                    check_area(ver,const_area_menu) ||
                     (
                         pious_battle_spirit[ver] == 0x01 &&
                         prev(stat_pointer[ver]) == stat_pointer[ver] &&
@@ -1182,8 +1388,8 @@ for ver_num in versions {
         sword_flag[ver] == 0 &&
         // character_id[ver] == characters["anthony"]["id"] &&
         once(
-            prev(location_id[ver]) == 0x75 &&
-            location_id[ver] == 0x68 &&
+            prev(check_area(ver,0x75)) &&
+            check_area(ver,0x68) &&
             never(
                 version_id != ver_num ||
                 weapon_id[ver] != 0
@@ -1246,11 +1452,11 @@ for l in areas {
 
 for version_value in versions {
     version = versions[version_value]
-    rich_presence_conditional_display(version_id == version_value && location_id[version] != const_location_none && stat_pointer[version] != 0,"{0} {1} ‣ {2}{3} ‣ {4}{5}/{6} {7}{8} {9}",
+    rich_presence_conditional_display(version_id == version_value && check_area(version,const_area_any) && stat_pointer[version] != 0,"{0} {1} ‣ {2}{3} ‣ {4}{5}/{6} {7}{8} {9}",
         rich_presence_lookup("artifact",artifact_id[version],emoji_artifact,fallback=emoji),
         rich_presence_lookup("character",character_id[version],rp_characters,fallback="Nobody"),
         rich_presence_lookup("location",character_id[version],rp_locations,fallback="Nowhere"),
-        rich_presence_lookup("area",location_id[version],rp_areas,fallback=""),
+        rich_presence_lookup("area",area_id[version],rp_areas,fallback=""),
         emoji_heart,
         rich_presence_macro("Number",current_hp(version)),
         rich_presence_macro("Number",max_hp(version)),
@@ -1299,6 +1505,19 @@ if (create_test_achievements) {
             description="Test achievement, do not upload",
             points=0,
             trigger=max_hp(ver) == 0
+        )
+        
+        je_test = []
+        for version_value in versions {
+            trig = version_id == version_value && new_col_flag(versions[version_value],dataType["letters"],0x300) == 0
+            array_push(je_test, trig)
+        }
+        achievement(
+            id=0,
+            title="[TEST] Journal Entry Pointer " + ver,
+            description="Test achievement, do not upload",
+            points=0,
+            trigger=any_of(je_test,e=>e)
         )
     }
 
