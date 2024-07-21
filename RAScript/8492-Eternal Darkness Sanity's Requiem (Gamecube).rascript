@@ -693,7 +693,7 @@ se_flags = {
         "id" : 415199,
         "title" : "The Call is Coming From Inside the House!",
         "desc" : "Playing as Alex, answer the phone...",
-        "points" : 1,
+        "points" : 3,
         "area" : 0x45,
         "flag" : {
             "EU" : bit7(event_flags["se_phone_intermission"]["EU"]),
@@ -706,7 +706,7 @@ se_flags = {
         "id" : 415200,
         "title" : "Don't Leave Me Hanging",
         "desc" : "Playing as Alex, find a dude just hanging around",
-        "points" : 1,
+        "points" : 3,
         "area" : 0x51,
         "flag" : {
             "EU" : bit1(event_flags["se_hanging_guy"]["EU"]),
@@ -719,7 +719,7 @@ se_flags = {
         "id" : 426463,
         "title" : "What Lies Beneath",
         "desc" : "Playing as Alex, find a body in the bathtub",
-        "points" : 1,
+        "points" : 3,
         "area" : 0x57,
         "flag" : {
             "EU" : bit7(event_flags["se_bathtub_girl"]["EU"]),
@@ -732,7 +732,7 @@ se_flags = {
         "id" : 426465,
         "title" : "I'm Half the Person I Once Was",
         "desc" : "Use the healing spell and suffer the consequences",
-        "points" : 1,
+        "points" : 2,
         "area" : const_area_any,
         "flag" : {
             "EU" : bit2(event_flags["se_torso_explode"]["EU"]),
@@ -745,7 +745,7 @@ se_flags = {
         "id" : 429852,
         "title" : "Tomb Raider",
         "desc" : "Playing as Ellia, repair your broken short sword",
-        "points" : 1,
+        "points" : 2,
         "area" : 0xa9,
         "flag" : {
             "EU" : bit0(event_flags["short_sword"]["EU"]),
@@ -943,7 +943,7 @@ collection_achs = {
     "max_letters" : {
         "id" : 423060,
         "title" : "Aaron On the Side of Caution",
-        "desc" : "As Max Roivas, find and read all four letters from Aaron Roivas",
+        "desc" : "As Maximillian Roivas, find and read all four letters from Aaron Roivas",
         "points" : 5,
         "character" : 0x05,
         "dataType" : dataType["letters"],
@@ -992,7 +992,7 @@ collection_achs = {
         "flags" : { 
             0: 0x1e8,
             1: 0x200,
-            2: 0x218
+            2: 0x2e8
          }
     },
     "edward_letters" : {
@@ -1023,16 +1023,15 @@ for colach in collection_achs {
         if (total_collect > 1){
             closing_cond = measured(
             sum_of(base["flags"], addr => new_col_flag(ver,base["dataType"],base["flags"][addr])) == total_collect,
-            when=version_id == ver_num && character_id[ver] == base["character"]
+            when=new_game_mode(ver) && version_id == ver_num && character_id[ver] == base["character"]
         )
         } else {
-            closing_cond = sum_of(base["flags"], addr => new_col_flag(ver,base["dataType"],base["flags"][addr])) == total_collect &&
+            closing_cond = new_game_mode(ver) && sum_of(base["flags"], addr => new_col_flag(ver,base["dataType"],base["flags"][addr])) == total_collect &&
             version_id == ver_num &&
             character_id[ver] == base["character"]
         }
         trig = // Measured If
             cheat["eternal"][ver] == 0 &&
-            new_game_mode(ver) &&
             sum_of(base["flags"], addr => prev(new_col_flag(ver,base["dataType"],base["flags"][addr]))) == total_collect-1 &&
             closing_cond
         array_push(triggers,trig)
@@ -1053,8 +1052,8 @@ for colach in collection_achs {
 // ----------------------------------------------------------------------------
 
 autopsy_flag_base = {
-    "US" : 0x0061f496,
-    "EU" : 0x0064ccf6
+    "US" : 0x0064ccf6,
+    "EU" : 0x0061f496
 } 
 
 ach_autopsy = {
@@ -1129,11 +1128,15 @@ for auto_ach in ach_autopsy {
     triggers=[]
     for ver_num in versions {
         ver = versions[ver_num]
-        trig = version_id == ver_num && 
-            cheat["eternal"][ver] == 0 &&
-            new_game_mode(ver) &&
+        trig = 
             sum_of(base["flags"][ver], s=> prev(base["flags"][ver][s])) == 3 &&
-            sum_of(base["flags"][ver], s=> base["flags"][ver][s]) == 4
+            measured(
+                sum_of(base["flags"][ver], s=> base["flags"][ver][s]) == 4,
+                when= version_id == ver_num && 
+                    cheat["eternal"][ver] == 0 &&
+                    new_game_mode(ver) &&
+                    character_id[ver] == characters["max"]["id"]
+            )
         array_push(triggers,trig)
     }
     achievement(
