@@ -39,31 +39,38 @@ episodes = {
     0x01 : {
         0 : {
           "name" : "Dark Fiend",
-          "id" : 403022
+          "id" : 403022,
+          "points": 10
         },
         1 : {
           "name" : "The Iron Ogre",
-          "id" : 403023
+          "id" : 403023,
+          "points": 10
         },
         2 : {
           "name" : "The Aquatic Terror",
-          "id" : 403024
+          "id" : 403024,
+          "points": 10
         },
         3 : {
           "name" : "The Imposter",
-          "id" : 403025
+          "id" : 403025,
+          "points": 25
         },
         4 : {
           "name" : "The Blade Master",
-          "id" : 403026
+          "id" : 403026,
+          "points": 25
         },
         5 : {
           "name" : "Inferno Lord",
-          "id" : 403027
+          "id" : 403027,
+          "points": 50
         },
         6 : {
           "name" : "Viewtiful Victory",
-          "id" : 403028
+          "id" : 403028,
+          "points": 50
         }
     },
     0x06 : {
@@ -261,7 +268,7 @@ key_events = {
         "episode" : 0,
         "stage" : 2,
         "flag" : bit7(key_events_1),
-        "points" : 1,
+        "points" : 5,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -294,7 +301,7 @@ key_events = {
         "episode" : 1,
         "stage" : 2,
         "flag" : bit7(key_events_1),
-        "points" : 2,
+        "points" : 5,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -316,7 +323,7 @@ key_events = {
         "episode" : 2,
         "stage" : 2,
         "flag" : bit7(key_events_1),
-        "points" : 3,
+        "points" : 5,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -327,7 +334,7 @@ key_events = {
         "episode" : 3,
         "stage" : 2,
         "flag" : bit7(key_events_1),
-        "points" : 3,
+        "points" : 5,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -349,7 +356,7 @@ key_events = {
         "episode" : 4,
         "stage" : 2,
         "flag" : bit7(key_events_1),
-        "points" : 4,
+        "points" : 5,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -371,7 +378,7 @@ key_events = {
         "episode" : 5,
         "stage" : 5,
         "flag" : bit7(key_events_1),
-        "points" : 5,
+        "points" : 10,
         "type" : "progression",
         "et" : event_type_main
     },
@@ -404,7 +411,7 @@ key_events = {
         "episode" : 6,
         "stage" : 5,
         "flag" : bit7(key_events_1),
-        "points" : 10,
+        "points" : 25,
         "type" : "win_condition",
         "et" : event_type_main
     }
@@ -461,13 +468,13 @@ diffs = {
         "id" : 402830,
         "title" : "V-Rated Victory",
         "desc" : "V-Rated",
-        "points" : 25
+        "points" : 50
     },
     0x03: {
         "id" : 402862,
         "title" : "Ultra-V Rated Victory",
         "desc" : "Ultra V-Rated",
-        "points" : 50
+        "points" : 100
     }
 }
 
@@ -656,6 +663,7 @@ for ke in key_events {
         rv_episodes[ke] = key_events[ke]
         rv_episodes[ke]["title"] = episodes[0x01][rv_episodes[ke]["episode"]]["name"]
         rv_episodes[ke]["id"] = episodes[0x01][rv_episodes[ke]["episode"]]["id"]
+        rv_episodes[ke]["points"] = episodes[0x01][rv_episodes[ke]["episode"]]["points"]
     }
 }
 for rv in rv_episodes {
@@ -663,8 +671,8 @@ for rv in rv_episodes {
     achievement( 
     id=base["id"],
     title="V's Up: " + base["title"],
-    description="With a V rating or better, " + base["desc"],
-    points=10,
+    description="Achieve an Episode rating of V or better and " + base["desc"],
+    points=base["points"],
     trigger=
         current_stage == base["stage"] &&
         current_episode == base["episode"] &&
@@ -705,8 +713,8 @@ achievement(
     points=5,
     trigger=
         episode_stage_combo != 0xFFFF &&
-        prev(byte(0x002c8b6e)) == 0x04 &&
-        byte(0x002c8b6e) == 0x05
+        prev(byte(0x002c8b7f)) == 0x04 &&
+        byte(0x002c8b7f) == 0x05
 )
 
 achievement( 
